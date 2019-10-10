@@ -32,7 +32,7 @@ function App() {
             const refresh_token = cookies.access_token || '';
             dispatch(setToken(refresh_token));
 
-            axios.defaults.baseURL = 'http://127.0.0.1:3000';
+            axios.defaults.baseURL = 'http://127.0.0.1:3000'; // TODO: 나중에 제대로 포워딩 할 것
             axios.defaults.headers.common['x-access-token'] = refresh_token;
             axios.get('/logintest').then(response => { // TODO: logintest 가 아니라 유저정보 가져오는 쿼리를 쓸것
                 //TODO: redux에 유저정보 저장하고 시작할 것

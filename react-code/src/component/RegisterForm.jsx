@@ -26,30 +26,43 @@ function RegisterForm() {
                 reject('password-different');
             }
             else {
-                resolve(axios.post('localhost:3000/register',
-                    {email: email, password: password, role: parseInt(role)},
-                    { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }));
+                axios.defaults.baseURL = 'http://127.0.0.1:3000';
+                resolve(axios.post('/register',
+                    {email: email, password: password, role: parseInt(role)}));
             }
         }).then(response => {
             console.log(response);
         }).catch(err => {
-            console.log(err);
             if (err === 'password-different') {
                 alert('비밀번호와 확인 비밀번호가 다릅니다.');
             }
             else {
-                alert("i'm sorry.");
+                if(err.response === undefined) {
+                    alert('서버와 연결이 끊어졌습니다.');
+                }
+                else if(err.response.data.message === "email-form-error") {
+                    alert('제대로 된 이메일을 써주세요.');
+                }
+                else if(err.response.data.message === "already-register") {
+                    alert('이미 등록되어있습니다.');
+                }
+                else if(err.response.data.message === "password-error") {
+                    alert('password 규칙을 확인해주세요.');
+                }
+                else {
+                    alert('서버에 문제가 있습니다.');
+                }
             }
         });
-    }
+    };
 
     return (
         <div className="RegisterForm">
             <input value={email} placeholder="이메일" onChange={emailChange}/>
             <br/>
-            <input value={password} placeholder="비밀번호" onChange={passwordChange}/>
+            <input type="password" value={password} placeholder="비밀번호" onChange={passwordChange}/>
             <br/>
-            <input value={confirmPassword} placeholder="비밀번호 확인" onChange={confirmPasswordChange}/>
+            <input type="password" value={confirmPassword} placeholder="비밀번호 확인" onChange={confirmPasswordChange}/>
             <form>
                 <div className="radio">
                     <label>

@@ -31,6 +31,7 @@ function RegisterForm() {
                     {email: email, password: password, role: parseInt(role)}));
             }
         }).then(response => {
+            //TODO: 회원가입 성공 메시지를 띄우세요. 
             console.log(response);
         }).catch(err => {
             if (err === 'password-different') {

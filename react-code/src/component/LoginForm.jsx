@@ -26,7 +26,15 @@ function LoginForm() {
             dispatch(setToken(response.data.token));
             setCookie('access_token', response.data.token, { maxAge: 60*60*24*7 });
         }).catch(err => {
-            //TODO: 로그인 실패 했을 때 구현 해주세요.
+            if(err.response === undefined) {
+                alert('서버와 연결이 끊어졌습니다.');
+            }
+            else if(err.response.data.message === "login-fail") {
+                alert('비밀번호, 혹은 이메일이 다릅니다.');
+            }
+            else {
+                alert('서버에 문제가 있습니다.');
+            }
             console.log(err);
         });
     };

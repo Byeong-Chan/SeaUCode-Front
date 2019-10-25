@@ -5,6 +5,7 @@ import axios from 'axios';
 function RegisterForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("1");
 
@@ -20,6 +21,9 @@ function RegisterForm() {
     const roleChange = e => {
         setRole(e.target.value);
     };
+    const nameChange = e => {
+        setName(e.target.value);
+    };
     const postRegist = e => {
         new Promise((resolve, reject) => {
             if (confirmPassword !== password) {
@@ -28,7 +32,7 @@ function RegisterForm() {
             else {
                 axios.defaults.baseURL = 'http://127.0.0.1:3000';
                 resolve(axios.post('/register',
-                    {email: email, password: password, role: parseInt(role)}));
+                    {email: email, name: name, password: password, role: parseInt(role)}));
             }
         }).then(response => {
             //TODO: 회원가입 성공 메시지를 띄우세요. 
@@ -50,6 +54,9 @@ function RegisterForm() {
                 else if(err.response.data.message === "password-error") {
                     alert('password 규칙을 확인해주세요.');
                 }
+                else if(err.response.data.message === 'not-unique-name') {
+                    alert('동일한 별명이 이미 존재합니다!');
+                }
                 else {
                     alert('서버에 문제가 있습니다.');
                 }
@@ -59,6 +66,8 @@ function RegisterForm() {
 
     return (
         <div className="RegisterForm">
+            <input value={name} placeholder="별명" onChange={nameChange}/>
+            <br/>
             <input value={email} placeholder="이메일" onChange={emailChange}/>
             <br/>
             <input type="password" value={password} placeholder="비밀번호" onChange={passwordChange}/>

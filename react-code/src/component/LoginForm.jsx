@@ -58,7 +58,7 @@ function LoginForm(props) {
                         <Form.Label>비밀번호</Form.Label>
                         <Form.Control type="password" placeholder="password" value={password} onChange={changePassword} />
                     </Form.Group>
-                    <Button variant="primary" type="button" onClick={postLogin}>
+                    <Button variant="primary" type="button" onClick={postLogin} variant="dark">
                         login
                     </Button>
                 </Form>

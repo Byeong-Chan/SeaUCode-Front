@@ -2,6 +2,7 @@ import React from 'react';
 import 'typescript';
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
+import { Button } from 'react-bootstrap'
 
 const clearToken = () => ({ type: "token/CLEAR_TOKEN" });
 
@@ -17,9 +18,7 @@ function UserUI() {
 
     return (
         <div className="UserUI">
-            환영합니다.
-            <br/>
-            <button onClick={logout}>로그아웃</button>
+            <Button onClick={logout} variant="dark">로그아웃</Button>
         </div>
     );
 }

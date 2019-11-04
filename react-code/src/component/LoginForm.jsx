@@ -3,11 +3,11 @@ import 'typescript';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
-import { Button, Form, Card } from 'react-bootstrap';
+import {Button, Form, Card, Modal} from 'react-bootstrap';
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 
-function LoginForm() {
+function LoginForm(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
@@ -41,7 +41,12 @@ function LoginForm() {
     };
 
     return (
-        <Card style={{ width: '18rem' }} className="LoginForm">
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            className="LoginForm">
             <Card.Body>
                 <Form>
                     <Form.Group controlId="formBasicEmail">
@@ -53,12 +58,12 @@ function LoginForm() {
                         <Form.Label>비밀번호</Form.Label>
                         <Form.Control type="password" placeholder="password" value={password} onChange={changePassword} />
                     </Form.Group>
-                    <Button variant="primary" type="submit" onClick={postLogin}>
+                    <Button variant="primary" type="button" onClick={postLogin}>
                         login
                     </Button>
                 </Form>
             </Card.Body>
-        </Card>
+        </Modal>
     );
 }
 

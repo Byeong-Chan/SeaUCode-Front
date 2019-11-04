@@ -2,21 +2,55 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'typescript';
-import ResisterForm from './component/RegisterForm';
+import RegisterForm from './component/RegisterForm';
 import LoginForm from './component/LoginForm';
 import UserUI from './component/UserUI';
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import { Button, ButtonToolbar} from 'react-bootstrap';
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
+
+function DefaultTopBar(props) {
+    return (
+        <React.Fragment>
+            <ButtonToolbar>
+                <Button variant="primary" onClick={() => props.setLoginModalShow(true)}>
+                    로그인
+                </Button>
+
+                <LoginForm
+                    show={props.loginModalShow}
+                    onHide={() => props.setLoginModalShow(false)}
+                />
+            </ButtonToolbar>
+
+            <ButtonToolbar>
+                <Button variant="primary" onClick={() => props.setRegisterModalShow(true)}>
+                    회원 가입
+                </Button>
+
+                <RegisterForm
+                    show={props.registerModalShow}
+                    onHide={() => props.setRegisterModalShow(false)}
+                />
+            </ButtonToolbar>
+        </React.Fragment>
+    );
+}
 
 function Greeting(props) {
     if(props.isLogedIn) {
         return <UserUI />;
     }
     else {
-        return <LoginForm />;
+        return <DefaultTopBar
+            registerModalShow={props.registerModalShow}
+            setRegisterModalShow={props.setRegisterModalShow}
+            loginModalShow={props.loginModalShow}
+            setLoginModalShow={props.setLoginModalShow}
+        />;
     }
 }
 
@@ -50,12 +84,18 @@ function App() {
         cookie_update();
     }, [cookies, dispatch]);
 
+    const [registerModalShow, setRegisterModalShow] = React.useState(false);
+    const [loginModalShow, setLoginModalShow] = React.useState(false);
+
     return (
         <div className="App">
             <h1 className="title">SeaU Code</h1>
-            <ResisterForm/>
-            <Greeting isLogedIn={isLogedIn}/>
-            <div className="registerButton" onClick={function(){showRegister()}}>회원가입</div>
+            <Greeting isLogedIn={isLogedIn}
+                      registerModalShow={registerModalShow}
+                      setRegisterModalShow={setRegisterModalShow}
+                      loginModalShow={loginModalShow}
+                      setLoginModalShow={setLoginModalShow}
+            />
         </div>
     );
 }

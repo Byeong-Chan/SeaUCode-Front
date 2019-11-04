@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import 'typescript';
 import axios from 'axios';
+import { Button, Form, Card, Col, Row } from 'react-bootstrap';
 
 function RegisterForm() {
     const [email, setEmail] = useState("");
@@ -65,34 +66,77 @@ function RegisterForm() {
     };
 
     return (
-        <div className="RegisterForm">
-            <input value={name} placeholder="별명" onChange={nameChange}/>
-            <br/>
-            <input value={email} placeholder="이메일" onChange={emailChange}/>
-            <br/>
-            <input type="password" value={password} placeholder="비밀번호" onChange={passwordChange}/>
-            <br/>
-            <input type="password" value={confirmPassword} placeholder="비밀번호 확인" onChange={confirmPasswordChange}/>
-            <form>
-                <div className="radio">
-                    <label>
-                        선생님
-                        <input type="radio" value="1"
-                               checked={role === "1"}
-                               onChange={roleChange} />
-                    </label>
-                </div>
-                <div className="radio">
-                    <label>
-                        학생
-                        <input type="radio" value="2"
-                               checked={role === "2"}
-                               onChange={roleChange} />
-                    </label>
-                </div>
-            </form>
-            <button onClick={postRegist}>제출</button>
-        </div>
+        <Card style={{ width: '48rem' }} className="RegisterForm">
+            <Form>
+                <Form.Group as={Row} controlId="formHorizontalEmail">
+                    <Form.Label column sm={2}>
+                        별명
+                    </Form.Label>
+                    <Col sm={10}>
+                        <Form.Control type="text" placeholder="your NickName" value={name} onChange={nameChange}/>
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} controlId="formHorizontalEmail">
+                    <Form.Label column sm={2}>
+                        이메일
+                    </Form.Label>
+                    <Col sm={10}>
+                        <Form.Control type="email" placeholder="example@email.com" value={email} onChange={emailChange}/>
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} controlId="formHorizontalPassword">
+                    <Form.Label column sm={2}>
+                        비밀번호
+                    </Form.Label>
+                    <Col sm={10}>
+                        <Form.Control type="password" placeholder="password" value={password} onChange={passwordChange}/>
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} controlId="formHorizontalPassword">
+                    <Form.Label column sm={2}>
+                        비밀번호 확인
+                    </Form.Label>
+                    <Col sm={10}>
+                        <Form.Control type="password" placeholder="password again" value={confirmPassword} onChange={confirmPasswordChange} />
+                    </Col>
+                </Form.Group>
+
+                <fieldset>
+                    <Form.Group as={Row}>
+                        <Form.Label as="legend" column sm={2}>
+                            선생님/학생
+                        </Form.Label>
+                        <Col sm={10}>
+                            <Form.Check
+                                type="radio"
+                                label="선생님"
+                                name="formHorizontalRadios"
+                                id="formHorizontalRadios1"
+                                value="1"
+                                onChange={roleChange}
+                            />
+                            <Form.Check
+                                type="radio"
+                                label="학생"
+                                name="formHorizontalRadios"
+                                id="formHorizontalRadios2"
+                                value="2"
+                                onChange={roleChange}
+                            />
+                        </Col>
+                    </Form.Group>
+                </fieldset>
+
+                <Form.Group as={Row}>
+                    <Col sm={{ span: 10, offset: 2 }}>
+                        <Button type="submit" onClick={postRegist}>회원 가입</Button>
+                    </Col>
+                </Form.Group>
+            </Form>
+        </Card>
     );
 }
 

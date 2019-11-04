@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'typescript';
 import RegisterForm from './component/RegisterForm';
 import LoginForm from './component/LoginForm';
-import UserUI from './component/UserUI';
+import LoginedUserTopNav from './component/LoginedUserTopNav';
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -42,7 +42,7 @@ function DefaultTopBar(props) {
 
 function Greeting(props) {
     if(props.isLogedIn) {
-        return <UserUI />;
+        return <LoginedUserTopNav />;
     }
     else {
         return <DefaultTopBar

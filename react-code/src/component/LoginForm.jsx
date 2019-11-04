@@ -3,6 +3,7 @@ import 'typescript';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
+import { Button, Form, Card } from 'react-bootstrap';
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 
@@ -40,14 +41,24 @@ function LoginForm() {
     };
 
     return (
-        <div className="LoginForm">
-            <br/>
-            < input value={email} placeholder="이메일" onChange={changeEmail}/>
-            <br/>
-            <input type="password" value={password} placeholder="비밀번호" onChange={changePassword}/>
-            <br/>
-            <button onClick={postLogin}>로그인</button>
-        </div>
+        <Card style={{ width: '18rem' }} className="LoginForm">
+            <Card.Body>
+                <Form>
+                    <Form.Group controlId="formBasicEmail">
+                        <Form.Label>이메일</Form.Label>
+                        <Form.Control type="email" placeholder="example@email.com" value={email} onChange={changeEmail} />
+                    </Form.Group>
+
+                    <Form.Group controlId="formBasicPassword">
+                        <Form.Label>비밀번호</Form.Label>
+                        <Form.Control type="password" placeholder="password" value={password} onChange={changePassword} />
+                    </Form.Group>
+                    <Button variant="primary" type="submit" onClick={postLogin}>
+                        login
+                    </Button>
+                </Form>
+            </Card.Body>
+        </Card>
     );
 }
 

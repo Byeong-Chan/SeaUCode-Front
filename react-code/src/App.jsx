@@ -4,11 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'typescript';
 import RegisterForm from './component/RegisterForm';
 import LoginForm from './component/LoginForm';
-import UserUI from './component/UserUI';
+import LoginedUserTopNav from './component/LoginedUserTopNav';
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { Button, ButtonToolbar, Navbar, NavDropdown, Nav} from 'react-bootstrap';
+import { Button, ButtonToolbar, Navbar, Nav} from 'react-bootstrap';
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 
@@ -16,7 +16,7 @@ function DefaultTopBar(props) {
     return (
         <React.Fragment>
             <ButtonToolbar>
-                <Button variant="primary" onClick={() => props.setLoginModalShow(true)} variant="dark">
+                <Button variant="dark" onClick={() => props.setLoginModalShow(true)}>
                     로그인
                 </Button>
 
@@ -27,7 +27,7 @@ function DefaultTopBar(props) {
             </ButtonToolbar>
 
             <ButtonToolbar>
-                <Button variant="primary" onClick={() => props.setRegisterModalShow(true)} variant="dark">
+                <Button variant="dark" onClick={() => props.setRegisterModalShow(true)}>
                     회원 가입
                 </Button>
 
@@ -42,7 +42,7 @@ function DefaultTopBar(props) {
 
 function Greeting(props) {
     if(props.isLogedIn) {
-        return <UserUI />;
+        return <LoginedUserTopNav />;
     }
     else {
         return <DefaultTopBar
@@ -52,10 +52,6 @@ function Greeting(props) {
             setLoginModalShow={props.setLoginModalShow}
         />;
     }
-}
-
-function showRegister() {
-    return <LoginForm />;
 }
 
 function App() {

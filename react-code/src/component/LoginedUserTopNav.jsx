@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap'
 
 const clearToken = () => ({ type: "token/CLEAR_TOKEN" });
 
-function UserUI() {
+function LoginedUserTopNav() {
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
 
     const dispatch = useDispatch();
@@ -23,4 +23,4 @@ function UserUI() {
     );
 }
 
-export default UserUI;
+export default LoginedUserTopNav;

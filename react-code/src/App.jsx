@@ -8,7 +8,7 @@ import UserUI from './component/UserUI';
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { Button, ButtonToolbar} from 'react-bootstrap';
+import { Button, ButtonToolbar, Navbar, NavDropdown, Nav} from 'react-bootstrap';
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 
@@ -16,7 +16,7 @@ function DefaultTopBar(props) {
     return (
         <React.Fragment>
             <ButtonToolbar>
-                <Button variant="primary" onClick={() => props.setLoginModalShow(true)}>
+                <Button variant="primary" onClick={() => props.setLoginModalShow(true)} variant="dark">
                     로그인
                 </Button>
 
@@ -27,7 +27,7 @@ function DefaultTopBar(props) {
             </ButtonToolbar>
 
             <ButtonToolbar>
-                <Button variant="primary" onClick={() => props.setRegisterModalShow(true)}>
+                <Button variant="primary" onClick={() => props.setRegisterModalShow(true)} variant="dark">
                     회원 가입
                 </Button>
 
@@ -89,13 +89,21 @@ function App() {
 
     return (
         <div className="App">
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
+                <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="mr-auto">
+                        <Greeting isLogedIn={isLogedIn}
+                                  registerModalShow={registerModalShow}
+                                  setRegisterModalShow={setRegisterModalShow}
+                                  loginModalShow={loginModalShow}
+                                  setLoginModalShow={setLoginModalShow}
+                        />
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
             <h1 className="title">SeaU Code</h1>
-            <Greeting isLogedIn={isLogedIn}
-                      registerModalShow={registerModalShow}
-                      setRegisterModalShow={setRegisterModalShow}
-                      loginModalShow={loginModalShow}
-                      setLoginModalShow={setLoginModalShow}
-            />
         </div>
     );
 }

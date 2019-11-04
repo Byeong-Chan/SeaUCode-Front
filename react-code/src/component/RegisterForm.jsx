@@ -138,7 +138,7 @@ function RegisterForm(props) {
 
                     <Form.Group as={Row}>
                         <Col sm={{ span: 10, offset: 2 }}>
-                            <Button type="button" onClick={postRegist}>회원 가입</Button>
+                            <Button type="button" onClick={postRegist} variant="dark">회원 가입</Button>
                         </Col>
                     </Form.Group>
                 </Form>

@@ -19,6 +19,10 @@ function Greeting(props) {
     }
 }
 
+function showRegister() {
+    return <LoginForm />;
+}
+
 function App() {
 
     const [isLogedIn, toggleLogedIn] = useState(false);
@@ -47,8 +51,10 @@ function App() {
 
     return (
         <div className="App">
+            <h1 className="title">SeaU Code</h1>
             <ResisterForm/>
             <Greeting isLogedIn={isLogedIn}/>
+            <div className="registerButton" onClick={function(){showRegister()}}>회원가입</div>
         </div>
     );
 }

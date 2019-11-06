@@ -63,59 +63,60 @@ function RegisterForm(props) {
                 }
             }
         });
+        props.onHide();
     };
 
     return (
         <Modal
             {...props}
-            size="xl"
+            size="md"
             aria-labelledby="contained-modal-title-vcenter"
             centered
             className="RegisterForm">
             <Modal.Body>
                 <Form>
                     <Form.Group as={Row} controlId="formHorizontalNickName">
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={4}>
                             별명
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={8}>
                             <Form.Control type="text" placeholder="your NickName" value={name} onChange={nameChange}/>
                         </Col>
                     </Form.Group>
 
                     <Form.Group as={Row} controlId="formHorizontalEmail">
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={4}>
                             이메일
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={8}>
                             <Form.Control type="email" placeholder="example@email.com" value={email} onChange={emailChange}/>
                         </Col>
                     </Form.Group>
 
                     <Form.Group as={Row} controlId="formHorizontalPassword">
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={4}>
                             비밀번호
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={8}>
                             <Form.Control type="password" placeholder="password" value={password} onChange={passwordChange}/>
                         </Col>
                     </Form.Group>
 
                     <Form.Group as={Row} controlId="formHorizontalPasswordConfirm">
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={4}>
                             비밀번호 확인
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={8}>
                             <Form.Control type="password" placeholder="password again" value={confirmPassword} onChange={confirmPasswordChange} />
                         </Col>
                     </Form.Group>
 
                     <fieldset>
                         <Form.Group as={Row}>
-                            <Form.Label as="legend" column sm={2}>
+                            <Form.Label as="legend" column sm={4}>
                                 선생님/학생
                             </Form.Label>
-                            <Col sm={10}>
+                            <Col sm={8}>
                                 <Form.Check
                                     type="radio"
                                     label="선생님"
@@ -137,7 +138,7 @@ function RegisterForm(props) {
                     </fieldset>
 
                     <Form.Group as={Row}>
-                        <Col sm={{ span: 10, offset: 2 }}>
+                        <Col sm={{ span: 8, offset: 4 }}>
                             <Button type="button" onClick={postRegist} variant="dark">회원 가입</Button>
                         </Col>
                     </Form.Group>

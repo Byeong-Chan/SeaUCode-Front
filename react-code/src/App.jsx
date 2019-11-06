@@ -2,13 +2,24 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'typescript';
+
 import RegisterForm from './component/RegisterForm';
 import LoginForm from './component/LoginForm';
 import LoginedUserTopNav from './component/LoginedUserTopNav';
+import CreateClass from './component/CreateClass';
+
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { Button, ButtonToolbar, Navbar, Nav} from 'react-bootstrap';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useRouteMatch,
+    useParams
+} from "react-router-dom";
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 
@@ -84,23 +95,33 @@ function App() {
     const [loginModalShow, setLoginModalShow] = React.useState(false);
 
     return (
-        <div className="App">
-            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
-                <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Greeting isLogedIn={isLogedIn}
-                                  registerModalShow={registerModalShow}
-                                  setRegisterModalShow={setRegisterModalShow}
-                                  loginModalShow={loginModalShow}
-                                  setLoginModalShow={setLoginModalShow}
-                        />
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-            <h1 className="title">SeaU Code</h1>
-        </div>
+        <Router>
+            <div className="App">
+                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky="top">
+                    <Link to="/"><Navbar.Brand>React-Bootstrap</Navbar.Brand></Link>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse id="responsive-navbar-nav">
+                        <Nav className="mr-auto">
+                            <Greeting isLogedIn={isLogedIn}
+                                      registerModalShow={registerModalShow}
+                                      setRegisterModalShow={setRegisterModalShow}
+                                      loginModalShow={loginModalShow}
+                                      setLoginModalShow={setLoginModalShow}
+                            />
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+                <div>
+                    <Switch>
+                        <Route path="/createClass">
+                            <CreateClass />
+                        </Route>
+                        <Route path="/">
+                        </Route>
+                    </Switch>
+                </div>
+            </div>
+        </Router>
     );
 }
 

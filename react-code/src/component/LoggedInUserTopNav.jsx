@@ -15,7 +15,7 @@ import {
 
 const clearToken = () => ({ type: "token/CLEAR_TOKEN" });
 
-function LoginedUserTopNav() {
+function LoggedInUserTopNav() {
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
 
     const dispatch = useDispatch();
@@ -33,4 +33,4 @@ function LoginedUserTopNav() {
     );
 }
 
-export default LoginedUserTopNav;
+export default LoggedInUserTopNav;

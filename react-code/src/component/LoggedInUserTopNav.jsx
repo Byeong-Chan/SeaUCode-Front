@@ -18,7 +18,7 @@ import CreateClass from "./CreateClass";
 
 const clearToken = () => ({ type: "token/CLEAR_TOKEN" });
 
-function LoginedUserTopNav(props) {
+function LoggedInUserTopNav() {
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
 
     const dispatch = useDispatch();
@@ -102,5 +102,4 @@ function LoginedUserTopNav(props) {
     );
 }
 
-
-export default LoginedUserTopNav;
+export default LoggedInUserTopNav;

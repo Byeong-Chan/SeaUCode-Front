@@ -14,13 +14,14 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { Button, ButtonToolbar, Navbar, Nav} from 'react-bootstrap';
 import {
-    BrowserRouter as Router,
     Switch,
     Route,
     Link,
     useRouteMatch,
     useParams
 } from "react-router-dom";
+
+import config from './config';
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 
@@ -79,7 +80,7 @@ function App() {
             const refresh_token = cookies.access_token || '';
             dispatch(setToken(refresh_token));
 
-            axios.defaults.baseURL = 'http://127.0.0.1:3000'; // TODO: 나중에 제대로 포워딩 할 것
+            axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
             axios.defaults.headers.common['x-access-token'] = refresh_token;
             axios.get('/logedin').then(response => { // TODO: logintest 가 아니라 유저정보 가져오는 쿼리를 쓸것
                 //TODO: redux에 유저정보 저장하고 시작할 것
@@ -96,37 +97,35 @@ function App() {
     const [loginModalShow, setLoginModalShow] = React.useState(false);
 
     return (
-        <Router>
-            <div className="App">
-                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky="top">
-                    <Link to="/"><Navbar.Brand>React-Bootstrap</Navbar.Brand></Link>
-                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                    <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Greeting isLogedIn={isLogedIn}
-                                      registerModalShow={registerModalShow}
-                                      setRegisterModalShow={setRegisterModalShow}
-                                      loginModalShow={loginModalShow}
-                                      setLoginModalShow={setLoginModalShow}
-                            />
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
-                <div>
-                    <Switch>
+        <div className="App">
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky="top">
+                <Link to="/"><Navbar.Brand>React-Bootstrap</Navbar.Brand></Link>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="mr-auto">
+                        <Greeting isLogedIn={isLogedIn}
+                                  registerModalShow={registerModalShow}
+                                  setRegisterModalShow={setRegisterModalShow}
+                                  loginModalShow={loginModalShow}
+                                  setLoginModalShow={setLoginModalShow}
+                        />
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+            <div>
+                <Switch>
 
-                        <Route path="/createClass">
-                            <CreateClass />
-                        </Route>
+                    <Route path="/createClass">
+                        <CreateClass />
+                    </Route>
 
-                        <Route path="/">
-                            <IndexPage />
-                        </Route>
+                    <Route path="/">
+                        <IndexPage />
+                    </Route>
 
-                    </Switch>
-                </div>
+                </Switch>
             </div>
-        </Router>
+        </div>
     );
 }
 

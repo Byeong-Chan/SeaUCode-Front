@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import 'typescript';
 import axios from 'axios';
 import { Button, Form, Modal, Col, Row } from 'react-bootstrap';
+import config from '../config';
 
 function RegisterForm(props) {
     const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ function RegisterForm(props) {
                 reject('password-different');
             }
             else {
-                axios.defaults.baseURL = 'http://127.0.0.1:3000';
+                axios.defaults.baseURL = config.serverURL;
                 resolve(axios.post('/register',
                     {email: email, name: name, password: password, role: parseInt(role)}));
             }

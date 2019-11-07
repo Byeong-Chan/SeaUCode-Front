@@ -7,6 +7,7 @@ import RegisterForm from './component/RegisterForm';
 import LoginForm from './component/LoginForm';
 import LoginedUserTopNav from './component/LoginedUserTopNav';
 import CreateClass from './component/CreateClass';
+import IndexPage from './component/IndexPage';
 
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -113,11 +114,15 @@ function App() {
                 </Navbar>
                 <div>
                     <Switch>
+
                         <Route path="/createClass">
                             <CreateClass />
                         </Route>
+
                         <Route path="/">
+                            <IndexPage />
                         </Route>
+
                     </Switch>
                 </div>
             </div>

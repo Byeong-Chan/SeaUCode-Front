@@ -5,11 +5,11 @@ import 'typescript';
 
 import RegisterForm from './component/RegisterForm';
 import LoginForm from './component/LoginForm';
-import LoginedUserTopNav from './component/LoginedUserTopNav';
+import LoggedInUserTopNav from './component/LoggedInUserTopNav';
 import CreateClass from './component/CreateClass';
 import IndexPage from './component/IndexPage';
 
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { Button, ButtonToolbar, Navbar, Nav} from 'react-bootstrap';
@@ -23,7 +23,8 @@ import {
 
 import config from './config';
 
-const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
+const setToken = refresh_token => ({ type: config.SET_TOKEN, refresh_token });
+const toggleLoggedIn = on_off => ({ type: config.TOGGLE_LOGGED_IN, on_off });
 
 function DefaultTopBar(props) {
     return (
@@ -54,8 +55,8 @@ function DefaultTopBar(props) {
 }
 
 function Greeting(props) {
-    if(props.isLogedIn) {
-        return <LoginedUserTopNav />;
+    if(props.isLoggedIn) {
+        return <LoggedInUserTopNav />;
     }
     else {
         return <DefaultTopBar
@@ -68,8 +69,9 @@ function Greeting(props) {
 }
 
 function App() {
-
-    const [isLogedIn, toggleLogedIn] = useState(false);
+    const isLoggedIn = useSelector(
+        state => state.isLoggedIn
+    );
 
     const [cookies] = useCookies(['access_token']);
 
@@ -82,19 +84,19 @@ function App() {
 
             axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
             axios.defaults.headers.common['x-access-token'] = refresh_token;
-            axios.get('/logedin').then(response => { // TODO: logintest 가 아니라 유저정보 가져오는 쿼리를 쓸것
+            axios.get('/loggedIn').then(response => { // TODO: logintest 가 아니라 유저정보 가져오는 쿼리를 쓸것
                 //TODO: redux에 유저정보 저장하고 시작할 것
                 console.log(response); // TODO response.data 에 정보가 들어있습니다. 이 로그는 제거하고 작업해주세요.
-                toggleLogedIn(true);
+                dispatch(toggleLoggedIn(true));
             }).catch(err => {
-                toggleLogedIn(false);
+                dispatch(toggleLoggedIn(false));
             });
         };
         cookie_update();
     }, [cookies, dispatch]);
 
-    const [registerModalShow, setRegisterModalShow] = React.useState(false);
-    const [loginModalShow, setLoginModalShow] = React.useState(false);
+    const [registerModalShow, setRegisterModalShow] = useState(false);
+    const [loginModalShow, setLoginModalShow] = useState(false);
 
     return (
         <div className="App">
@@ -103,7 +105,7 @@ function App() {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="mr-auto">
-                        <Greeting isLogedIn={isLogedIn}
+                        <Greeting isLoggedIn={isLoggedIn}
                                   registerModalShow={registerModalShow}
                                   setRegisterModalShow={setRegisterModalShow}
                                   loginModalShow={loginModalShow}

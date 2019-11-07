@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import {Button, Form, Card, Modal, Col, Row} from 'react-bootstrap';
 
+import config from '../config';
+
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 
 function LoginForm(props) {
@@ -21,7 +23,7 @@ function LoginForm(props) {
         setPassword(e.target.value);
     };
     const postLogin = e => {
-        axios.defaults.baseURL = 'http://127.0.0.1:3000';
+        axios.defaults.baseURL = config.serverURL;
         axios.post('/login',
             {email: email, password: password}).then(response => {
             dispatch(setToken(response.data.token));

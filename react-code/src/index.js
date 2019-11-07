@@ -10,16 +10,20 @@ import { createStore } from 'redux';
 import rootReducer from './store/modules';
 import { Provider } from 'react-redux';
 
+import { BrowserRouter as Router } from 'react-router-dom';
+
 const store = createStore(rootReducer);
 
 
 
 ReactDOM.render(
-    <CookiesProvider>
-        <Provider store={store}>
-            <App />
-        </Provider>
-    </CookiesProvider>,
+    <Router>
+        <CookiesProvider>
+            <Provider store={store}>
+                <App />
+            </Provider>
+        </CookiesProvider>
+    </Router>,
     document.getElementById('root')
 );
 

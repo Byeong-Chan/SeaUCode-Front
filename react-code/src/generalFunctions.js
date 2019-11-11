@@ -1,16 +1,15 @@
 module.exports = {
-    isTokenExist: function(isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken) {
-        if(!isLoggedIn) {
-            const refresh_token = cookies.access_token || '';
-            if(refresh_token != '') {
-                dispatch(toggleLoggedIn(true));
-                dispatch(setToken(refresh_token));
+    loggedInTest: function(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken) {
+        const refresh_token = cookies.access_token || '';
+        axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
+        axios.defaults.headers.common['x-access-token'] = refresh_token;
+        return axios.get('/loggedIn').then(response => {
+            dispatch(setToken(refresh_token));
+            if(isLoggedIn) {
+                // TODO: 유저정보 입력
             }
-            else {
-                dispatch(toggleLoggedIn(false));
-                dispatch(setToken(''));
-            }
-        }
+            dispatch(toggleLoggedIn(true));
+        });
     },
     axiosInit: function(axios, token, config) {
         axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것

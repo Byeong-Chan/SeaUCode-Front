@@ -3,7 +3,9 @@ import 'typescript';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { Button, Form, Modal, Col, Row } from 'react-bootstrap';
+import {Col, Row, Container, Navbar} from 'react-bootstrap';
+
+import Menu from './classComponent/Menu';
 
 import config from '../../config';
 import generalFunctions from '../../generalFunctions';
@@ -17,7 +19,7 @@ import {
     withRouter
 } from "react-router-dom";
 
-const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
+const setToken = refresh_token => ({ type: config.SET_TOKEN, refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 function Class(props) {
@@ -33,6 +35,9 @@ function Class(props) {
     const isLoggedIn = useSelector(
         state => state.isLoggedIn
     );
+
+    const [notice, setNotice] = useState([]);
+    const [chatting, setChatting] = useState([]);
 
     useEffect(() => {
         async function get_class_info() {
@@ -61,7 +66,7 @@ function Class(props) {
                 }
                 else {
                     alert('문제가 발생했습니다.');
-                    props.history.push('/');
+                    //props.history.push('/');
                 }
             });
         };
@@ -69,8 +74,16 @@ function Class(props) {
     }, [cookies, dispatch]);
 
     return (
-        <div className="Class">
-        </div>
+        <Container className="Class" fluid={true}>
+            <Row>
+                <Navbar as={Col} xs={3} collapseOnSelect expand="lg" bg="dark" variant="dark">
+                    <Menu />
+                </Navbar>
+                <Col>
+                    감사해요.
+                </Col>
+            </Row>
+        </Container>
     );
 }
 

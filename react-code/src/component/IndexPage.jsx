@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import 'typescript';
 import { Button, Form, Modal, Col, Row, Carousel } from 'react-bootstrap';
 
-function CreateClass() {
+function IndexPage() {
 
     //const [isLogedIn, toggleLogedIn] = useState(false);
 
     return (
-        <div className="CreateClass">
+        <div>
             <Carousel>
                 <Carousel.Item>
                     <img
@@ -26,4 +26,4 @@ function CreateClass() {
     );
 }
 
-export default CreateClass;
+export default IndexPage;

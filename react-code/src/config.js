@@ -3,4 +3,4 @@ module.exports = {
     'TOGGLE_LOGGED_IN': 'isLoggedIn/TOGGLE_LOGGED_IN',
     'CLEAR_TOKEN' : 'token/CLEAR_TOKEN',
     'SET_TOKEN' : 'token/SET_TOKEN'
-}
+};

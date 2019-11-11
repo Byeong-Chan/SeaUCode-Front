@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'typescript';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { Button, Form, Modal, Col, Row } from 'react-bootstrap';
+import { Button, Form, Col, Row } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
 
 import config from '../config';
 import generalFunctions from '../generalFunctions';
@@ -12,13 +13,28 @@ const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 
-function CreateClass() {
+function CreateClass(props) {
     const dispatch = useDispatch();
     const [cookies] = useCookies(['access_token']);
 
     const token = useSelector(
         state => state.token
     );
+
+    const isLoggedIn = useSelector(
+        state => state.isLoggedIn
+    );
+
+    useEffect(() => {
+        async function login_check() {
+            generalFunctions.loggedInTest(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken)
+                .catch(err => {
+                    alert('로그인이 필요한 기능입니다!');
+                    props.history.push('/');
+                });
+        };
+        login_check();
+    }, [cookies, dispatch]);
 
     const [ className, setClassName ] = useState('');
 
@@ -50,19 +66,19 @@ function CreateClass() {
         <div className="CreateClass">
             <Form style={{"marginTop":"200px"}}>
                 <Row className="justify-content-xl-center">
-                    <Col xs lg="6">
+                    <Col lg="6">
                         <h1 style={{"textAlign":"center"}}>
                             반 이름
                         </h1>
                     </Col>
                 </Row>
                 <Row className="justify-content-xl-center">
-                    <Col xs lg="6">
+                    <Col lg="6">
                         <Form.Control value={className} size="lg" type="text" placeholder="반 이름 입력" onChange={changeClassName} />
                     </Col>
                 </Row>
                 <Row className="justify-content-xl-center" style={{"marginTop":"50px"}}>
-                    <Col xs lg="auto">
+                    <Col lg="auto">
                         <Button type="button" onClick={postCreateClass}>반 생성!</Button>
                     </Col>
                 </Row>
@@ -71,4 +87,4 @@ function CreateClass() {
     );
 }
 
-export default CreateClass;
+export default withRouter(CreateClass);

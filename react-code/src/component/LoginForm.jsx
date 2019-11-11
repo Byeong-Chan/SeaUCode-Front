@@ -43,6 +43,12 @@ function LoginForm(props) {
         props.onHide();
     };
 
+    const enterKeyPress = (e) => {
+        if(e.key == 'Enter'){
+            postLogin();
+        }
+    }
+
     return (
         <Modal
             {...props}
@@ -57,7 +63,7 @@ function LoginForm(props) {
                             이메일
                         </Form.Label>
                         <Col sm={8}>
-                            <Form.Control type="email" placeholder="example@email.com" value={email} onChange={changeEmail} />
+                            <Form.Control type="email" placeholder="example@email.com" value={email} onChange={changeEmail} onKeyPress={enterKeyPress}/>
                         </Col>
                     </Form.Group>
 
@@ -66,7 +72,7 @@ function LoginForm(props) {
                             비밀번호
                         </Form.Label>
                         <Col sm={8}>
-                            <Form.Control type="password" placeholder="password" value={password} onChange={changePassword} />
+                            <Form.Control type="password" placeholder="password" value={password} onChange={changePassword} onKeyPress={enterKeyPress}/>
                         </Col>
                     </Form.Group>
 

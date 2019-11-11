@@ -13,7 +13,7 @@ import Class from './component/class/Class';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { Button, ButtonToolbar, Navbar, Nav} from 'react-bootstrap';
+import { Button, ButtonToolbar, Navbar, Nav, Carousel} from 'react-bootstrap';
 import {
     Switch,
     Route,

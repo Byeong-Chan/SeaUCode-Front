@@ -32,7 +32,7 @@ function LoggedInUserTopNav() {
         <div className="LoggedInUserTopNav">
             <Link to="/"><Button onClick={logout} variant="dark">로그아웃</Button></Link>
             <Link to="/createClass"><Button variant="dark">반 만들기</Button></Link>
-            <Button variant="dark">마이페이지</Button>
+            <Link to="/myPage"><Button variant="dark">마이페이지</Button></Link>
         </div>
     );
 }

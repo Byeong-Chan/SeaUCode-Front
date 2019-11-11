@@ -27,7 +27,7 @@ function LoginForm(props) {
         axios.post('/login',
             {email: email, password: password}).then(response => {
             dispatch(setToken(response.data.token));
-            setCookie('access_token', response.data.token, { maxAge: 60*60*24*7 });
+            setCookie('access_token', response.data.token, { maxAge: 60*60*24*7, path: '/' });
         }).catch(err => {
             if(err.response === undefined) {
                 alert('서버와 연결이 끊어졌습니다.');

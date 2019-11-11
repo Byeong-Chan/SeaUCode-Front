@@ -12,11 +12,10 @@ import {
     useRouteMatch,
     useParams
 } from "react-router-dom";
-import LoginForm from "./LoginForm";
-import axios from "axios";
-import CreateClass from "./CreateClass";
+import config from "../config";
 
 const clearToken = () => ({ type: "token/CLEAR_TOKEN" });
+const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 function LoggedInUserTopNav() {
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
@@ -24,8 +23,9 @@ function LoggedInUserTopNav() {
     const dispatch = useDispatch();
 
     const logout = e => {
+        dispatch(toggleLoggedIn(false));
         dispatch(clearToken());
-        removeCookie('access_token');
+        removeCookie('access_token', { path: '/' });
     };
 
     return (

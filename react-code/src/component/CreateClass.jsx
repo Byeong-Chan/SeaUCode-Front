@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Button, Form, Modal, Col, Row } from 'react-bootstrap';
 
 import config from '../config';
+import generalFunctions from '../generalFunctions';
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
@@ -26,8 +27,7 @@ function CreateClass() {
     };
 
     const postCreateClass = e => {
-        axios.defaults.baseURL = config.serverURL;
-        axios.defaults.headers.common['x-access-token'] = token;
+        generalFunctions.axiosInit(axios, token, config);
         axios.post('/class/createClass', {name: className})
             .then(res => {
 

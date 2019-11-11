@@ -41,23 +41,24 @@ function Class(props) {
 
     useEffect(() => {
         async function get_class_info() {
-            generalFunctions.isTokenExist(isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken);
-            generalFunctions.axiosInit(axios, token, config);
-            axios.get('/class/getClassInfo/' + id).then(result=> {
+            generalFunctions.loggedInTest(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken).then( () => {
+                generalFunctions.axiosInit(axios, token, config);
+                return axios.get('/class/getClassInfo/' + id);
+            }).then(result => {
 
             }).catch(err => {
-                if(err.response === undefined) {
+                if (err.response === undefined) {
                     alert('서버와 연결이 끊겼습니다.');
                     this.props.history.push('/');
                 }
-                else if(err.response.data.message === 'not logged in') {
+                else if (err.response.data.message === 'not logged in') {
                     alert('로그인이 필요한 서비스입니다.');
                     props.history.push('/');
 
                     dispatch(setToken(''));
                     dispatch(toggleLoggedIn(false));
                 }
-                else if(err.response.data.message === 'auth-fail') {
+                else if (err.response.data.message === 'auth-fail') {
                     alert('다시 로그인 해주세요!');
                     props.history.push('/');
 
@@ -74,16 +75,24 @@ function Class(props) {
     }, [cookies, dispatch]);
 
     return (
-        <Container className="Class" fluid={true}>
-            <Row>
-                <Navbar as={Col} xs={3} collapseOnSelect expand="lg" bg="dark" variant="dark">
-                    <Menu />
-                </Navbar>
-                <Col>
-                    감사해요.
+        <div className="Class" style={{"height":"100%"}}>
+
+            <Row style={{"height":"100%", paddingLeft: 0, paddingRight: 0 }}>
+                <Col sm={2} style={{ paddingLeft: 0, paddingRight: 0, backgroundColor: "#343a40" }}>
+                    <Menu className="반이름" url={url}/>
+                </Col>
+                <Col style={{ paddingLeft: 0, paddingRight: 0 }}>
+                    <Switch>
+                        <Route path={`${path}/student`}>
+                            학생관리
+                        </Route>
+                        <Route path={`${path}/`}>
+                            채팅
+                        </Route>
+                    </Switch>
                 </Col>
             </Row>
-        </Container>
+        </div>
     );
 }
 

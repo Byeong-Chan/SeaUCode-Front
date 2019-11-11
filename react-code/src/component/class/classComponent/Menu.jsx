@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import 'typescript';
 import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
-import {Button, ButtonToolbar, Nav, Navbar, Modal, Form, Row, Col} from 'react-bootstrap'
+import {ListGroup} from 'react-bootstrap'
 
 import {
     BrowserRouter as Router,
@@ -15,7 +15,7 @@ import {
 
 const clearToken = () => ({ type: "token/CLEAR_TOKEN" });
 
-function Menu() {
+function Menu(props) {
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
 
     const dispatch = useDispatch();
@@ -26,9 +26,22 @@ function Menu() {
     };
 
     return (
-        <Navbar.Collapse className="Menu" id="responsive-navbar-nav">
+        <ListGroup style={{textAlign: "center"}}>
+            <Link to={`${props.url}`}>
+                <ListGroup.Item variant="secondary">
+                    <b>{props.className}</b>
+                </ListGroup.Item>
+            </Link>
 
-        </Navbar.Collapse>
+            <Link to={`${props.url}/student`}>
+            <ListGroup.Item action variant="secondary">
+                학생 관리
+            </ListGroup.Item>
+            </Link>
+            <ListGroup.Item action variant="secondary">
+                학생 관리
+            </ListGroup.Item>
+        </ListGroup>
     );
 }
 

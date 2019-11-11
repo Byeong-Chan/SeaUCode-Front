@@ -9,6 +9,7 @@ import LoggedInUserTopNav from './component/LoggedInUserTopNav';
 import CreateClass from './component/CreateClass';
 import IndexPage from './component/IndexPage';
 import Class from './component/class/Class';
+import MyPage from './component/MyPage';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -124,10 +125,15 @@ function App() {
                     <Route path="/createClass">
                         <CreateClass />
                     </Route>
+                    
+                    <Route path="/myPage">
+                        <MyPage />
+                    </Route>
 
                     <Route path="/">
                         <IndexPage />
                     </Route>
+
 
                 </Switch>
             </div>

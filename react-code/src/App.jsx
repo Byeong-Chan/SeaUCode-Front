@@ -24,6 +24,7 @@ import {
 } from "react-router-dom";
 
 import config from './config';
+import generalFunctions from './generalFunctions';
 
 const setToken = refresh_token => ({ type: config.SET_TOKEN, refresh_token });
 const toggleLoggedIn = on_off => ({ type: config.TOGGLE_LOGGED_IN, on_off });
@@ -84,11 +85,8 @@ function App() {
             const refresh_token = cookies.access_token || '';
             dispatch(setToken(refresh_token));
 
-            axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
-            axios.defaults.headers.common['x-access-token'] = refresh_token;
-            axios.get('/loggedIn').then(response => { // TODO: logintest 가 아니라 유저정보 가져오는 쿼리를 쓸것
-                //TODO: redux에 유저정보 저장하고 시작할 것
-                console.log(response); // TODO response.data 에 정보가 들어있습니다. 이 로그는 제거하고 작업해주세요.
+            generalFunctions.axiosInit(axios, refresh_token, config);
+            axios.get('/loggedIn').then(response => {
                 dispatch(toggleLoggedIn(true));
             }).catch(err => {
                 dispatch(toggleLoggedIn(false));

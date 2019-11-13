@@ -41,34 +41,40 @@ function Class(props) {
 
     useEffect(() => {
         async function get_class_info() {
-            generalFunctions.loggedInTest(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken).then( () => {
-                generalFunctions.axiosInit(axios, token, config);
-                return axios.get('/class/getClassInfo/' + id);
-            }).then(result => {
+            generalFunctions.loggedInTest(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken)
+                .then( res => {
+                    generalFunctions.axiosInit(axios, res.refresh_token, config);
+                    return axios.get('/class/getClassInfo/' + id);
+                }).then(result => {
+                    console.log(result.data.notice[0]);
+                }).catch(err => {
+                    console.log(err);
+                    if (err.response === undefined) {
+                        alert('서버와 연결이 끊겼습니다.');
+                        props.history.push('/');
+                    }
+                    else if (err.response.data.message === 'not logged in') {
+                        alert('로그인이 필요한 서비스입니다.');
+                        props.history.push('/');
 
-            }).catch(err => {
-                if (err.response === undefined) {
-                    alert('서버와 연결이 끊겼습니다.');
-                    this.props.history.push('/');
-                }
-                else if (err.response.data.message === 'not logged in') {
-                    alert('로그인이 필요한 서비스입니다.');
-                    props.history.push('/');
+                        dispatch(setToken(''));
+                        dispatch(toggleLoggedIn(false));
+                    }
+                    else if (err.response.data.message === 'auth-fail') {
+                        alert('다시 로그인 해주세요!');
+                        props.history.push('/');
 
-                    dispatch(setToken(''));
-                    dispatch(toggleLoggedIn(false));
-                }
-                else if (err.response.data.message === 'auth-fail') {
-                    alert('다시 로그인 해주세요!');
-                    props.history.push('/');
-
-                    dispatch(setToken(''));
-                    dispatch(toggleLoggedIn(false));
-                }
-                else {
-                    alert('문제가 발생했습니다.');
-                    //props.history.push('/');
-                }
+                        dispatch(setToken(''));
+                        dispatch(toggleLoggedIn(false));
+                    }
+                    else if (err.response.data.message === 'not-exist-class') {
+                        alert('그런 반은 없습니다.');
+                        props.history.push('/');
+                    }
+                    else {
+                        alert('문제가 발생했습니다.');
+                        //props.history.push('/');
+                    }
             });
         };
         get_class_info();

@@ -4,11 +4,10 @@ module.exports = {
         axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
         axios.defaults.headers.common['x-access-token'] = refresh_token;
         return axios.get('/loggedIn').then(response => {
-            dispatch(setToken(refresh_token));
-            if(isLoggedIn) {
-                // TODO: 유저정보 입력
-            }
-            dispatch(toggleLoggedIn(true));
+            // TODO: 유저정보 입력
+            return dispatch(toggleLoggedIn(true));
+        }).then(() => {
+            return dispatch(setToken(refresh_token));
         });
     },
     axiosInit: function(axios, token, config) {

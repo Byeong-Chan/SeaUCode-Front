@@ -10,7 +10,8 @@ import {
     Route,
     Link,
     useRouteMatch,
-    useParams
+    useParams,
+    withRouter
 } from "react-router-dom";
 import config from "../config";
 
@@ -20,7 +21,7 @@ const setUserEmail = input_email => ({ type: config.SET_USER_EMAIL, input_email}
 const setUserName = input_name => ({ type: config.SET_USER_NAME, input_name});
 const setUserNickname = input_nickname => ({ type: config.SET_USER_NICKNAME, input_nickname});
 
-function LoggedInUserTopNav() {
+function LoggedInUserTopNav(props) {
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
 
     const dispatch = useDispatch();
@@ -32,6 +33,7 @@ function LoggedInUserTopNav() {
         dispatch(setUserName(''));
         dispatch(setUserNickname(''));
         removeCookie('access_token', { path: '/' });
+        props.history.push('/');
     };
 
     return (
@@ -43,4 +45,4 @@ function LoggedInUserTopNav() {
     );
 }
 
-export default LoggedInUserTopNav;
+export default withRouter(LoggedInUserTopNav);

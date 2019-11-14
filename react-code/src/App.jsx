@@ -23,11 +23,7 @@ import {
     useParams
 } from "react-router-dom";
 
-import config from './config';
 import generalFunctions from './generalFunctions';
-
-const setToken = refresh_token => ({ type: config.SET_TOKEN, refresh_token });
-const toggleLoggedIn = on_off => ({ type: config.TOGGLE_LOGGED_IN, on_off });
 
 function DefaultTopBar(props) {
     return (
@@ -83,12 +79,10 @@ function App() {
     useEffect(() => {
         async function cookie_update() {
             const refresh_token = cookies.access_token || '';
-            dispatch(setToken(refresh_token));
 
-            generalFunctions.axiosInit(axios, refresh_token, config);
-            generalFunctions.loggedInTest(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken)
+            generalFunctions.axiosInit(axios, refresh_token);
+            generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .catch(err => {
-                    // TODO: 유저정보 초기화
                 });
         };
         cookie_update();

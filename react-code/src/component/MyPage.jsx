@@ -4,20 +4,90 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { Button, Form, Col, Row } from 'react-bootstrap';
+import { withRouter } from "react-router-dom";
 
-import config from '../config';
+import generalFunctions from "../generalFunctions";
+import config from "../config";
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
-
-function MyPage() {
-    const dispatch = useDispatch();
+function MyPage(props) {
     const [cookies] = useCookies(['access_token']);
+    const dispatch = useDispatch();
 
-    const token = useSelector(
-        state => state.token
+    const userName = useSelector(
+        state => state.userName
     );
+    const userNickname = useSelector(
+        state => state.userNickname
+    );
+    const userEmail = useSelector(
+        state => state.userEmail
+    );
+
+    const [rename, setRename] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const changeRename = e => {
+        setRename(e.target.value);
+    };
+    const changePassword = e => {
+        setPassword(e.target.value);
+    };
+    const changeConfirmPassword = e => {
+        setConfirmPassword(e.target.value);
+    };
+
+    const updateUserInfo = e => {
+        if(password.length === 0) {
+            alert('바꿀 비밀번호를 반드시 입력해주세요. 바꾸지 않을것이라면 원래 비밀번호를 입력해주세요.');
+        }
+        else if(password !== confirmPassword) {
+            alert('비밀번호가 일치하는지 확인하세요.');
+        }
+        else if(rename.length === 0) {
+            alert('바꿀 이름을 입력해주세요.');
+        }
+        else {
+            generalFunctions.axiosInit(axios, cookies.token);
+            axios.post('/userRevise', {name: rename, password: password})
+                .then(result=>{
+                    alert('성공적으로 변경 되었습니다.');
+                }).catch(err => {
+                    if(err.response === undefined) {
+                        alert('서버와 연결이 끊어졌습니다.');
+                    }
+                    else if(err.response.message === 'update failure') {
+                        alert('업데이트에 실패했습니다.');
+                    }
+                    else if(err.response.message === 'not found') {
+                        alert('로그인 정보가 잘못 되었습니다. 다시 로그인 해주세요.');
+                        dispatch(setToken(''));
+                        dispatch(toggleLoggedIn(false));
+                        props.history.push('/');
+                    }
+                    else {
+                        alert('서버에 문제가 생겼습니다.');
+                    }
+            });
+        }
+    };
+
+    useEffect(() => {
+        async function cookie_update() {
+            const refresh_token = cookies.access_token || '';
+
+            generalFunctions.axiosInit(axios, refresh_token);
+            generalFunctions.loggedInTest(axios, cookies, dispatch)
+                .catch(err => {
+                    alert('로그인이 필요한 기능입니다!');
+                    props.history.push('/');
+                });
+        };
+        cookie_update();
+    }, [cookies, dispatch]);
 
     return (
         <div className="MyPage">
@@ -29,7 +99,19 @@ function MyPage() {
                         닉네임
                     </Form.Label>
                     <Col sm={8}>
-                        홍길동
+                        {userNickname}
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row}>
+                    <Form.Label column sm={4}>
+                        실명
+                    </Form.Label>
+                    <Col sm={4}>
+                        {userName}
+                    </Col>
+                    <Col sm={4}>
+                        <Form.Control value={rename} type="text" placeholder="이름 수정" onChange={changeRename}/>
                     </Col>
                 </Form.Group>
 
@@ -38,7 +120,7 @@ function MyPage() {
                         이메일
                     </Form.Label>
                     <Col sm={8}>
-                        SeaUCode@ajou.ac.kr
+                        {userEmail}
                     </Col>
                 </Form.Group>
 
@@ -47,7 +129,7 @@ function MyPage() {
                         비밀번호 변경
                     </Form.Label>
                     <Col sm={8}>
-                        <Form.Control type="password" placeholder="password" />
+                        <Form.Control value={password} type="password" placeholder="password" onChange={changePassword}/>
                     </Col>
                 </Form.Group>
 
@@ -56,15 +138,15 @@ function MyPage() {
                         비밀번호 확인
                     </Form.Label>
                     <Col sm={8}>
-                        <Form.Control type="password" placeholder="password" />
+                        <Form.Control value={confirmPassword} type="password" placeholder="password" onChange={changeConfirmPassword}/>
                     </Col>
                 </Form.Group>
 
-                <Button variant="primary w-100">수정</Button>
+                <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
 
             </Form>
         </div>
     );
 }
 
-export default MyPage;
+export default withRouter(MyPage);

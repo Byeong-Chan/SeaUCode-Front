@@ -6,7 +6,16 @@ function Chatting() {
 
     return (
         <div className="chatting">
-            채팅
+            <Card>
+                <span style="">작성자</span>
+                <Card.Body>This is some text within a card body.</Card.Body>
+            </Card>
+            <Card>
+                <Card.Body>This is some text within a card body.</Card.Body>
+            </Card>
+            <Card>
+                <Card.Body>This is some text within a card body.</Card.Body>
+            </Card>
         </div>
     );
 }

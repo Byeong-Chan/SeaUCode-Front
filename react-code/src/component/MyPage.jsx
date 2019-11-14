@@ -79,7 +79,7 @@ function MyPage(props) {
         }
     };
 
-    const deleteUserInfo = e => {
+    const deleteUser = e => {
         generalFunctions.axiosInit(axios, cookies.token);
         axios.delete('/userDelete')
             .then(result => {
@@ -176,7 +176,7 @@ function MyPage(props) {
                 </Form.Group>
                 <Form.Group as={Row}>
                     <Col sm={12}>
-                        <Button variant="danger w-100" onClick={updateUserInfo}>계정 탈퇴</Button>
+                        <Button variant="danger w-100" onClick={deleteUser}>계정 탈퇴</Button>
                     </Col>
                 </Form.Group>
 

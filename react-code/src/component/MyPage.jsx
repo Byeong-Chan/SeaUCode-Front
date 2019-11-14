@@ -11,6 +11,9 @@ import config from "../config";
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
+const setUserName = input_name => ({ type: config.SET_USER_NAME, input_name});
+const setUserEmail = input_email => ({ type: config.SET_USER_EMAIL, input_email});
+const setUserNickname = input_nickname => ({ type: config.SET_USER_NICKNAME, input_nickname});
 
 function MyPage(props) {
     const [cookies] = useCookies(['access_token']);
@@ -54,15 +57,16 @@ function MyPage(props) {
             generalFunctions.axiosInit(axios, cookies.token);
             axios.post('/userRevise', {name: rename, password: password})
                 .then(result=>{
+                    dispatch(setUserName(rename));
                     alert('성공적으로 변경 되었습니다.');
                 }).catch(err => {
                     if(err.response === undefined) {
                         alert('서버와 연결이 끊어졌습니다.');
                     }
-                    else if(err.response.message === 'update failure') {
+                    else if(err.response.data.message === 'update failure') {
                         alert('업데이트에 실패했습니다.');
                     }
-                    else if(err.response.message === 'not found') {
+                    else if(err.response.data.message === 'not found') {
                         alert('로그인 정보가 잘못 되었습니다. 다시 로그인 해주세요.');
                         dispatch(setToken(''));
                         dispatch(toggleLoggedIn(false));
@@ -73,6 +77,30 @@ function MyPage(props) {
                     }
             });
         }
+    };
+
+    const deleteUserInfo = e => {
+        generalFunctions.axiosInit(axios, cookies.token);
+        axios.delete('/userDelete')
+            .then(result => {
+                dispatch(toggleLoggedIn(false));
+                dispatch(setToken(''));
+                dispatch(setUserEmail(''));
+                dispatch(setUserName(''));
+                dispatch(setUserNickname(''));
+                props.history.push('/');
+                alert('성공적으로 탈퇴되었습니다.');
+            }).catch(err => {
+                if(err.response === undefined) {
+                    alert('서버와 연결이 끊어졌습니다.');
+                }
+                else if(err.response.data.message === 'user do not exist') {
+                    alert('유저가 존재하지 않습니다.');
+                }
+                else {
+                    alert('서버에 문제가 생겼습니다.')
+                }
+        });
     };
 
     useEffect(() => {
@@ -141,8 +169,16 @@ function MyPage(props) {
                         <Form.Control value={confirmPassword} type="password" placeholder="password" onChange={changeConfirmPassword}/>
                     </Col>
                 </Form.Group>
-
-                <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
+                <Form.Group as={Row}>
+                    <Col sm={12}>
+                        <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
+                    </Col>
+                </Form.Group>
+                <Form.Group as={Row}>
+                    <Col sm={12}>
+                        <Button variant="danger w-100" onClick={updateUserInfo}>계정 탈퇴</Button>
+                    </Col>
+                </Form.Group>
 
             </Form>
         </div>

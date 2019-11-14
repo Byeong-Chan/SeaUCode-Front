@@ -15,7 +15,7 @@ const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 function CreateClass(props) {
     const dispatch = useDispatch();
-    const [cookies] = useCookies(['access_token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
 
     const token = useSelector(
         state => state.token
@@ -45,16 +45,28 @@ function CreateClass(props) {
     const postCreateClass = e => {
         generalFunctions.axiosInit(axios, token, config);
         axios.post('/class/createClass', {name: className})
-            .then(res => {
-
+            .then(response => {
+                props.history.push('/class/' + response.data['class_id']);
             }).catch(err => {
                 if(err.response === undefined) {
                     alert('서버와의 연결이 끊어졌습니다.');
                 }
-                else if(err.response.data.message == 'auth-fail') {
+                else if(err.response.data.message === 'auth-fail') {
                     dispatch(toggleLoggedIn(false));
                     dispatch(setToken(''));
+                    props.history.push('/');
                     alert('로그인이 필요한 서비스입니다!');
+                }
+                else if(err.response.data.message === 'invalid-token') {
+                    dispatch(toggleLoggedIn(false));
+                    dispatch(setToken(''));
+                    removeCookie('access_token', { path: '/' });
+                    props.history.push('/');
+                    alert('로그인에 문제가 생겼습니다. 다시 로그인해주세요.')
+                }
+                else if(err.response.data.message === 'role-auth-fail') {
+                    props.history.push('/');
+                    alert('선생님만 사용할 수 있는 기능입니다!');
                 }
                 else {
                     alert('서버에 문제가 생겼습니다.');

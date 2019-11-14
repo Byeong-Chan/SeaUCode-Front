@@ -27,7 +27,7 @@ function CreateClass(props) {
 
     useEffect(() => {
         async function login_check() {
-            generalFunctions.loggedInTest(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken)
+            generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .catch(err => {
                     alert('로그인이 필요한 기능입니다!');
                     props.history.push('/');
@@ -43,7 +43,7 @@ function CreateClass(props) {
     };
 
     const postCreateClass = e => {
-        generalFunctions.axiosInit(axios, token, config);
+        generalFunctions.axiosInit(axios, token);
         axios.post('/class/createClass', {name: className})
             .then(response => {
                 props.history.push('/class/' + response.data['class_id']);

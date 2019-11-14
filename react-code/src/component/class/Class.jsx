@@ -36,17 +36,19 @@ function Class(props) {
         state => state.isLoggedIn
     );
 
+    const [name, setName] = useState('');
     const [notice, setNotice] = useState([]);
     const [chatting, setChatting] = useState([]);
 
     useEffect(() => {
         async function get_class_info() {
-            generalFunctions.loggedInTest(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken)
+            generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
-                    generalFunctions.axiosInit(axios, res.refresh_token, config);
+                    generalFunctions.axiosInit(axios, res.refresh_token);
                     return axios.get('/class/getClassInfo/' + id);
                 }).then(result => {
                     console.log(result.data.notice[0]);
+                    setName(result.data.name);
                 }).catch(err => {
                     console.log(err);
                     if (err.response === undefined) {
@@ -85,7 +87,7 @@ function Class(props) {
 
             <Row style={{"height":"100%", paddingLeft: 0, paddingRight: 0 }}>
                 <Col sm={2} style={{ paddingLeft: 0, paddingRight: 0, backgroundColor: "#343a40" }}>
-                    <Menu className="반이름" url={url}/>
+                    <Menu className={name} url={url}/>
                 </Col>
                 <Col style={{ paddingLeft: 0, paddingRight: 0 }}>
                     <Switch>

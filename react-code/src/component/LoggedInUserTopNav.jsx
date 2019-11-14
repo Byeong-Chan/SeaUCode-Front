@@ -16,6 +16,9 @@ import config from "../config";
 
 const clearToken = () => ({ type: "token/CLEAR_TOKEN" });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
+const setUserEmail = input_email => ({ type: config.SET_USER_EMAIL, input_email});
+const setUserName = input_name => ({ type: config.SET_USER_NAME, input_name});
+const setUserNickname = input_nickname => ({ type: config.SET_USER_NICKNAME, input_nickname});
 
 function LoggedInUserTopNav() {
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
@@ -25,6 +28,9 @@ function LoggedInUserTopNav() {
     const logout = e => {
         dispatch(toggleLoggedIn(false));
         dispatch(clearToken());
+        dispatch(setUserEmail(''));
+        dispatch(setUserName(''));
+        dispatch(setUserNickname(''));
         removeCookie('access_token', { path: '/' });
     };
 

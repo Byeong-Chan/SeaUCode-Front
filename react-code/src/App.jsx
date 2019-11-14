@@ -14,7 +14,7 @@ import MyPage from './component/MyPage';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { Button, ButtonToolbar, Navbar, Nav, Carousel} from 'react-bootstrap';
+import { Button, ButtonToolbar, Navbar, Nav, Row, Col, Container} from 'react-bootstrap';
 import {
     Switch,
     Route,
@@ -24,6 +24,7 @@ import {
 } from "react-router-dom";
 
 import config from './config';
+import generalFunctions from './generalFunctions';
 
 const setToken = refresh_token => ({ type: config.SET_TOKEN, refresh_token });
 const toggleLoggedIn = on_off => ({ type: config.TOGGLE_LOGGED_IN, on_off });
@@ -84,15 +85,11 @@ function App() {
             const refresh_token = cookies.access_token || '';
             dispatch(setToken(refresh_token));
 
-            axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
-            axios.defaults.headers.common['x-access-token'] = refresh_token;
-            axios.get('/loggedIn').then(response => { // TODO: logintest 가 아니라 유저정보 가져오는 쿼리를 쓸것
-                //TODO: redux에 유저정보 저장하고 시작할 것
-                console.log(response); // TODO response.data 에 정보가 들어있습니다. 이 로그는 제거하고 작업해주세요.
-                dispatch(toggleLoggedIn(true));
-            }).catch(err => {
-                dispatch(toggleLoggedIn(false));
-            });
+            generalFunctions.axiosInit(axios, refresh_token, config);
+            generalFunctions.loggedInTest(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken)
+                .catch(err => {
+                    // TODO: 유저정보 초기화
+                });
         };
         cookie_update();
     }, [cookies, dispatch]);
@@ -101,43 +98,47 @@ function App() {
     const [loginModalShow, setLoginModalShow] = useState(false);
 
     return (
-        <div className="App">
-            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky="top">
-                <Link to="/"><Navbar.Brand>React-Bootstrap</Navbar.Brand></Link>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Greeting isLoggedIn={isLoggedIn}
-                                  registerModalShow={registerModalShow}
-                                  setRegisterModalShow={setRegisterModalShow}
-                                  loginModalShow={loginModalShow}
-                                  setLoginModalShow={setLoginModalShow}
-                        />
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-            <div>
-                <Switch>
-                    <Route path="/class/:id">
-                        <Class />
-                    </Route>
+        <Container className="App" style={{marginLeft:0, marginRight:0, paddingLeft:0, paddingRight:0, maxWidth: 1440}}>
+            <Row>
+                <Col lg={12}>
+                    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky="top">
+                        <Link to="/"><Navbar.Brand>React-Bootstrap</Navbar.Brand></Link>
+                        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                        <Navbar.Collapse id="responsive-navbar-nav">
+                            <Nav className="mr-auto">
+                                <Greeting isLoggedIn={isLoggedIn}
+                                          registerModalShow={registerModalShow}
+                                          setRegisterModalShow={setRegisterModalShow}
+                                          loginModalShow={loginModalShow}
+                                          setLoginModalShow={setLoginModalShow}
+                                />
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Navbar>
+                </Col>
+            </Row>
+            <Row style={{"height":"92.5vh"}}>
+                <Col lg={12}>
+                    <Switch>
+                        <Route path="/class/:id">
+                            <Class />
+                        </Route>
 
-                    <Route path="/createClass">
-                        <CreateClass />
-                    </Route>
-                    
-                    <Route path="/myPage">
-                        <MyPage />
-                    </Route>
+                        <Route path="/createClass">
+                            <CreateClass />
+                        </Route>
 
-                    <Route path="/">
-                        <IndexPage />
-                    </Route>
+                        <Route path="/myPage">
+                            <MyPage />
+                        </Route>
 
-
-                </Switch>
-            </div>
-        </div>
+                        <Route path="/">
+                            <IndexPage />
+                        </Route>
+                    </Switch>
+                </Col>
+            </Row>
+        </Container>
     );
 }
 

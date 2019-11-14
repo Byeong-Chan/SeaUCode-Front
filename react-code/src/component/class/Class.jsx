@@ -3,9 +3,12 @@ import 'typescript';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { Button, Form, Modal, Col, Row } from 'react-bootstrap';
+import {Col, Row, Container, Navbar} from 'react-bootstrap';
+
+import Menu from './classComponent/Menu';
 
 import config from '../../config';
+import generalFunctions from '../../generalFunctions';
 
 import {
     Switch,
@@ -16,24 +19,8 @@ import {
     withRouter
 } from "react-router-dom";
 
-const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
+const setToken = refresh_token => ({ type: config.SET_TOKEN, refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
-
-function Sub() {
-    const { path, url } = useRouteMatch();
-    const { id, no } = useParams();
-
-    return (<div className="Sub">
-        이것은 Sub
-        <br/>
-        {path}, {url}
-        <br/>
-        {id}
-        <br/>
-        {no}
-        <br/>
-    </div>)
-}
 
 function Class(props) {
     const dispatch = useDispatch();
@@ -49,57 +36,68 @@ function Class(props) {
         state => state.isLoggedIn
     );
 
+    const [notice, setNotice] = useState([]);
+    const [chatting, setChatting] = useState([]);
+
     useEffect(() => {
         async function get_class_info() {
-            if(!isLoggedIn) {
-                const refresh_token = cookies.access_token || '';
-                if(refresh_token != '') {
-                    dispatch(toggleLoggedIn(true));
-                    dispatch(setToken(refresh_token));
-                }
-                else {
-                    dispatch(toggleLoggedIn(false));
-                    dispatch(setToken(''));
-                }
-            }
+            generalFunctions.loggedInTest(axios, config, isLoggedIn, cookies, dispatch, toggleLoggedIn, setToken)
+                .then( res => {
+                    generalFunctions.axiosInit(axios, res.refresh_token, config);
+                    return axios.get('/class/getClassInfo/' + id);
+                }).then(result => {
+                    console.log(result.data.notice[0]);
+                }).catch(err => {
+                    console.log(err);
+                    if (err.response === undefined) {
+                        alert('서버와 연결이 끊겼습니다.');
+                        props.history.push('/');
+                    }
+                    else if (err.response.data.message === 'not logged in') {
+                        alert('로그인이 필요한 서비스입니다.');
+                        props.history.push('/');
 
-            axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
-            axios.defaults.headers.common['x-access-token'] = token;
-            axios.get('/class/getClassInfo/' + id).then(result=> {
+                        dispatch(setToken(''));
+                        dispatch(toggleLoggedIn(false));
+                    }
+                    else if (err.response.data.message === 'auth-fail') {
+                        alert('다시 로그인 해주세요!');
+                        props.history.push('/');
 
-            }).catch(err => {
-                if(err.response === undefined) {
-                    alert('서버와 연결이 끊겼습니다.');
-                    this.props.history.push('/');
-                }
-                else if(err.response.data.message === 'not logged in') {
-                    alert('로그인이 필요한 서비스입니다.');
-                    props.history.push('/');
-
-                    dispatch(setToken(''));
-                    dispatch(toggleLoggedIn(false));
-                }
-                else if(err.response.data.message === 'auth-fail') {
-                    alert('다시 로그인 해주세요!');
-                    props.history.push('/');
-
-                    dispatch(setToken(''));
-                    dispatch(toggleLoggedIn(false));
-                }
-                else {
-                    alert('문제가 발생했습니다.');
-                    props.history.push('/');
-                }
+                        dispatch(setToken(''));
+                        dispatch(toggleLoggedIn(false));
+                    }
+                    else if (err.response.data.message === 'not-exist-class') {
+                        alert('그런 반은 없습니다.');
+                        props.history.push('/');
+                    }
+                    else {
+                        alert('문제가 발생했습니다.');
+                        //props.history.push('/');
+                    }
             });
         };
         get_class_info();
     }, [cookies, dispatch]);
 
     return (
-        <div className="Class">
-            <Route path={`${path}/sub/:no`}>
-                <Sub />
-            </Route>
+        <div className="Class" style={{"height":"100%"}}>
+
+            <Row style={{"height":"100%", paddingLeft: 0, paddingRight: 0 }}>
+                <Col sm={2} style={{ paddingLeft: 0, paddingRight: 0, backgroundColor: "#343a40" }}>
+                    <Menu className="반이름" url={url}/>
+                </Col>
+                <Col style={{ paddingLeft: 0, paddingRight: 0 }}>
+                    <Switch>
+                        <Route path={`${path}/student`}>
+                            학생관리
+                        </Route>
+                        <Route path={`${path}/`}>
+                            채팅
+                        </Route>
+                    </Switch>
+                </Col>
+            </Row>
         </div>
     );
 }

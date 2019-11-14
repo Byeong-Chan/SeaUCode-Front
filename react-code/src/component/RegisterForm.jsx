@@ -10,6 +10,7 @@ function RegisterForm(props) {
     const [name, setName] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("1");
+    const [nickname, setNickname] = useState("");
 
     const emailChange = e => {
         setEmail(e.target.value);
@@ -26,6 +27,10 @@ function RegisterForm(props) {
     const nameChange = e => {
         setName(e.target.value);
     };
+    const nicknameChange = e => {
+        setNickname(e.target.value);
+    };
+
     const postRegist = e => {
         new Promise((resolve, reject) => {
             if (confirmPassword !== password) {
@@ -34,7 +39,7 @@ function RegisterForm(props) {
             else {
                 axios.defaults.baseURL = config.serverURL;
                 resolve(axios.post('/register',
-                    {email: email, name: name, password: password, role: parseInt(role)}));
+                    {email: email, name: name, password: password, role: parseInt(role), nickname: nickname}));
             }
         }).then(response => {
             //TODO: 회원가입 성공 메시지를 띄우세요. 
@@ -56,7 +61,7 @@ function RegisterForm(props) {
                 else if(err.response.data.message === "password-error") {
                     alert('password 규칙을 확인해주세요.');
                 }
-                else if(err.response.data.message === 'not-unique-name') {
+                else if(err.response.data.message === 'not-unique-nickname') {
                     alert('동일한 별명이 이미 존재합니다!');
                 }
                 else {
@@ -81,7 +86,16 @@ function RegisterForm(props) {
                             별명
                         </Form.Label>
                         <Col sm={8}>
-                            <Form.Control type="text" placeholder="your NickName" value={name} onChange={nameChange}/>
+                            <Form.Control type="text" placeholder="your Nickname" value={nickname} onChange={nicknameChange}/>
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} controlId="formHorizontalNickName">
+                        <Form.Label column sm={4}>
+                            이름
+                        </Form.Label>
+                        <Col sm={8}>
+                            <Form.Control type="text" placeholder="your Name" value={name} onChange={nameChange}/>
                         </Col>
                     </Form.Group>
 

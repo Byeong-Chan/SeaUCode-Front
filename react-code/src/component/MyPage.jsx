@@ -16,7 +16,7 @@ const setUserEmail = input_email => ({ type: config.SET_USER_EMAIL, input_email}
 const setUserNickname = input_nickname => ({ type: config.SET_USER_NICKNAME, input_nickname});
 
 function MyPage(props) {
-    const [cookies] = useCookies(['access_token']);
+    const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
     const dispatch = useDispatch();
 
     const userName = useSelector(
@@ -69,6 +69,7 @@ function MyPage(props) {
                         alert('로그인 정보가 잘못 되었습니다. 다시 로그인 해주세요.');
                         dispatch(setToken(''));
                         dispatch(toggleLoggedIn(false));
+                        removeCookies('access_token', {path: '/'});
                         props.history.push('/');
                     }
                     else {
@@ -89,6 +90,7 @@ function MyPage(props) {
                     dispatch(setUserEmail(''));
                     dispatch(setUserName(''));
                     dispatch(setUserNickname(''));
+                    removeCookies('access_token', {path: '/'});
                     props.history.push('/');
                     alert('성공적으로 탈퇴되었습니다.');
                 }).catch(err => {
@@ -101,6 +103,7 @@ function MyPage(props) {
                     dispatch(setUserEmail(''));
                     dispatch(setUserName(''));
                     dispatch(setUserNickname(''));
+                    removeCookies('access_token', {path: '/'});
                     props.history.push('/');
                     alert('로그인 정보가 잘못되었습니다. 다시 로그인 해주세요.');
                 }

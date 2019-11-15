@@ -11,9 +11,12 @@ import config from "../config";
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
+const setUserName = input_name => ({ type: config.SET_USER_NAME, input_name});
+const setUserEmail = input_email => ({ type: config.SET_USER_EMAIL, input_email});
+const setUserNickname = input_nickname => ({ type: config.SET_USER_NICKNAME, input_nickname});
 
 function MyPage(props) {
-    const [cookies] = useCookies(['access_token']);
+    const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
     const dispatch = useDispatch();
 
     const userName = useSelector(
@@ -59,13 +62,14 @@ function MyPage(props) {
                     if(err.response === undefined) {
                         alert('서버와 연결이 끊어졌습니다.');
                     }
-                    else if(err.response.message === 'update failure') {
+                    else if(err.response.data.message === 'update failure') {
                         alert('업데이트에 실패했습니다.');
                     }
-                    else if(err.response.message === 'not found') {
+                    else if(err.response.data.message === 'not found') {
                         alert('로그인 정보가 잘못 되었습니다. 다시 로그인 해주세요.');
                         dispatch(setToken(''));
                         dispatch(toggleLoggedIn(false));
+                        removeCookies('access_token', {path: '/'});
                         props.history.push('/');
                     }
                     else {
@@ -81,9 +85,31 @@ function MyPage(props) {
             generalFunctions.axiosInit(axios, cookies.access_token);
             axios.delete('/user/userDelete')
                 .then(result => {
-                    alert('삭제 처리가 완료 되었습니다.');
+                    dispatch(toggleLoggedIn(false));
+                    dispatch(setToken(''));
+                    dispatch(setUserEmail(''));
+                    dispatch(setUserName(''));
+                    dispatch(setUserNickname(''));
+                    removeCookies('access_token', {path: '/'});
+                    props.history.push('/');
+                    alert('성공적으로 탈퇴되었습니다.');
                 }).catch(err => {
-                    alert('삭제에 실패했습니다.');
+                if(err.response === undefined) {
+                    alert('서버와 연결이 끊어졌습니다.');
+                }
+                else if(err.response.data.message === 'user do not exist') {
+                    dispatch(toggleLoggedIn(false));
+                    dispatch(setToken(''));
+                    dispatch(setUserEmail(''));
+                    dispatch(setUserName(''));
+                    dispatch(setUserNickname(''));
+                    removeCookies('access_token', {path: '/'});
+                    props.history.push('/');
+                    alert('로그인 정보가 잘못되었습니다. 다시 로그인 해주세요.');
+                }
+                else {
+                    alert('서버에 문제가 생겼습니다.');
+                }
             });
         }
     };

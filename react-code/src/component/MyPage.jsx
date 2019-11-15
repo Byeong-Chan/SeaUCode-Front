@@ -84,9 +84,29 @@ function MyPage(props) {
             generalFunctions.axiosInit(axios, cookies.access_token);
             axios.delete('/user/userDelete')
                 .then(result => {
-                    alert('삭제 처리가 완료 되었습니다.');
+                    dispatch(toggleLoggedIn(false));
+                    dispatch(setToken(''));
+                    dispatch(setUserEmail(''));
+                    dispatch(setUserName(''));
+                    dispatch(setUserNickname(''));
+                    props.history.push('/');
+                    alert('성공적으로 탈퇴되었습니다.');
                 }).catch(err => {
-                    alert('삭제에 실패했습니다.');
+                if(err.response === undefined) {
+                    alert('서버와 연결이 끊어졌습니다.');
+                }
+                else if(err.response.data.message === 'user do not exist') {
+                    dispatch(toggleLoggedIn(false));
+                    dispatch(setToken(''));
+                    dispatch(setUserEmail(''));
+                    dispatch(setUserName(''));
+                    dispatch(setUserNickname(''));
+                    props.history.push('/');
+                    alert('로그인 정보가 잘못되었습니다. 다시 로그인 해주세요.');
+                }
+                else {
+                    alert('서버에 문제가 생겼습니다.');
+                }
             });
         }
     };

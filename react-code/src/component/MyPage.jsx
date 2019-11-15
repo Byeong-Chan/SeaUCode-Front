@@ -54,10 +54,9 @@ function MyPage(props) {
             alert('바꿀 이름을 입력해주세요.');
         }
         else {
-            generalFunctions.axiosInit(axios, cookies.token);
-            axios.post('/userRevise', {name: rename, password: password})
-                .then(result=>{
-                    dispatch(setUserName(rename));
+            generalFunctions.axiosInit(axios, cookies.access_token);
+            axios.post('/user/userRevise', {name: rename, password: password})
+                .then(result => {
                     alert('성공적으로 변경 되었습니다.');
                 }).catch(err => {
                     if(err.response === undefined) {
@@ -80,27 +79,16 @@ function MyPage(props) {
     };
 
     const deleteUser = e => {
-        generalFunctions.axiosInit(axios, cookies.token);
-        axios.delete('/userDelete')
-            .then(result => {
-                dispatch(toggleLoggedIn(false));
-                dispatch(setToken(''));
-                dispatch(setUserEmail(''));
-                dispatch(setUserName(''));
-                dispatch(setUserNickname(''));
-                props.history.push('/');
-                alert('성공적으로 탈퇴되었습니다.');
-            }).catch(err => {
-                if(err.response === undefined) {
-                    alert('서버와 연결이 끊어졌습니다.');
-                }
-                else if(err.response.data.message === 'user do not exist') {
-                    alert('유저가 존재하지 않습니다.');
-                }
-                else {
-                    alert('서버에 문제가 생겼습니다.')
-                }
-        });
+        const answer = window.confirm('정말로 삭제하시겠습니까? 삭제 이후 계정정보는 복구 할 수 없습니다.');
+        if(answer) {
+            generalFunctions.axiosInit(axios, cookies.access_token);
+            axios.delete('/user/userDelete')
+                .then(result => {
+                    alert('삭제 처리가 완료 되었습니다.');
+                }).catch(err => {
+                    alert('삭제에 실패했습니다.');
+            });
+        }
     };
 
     useEffect(() => {
@@ -169,15 +157,17 @@ function MyPage(props) {
                         <Form.Control value={confirmPassword} type="password" placeholder="password" onChange={changeConfirmPassword}/>
                     </Col>
                 </Form.Group>
+
                 <Form.Group as={Row}>
-                    <Col sm={12}>
+                    <Form.Label column sm={12}>
                         <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
-                    </Col>
+                    </Form.Label>
                 </Form.Group>
+
                 <Form.Group as={Row}>
-                    <Col sm={12}>
-                        <Button variant="danger w-100" onClick={deleteUser}>계정 탈퇴</Button>
-                    </Col>
+                    <Form.Label column sm={12}>
+                        <Button variant="danger w-100" onClick={deleteUser}>삭제</Button>
+                    </Form.Label>
                 </Form.Group>
 
             </Form>

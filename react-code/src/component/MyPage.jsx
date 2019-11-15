@@ -51,9 +51,9 @@ function MyPage(props) {
             alert('바꿀 이름을 입력해주세요.');
         }
         else {
-            generalFunctions.axiosInit(axios, cookies.token);
-            axios.post('/userRevise', {name: rename, password: password})
-                .then(result=>{
+            generalFunctions.axiosInit(axios, cookies.access_token);
+            axios.post('/user/userRevise', {name: rename, password: password})
+                .then(result => {
                     alert('성공적으로 변경 되었습니다.');
                 }).catch(err => {
                     if(err.response === undefined) {
@@ -71,6 +71,19 @@ function MyPage(props) {
                     else {
                         alert('서버에 문제가 생겼습니다.');
                     }
+            });
+        }
+    };
+
+    const deleteUser = e => {
+        const answer = window.confirm('정말로 삭제하시겠습니까? 삭제 이후 계정정보는 복구 할 수 없습니다.');
+        if(answer) {
+            generalFunctions.axiosInit(axios, cookies.access_token);
+            axios.delete('/user/userDelete')
+                .then(result => {
+                    alert('삭제 처리가 완료 되었습니다.');
+                }).catch(err => {
+                    alert('삭제에 실패했습니다.');
             });
         }
     };
@@ -142,7 +155,17 @@ function MyPage(props) {
                     </Col>
                 </Form.Group>
 
-                <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
+                <Form.Group as={Row}>
+                    <Form.Label column sm={12}>
+                        <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
+                    </Form.Label>
+                </Form.Group>
+
+                <Form.Group as={Row}>
+                    <Form.Label column sm={12}>
+                        <Button variant="danger w-100" onClick={deleteUser}>삭제</Button>
+                    </Form.Label>
+                </Form.Group>
 
             </Form>
         </div>

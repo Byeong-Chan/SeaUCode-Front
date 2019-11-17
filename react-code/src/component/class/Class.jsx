@@ -24,7 +24,7 @@ const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 function Class(props) {
     const dispatch = useDispatch();
-    const [cookies] = useCookies(['access_token']);
+    const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
 
     const { path, url } = useRouteMatch();
     const { id } = useParams();
@@ -61,6 +61,7 @@ function Class(props) {
 
                         dispatch(setToken(''));
                         dispatch(toggleLoggedIn(false));
+                        removeCookies('access_token', {path: '/'});
                     }
                     else if (err.response.data.message === 'auth-fail') {
                         alert('다시 로그인 해주세요!');
@@ -68,6 +69,7 @@ function Class(props) {
 
                         dispatch(setToken(''));
                         dispatch(toggleLoggedIn(false));
+                        removeCookies('access_token', {path: '/'});
                     }
                     else if (err.response.data.message === 'not-exist-class') {
                         alert('그런 반은 없습니다.');

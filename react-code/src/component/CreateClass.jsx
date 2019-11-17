@@ -54,6 +54,7 @@ function CreateClass(props) {
                 else if(err.response.data.message === 'auth-fail') {
                     dispatch(toggleLoggedIn(false));
                     dispatch(setToken(''));
+                    removeCookie('access_token', {path: '/'});
                     props.history.push('/');
                     alert('로그인이 필요한 서비스입니다!');
                 }

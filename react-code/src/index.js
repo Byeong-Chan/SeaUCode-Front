@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import * as monaco from 'monaco-editor'
 
 import { CookiesProvider } from 'react-cookie';
 

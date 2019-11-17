@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'typescript';
 import {Col, Row, Container, Navbar, Button, Dropdown, DropdownButton} from 'react-bootstrap';
+import reactMarkdown from 'react-markdown';
 import axios from 'axios';
 import config from '../../config';
 

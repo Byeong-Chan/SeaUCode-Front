@@ -27,12 +27,22 @@ function Description(props) {
     const [ sampleOutput, setSampleOutput ] = useState('');
     const [ spj, setSpj] = useState(false);
 
+    const [ markdown, setMarkdown ] = useState('');
+
     useEffect(() => {
         async function getDescription() {
             axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
             axios.get('/problems/getProblemDescription/' + id)
                 .then(result => {
-                    console.log(result.data);
+                    let preMarkdown = "| Fun                  | With                 | Tables          |\n" +
+                        "| :------------------- | -------------------: |:---------------:|\n" +
+                        "| left-aligned column  | right-aligned column | centered column |\n" +
+                        "| $100                 | $100                 | $100            |\n" +
+                        "| $10                  | $10                  | $10             |\n" +
+                        "| $1                   | $1                   | $1              |\n";
+
+                    setMarkdown(preMarkdown);
+
                     setMemoryLimit(result.data.memory_limit / 1024 / 1024);
                     setTimeLimit(result.data.time_limit / 1000);
                     setProblemDescription(result.data.problem_description);
@@ -61,6 +71,7 @@ function Description(props) {
 
     return (
         <div className="Description" style={{"height":"100%"}}>
+            <reactMarkdown source="markdown"/>
             메모리 제한: {memoryLimit} MB
             <br/>
             시간 제한: {timeLimit} sec

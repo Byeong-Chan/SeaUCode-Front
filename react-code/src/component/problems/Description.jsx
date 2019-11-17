@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'typescript';
-import {Col, Row, Container, Navbar, Button, Dropdown, DropdownButton} from 'react-bootstrap';
-import reactMarkdown from 'react-markdown';
+import {Col, Row, Container, Navbar, Button, Dropdown, DropdownButton, Table} from 'react-bootstrap';
 import axios from 'axios';
 import config from '../../config';
 
@@ -12,10 +11,14 @@ import {
     withRouter
 } from "react-router-dom";
 
+import ReactMarkdown from 'react-markdown';
+import Form from "react-bootstrap/esm/Form";
+
 function Description(props) {
     const { path, url } = useRouteMatch();
     const { id } = useParams();
 
+    const [ name, setName ] =useState('');
     const [ timeLimit, setTimeLimit] = useState(0);
     const [ memoryLimit, setMemoryLimit] = useState(0);
     const [ problemDescription, setProblemDescription] = useState('');
@@ -34,15 +37,7 @@ function Description(props) {
             axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
             axios.get('/problems/getProblemDescription/' + id)
                 .then(result => {
-                    let preMarkdown = "| Fun                  | With                 | Tables          |\n" +
-                        "| :------------------- | -------------------: |:---------------:|\n" +
-                        "| left-aligned column  | right-aligned column | centered column |\n" +
-                        "| $100                 | $100                 | $100            |\n" +
-                        "| $10                  | $10                  | $10             |\n" +
-                        "| $1                   | $1                   | $1              |\n";
-
-                    setMarkdown(preMarkdown);
-
+                    setName(result.data.name);
                     setMemoryLimit(result.data.memory_limit / 1024 / 1024);
                     setTimeLimit(result.data.time_limit / 1000);
                     setProblemDescription(result.data.problem_description);
@@ -71,28 +66,78 @@ function Description(props) {
 
     return (
         <div className="Description" style={{"height":"100%"}}>
-            <reactMarkdown source="markdown"/>
-            메모리 제한: {memoryLimit} MB
-            <br/>
-            시간 제한: {timeLimit} sec
-            <br/>
-            문제 디스크립션: {problemDescription}
-            <br/>
-            입력 디스크립션: {inputDescription}
-            <br/>
-            출력 디스크립션: {outputDescription}
-            <br/>
-            난이도: {difficulty}
-            <br/>
-            알고리즘 종류: {category}
-            <br/>
-            입력 예제: {sampleInput}
-            <br/>
-            출력 예졔: {sampleOutput}
-            <br/>
-            스페셜 저지: {spj.toString()}
-            <br/>
-            <Link to={url + '/submitMode'}><Button> 코드 작성 </Button></Link>
+            <Row>
+                <Col sm="12">
+                    <Table striped bordered hover>
+                        <thead>
+                        <tr>
+                            <th>시간 제한</th>
+                            <th>메모리 제한</th>
+                            <th>SPJ</th>
+                            <th>난이도</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <td key="timeLimit">{timeLimit} 초</td>
+                            <td key="memoryLimit">{memoryLimit} MB</td>
+                            <td key="spj">{spj ? <b>SPJ</b> : <b>none-spj</b>}</td>
+                            <td key="difficulty">{difficulty}</td>
+                        </tbody>
+                    </Table>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col sm="12">
+                    <ReactMarkdown source={`# ${name}`}/>
+                    <ReactMarkdown source="***"/>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col sm="12">
+                    <ReactMarkdown source="## 문제"/>
+                    <ReactMarkdown source="***"/>
+                    <ReactMarkdown source={problemDescription}/>
+                    <ReactMarkdown source="---"/>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col sm="12">
+                    <ReactMarkdown source="## 입력"/>
+                    <ReactMarkdown source="***"/>
+                    <ReactMarkdown source={inputDescription}/>
+                    <ReactMarkdown source="---"/>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col sm="12">
+                    <ReactMarkdown source="## 출력"/>
+                    <ReactMarkdown source="***"/>
+                    <ReactMarkdown source={outputDescription}/>
+                    <ReactMarkdown source="---"/>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col sm="6">
+                    <ReactMarkdown source="## 예제 입력"/>
+                    <ReactMarkdown source={`\`\`\`alias\n${sampleInput}\n\`\`\`\n`}/>
+                </Col>
+                <Col sm="6">
+                    <ReactMarkdown source="## 예제 출력"/>
+                    <ReactMarkdown source={`\`\`\`alias\n${sampleOutput}\n\`\`\`\n`}/>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col sm="12">
+                    <ReactMarkdown source="---"/>
+                    <Link to={url + '/submitMode'}><Button variant="primary w-100"> 코드 작성 </Button></Link>
+                </Col>
+            </Row>
         </div>
     );
 }

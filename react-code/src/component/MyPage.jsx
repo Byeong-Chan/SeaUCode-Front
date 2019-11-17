@@ -57,6 +57,7 @@ function MyPage(props) {
             generalFunctions.axiosInit(axios, cookies.access_token);
             axios.post('/user/userRevise', {name: rename, password: password})
                 .then(result => {
+                    dispatch(setUserName(rename));
                     alert('성공적으로 변경 되었습니다.');
                 }).catch(err => {
                     if(err.response === undefined) {

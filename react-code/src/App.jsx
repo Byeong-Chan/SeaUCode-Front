@@ -10,6 +10,7 @@ import CreateClass from './component/CreateClass';
 import IndexPage from './component/IndexPage';
 import Class from './component/class/Class';
 import MyPage from './component/MyPage';
+import Problem from './component/problems/Problem';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -72,7 +73,7 @@ function App() {
         state => state.isLoggedIn
     );
 
-    const [cookies] = useCookies(['access_token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
 
     const dispatch = useDispatch();
 
@@ -83,6 +84,7 @@ function App() {
             generalFunctions.axiosInit(axios, refresh_token);
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .catch(err => {
+                    removeCookie('access_token', {path: '/'});
                 });
         };
         cookie_update();
@@ -111,11 +113,24 @@ function App() {
                     </Navbar>
                 </Col>
             </Row>
+            <Link to="/problems/999"> hello </Link>
             <Row style={{"height":"92.5vh"}}>
                 <Col lg={12}>
                     <Switch>
+                        <Route path="/problems/:id">
+                            <Problem />
+                        </Route>
+
+                        <Route path="/problems">
+                            문제 목록
+                        </Route>
+
                         <Route path="/class/:id">
                             <Class />
+                        </Route>
+
+                        <Route path="/class">
+                            내가 속한 반 목록
                         </Route>
 
                         <Route path="/createClass">

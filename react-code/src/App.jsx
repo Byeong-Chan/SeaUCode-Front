@@ -11,6 +11,7 @@ import IndexPage from './component/IndexPage';
 import Class from './component/class/Class';
 import MyPage from './component/MyPage';
 import Problem from './component/problems/Problem';
+import ProblemList from './component/problems/ProblemList';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -98,7 +99,7 @@ function App() {
             <Row>
                 <Col lg={12}>
                     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky="top">
-                        <Link to="/"><Navbar.Brand>React-Bootstrap</Navbar.Brand></Link>
+                        <Link to="/"><Navbar.Brand>SeaUCode</Navbar.Brand></Link>
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                         <Navbar.Collapse id="responsive-navbar-nav">
                             <Nav className="mr-auto">
@@ -113,7 +114,6 @@ function App() {
                     </Navbar>
                 </Col>
             </Row>
-            <Link to="/problems/999"> hello </Link>
             <Row style={{"height":"92.5vh"}}>
                 <Col lg={12}>
                     <Switch>
@@ -122,7 +122,7 @@ function App() {
                         </Route>
 
                         <Route path="/problems">
-                            문제 목록
+                            <ProblemList />
                         </Route>
 
                         <Route path="/class/:id">

@@ -48,7 +48,7 @@ function ShowProblems(props) {
         renders.push(
             <tr key={item.pending_number}>
                 <td>
-                    <Link to={"/myJudges/"+item.problem_number}>
+                    <Link to={"/myJudges/"+item.pending_number}>
                         {item.pending_number}
                     </Link>
                 </td>
@@ -56,6 +56,9 @@ function ShowProblems(props) {
                     <Link to={"/problems/"+item.problem_number}>
                         {item.problem_number}
                     </Link>
+                </td>
+                <td>
+                    {{'c':'C', 'cpp':'C++', 'python':'Python', 'java':'Java'}[item.language]}
                 </td>
                 <td style={{color:textColor[item.state]}}>
                     {transEnum[item.state]}
@@ -84,7 +87,7 @@ function MyJudges(props) {
     const [onSearch, setOnSearch] = useState(false);
     const [page, setPage] = useState(1);
     const [field, setField] = useState('');
-    const [constraint, setConstraint] = useState('name');
+    const [constraint, setConstraint] = useState('pending_number');
     const [searchedJudgeList, setSearchedJudgeList] = useState([]);
 
     const changeConstraint = e => {
@@ -95,7 +98,7 @@ function MyJudges(props) {
         setField(e.target.value);
     };
 
-    const findProblems = e => {
+    const findJudges = e => {
         setPage(1);
         if(field !== '') setOnSearch(true);
         else setOnSearch(false);
@@ -223,15 +226,15 @@ function MyJudges(props) {
                 <Form.Label column sm="1">검색 조건</Form.Label>
                 <Col sm="3">
                     <Form.Control as="select" onChange={changeConstraint}>
-                        <option value="name">문제 이름</option>
-                        <option value="category">알고리즘 분류</option>
+                        <option value="pending_number">채점 번호</option>
+                        <option value="problem_number">문제 번호</option>
                     </Form.Control>
                 </Col>
                 <Col sm="5">
                     <Form.Control type="text" onChange={changeField} />
                 </Col>
                 <Col sm="1">
-                    <Button onClick={findProblems}>검색</Button>
+                    <Button onClick={findJudges}>검색</Button>
                 </Col>
                 <Col sm="1">
                     <Button value={-1} onClick={changePage}>이전</Button>
@@ -247,6 +250,7 @@ function MyJudges(props) {
                         <tr>
                             <th>채점 번호</th>
                             <th>문제 번호</th>
+                            <th>언어</th>
                             <th>결과</th>
                             <th>시간</th>
                             <th>메모리</th>

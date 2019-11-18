@@ -12,7 +12,8 @@ import Class from './component/class/Class';
 import MyPage from './component/MyPage';
 import Problem from './component/problems/Problem';
 import ProblemList from './component/problems/ProblemList';
-import MyJudges from "./component/MyJudges";
+import MyJudges from './component/MyJudges';
+import JudgeResult from './component/JudgeResult';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -142,6 +143,10 @@ function App() {
 
                         <Route path="/createClass">
                             <CreateClass />
+                        </Route>
+
+                        <Route path="/myJudges/:id">
+                            <JudgeResult/>
                         </Route>
 
                         <Route path="/myJudges">

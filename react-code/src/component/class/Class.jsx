@@ -57,19 +57,28 @@ function Class(props) {
                     }
                     else if (err.response.data.message === 'not logged in') {
                         alert('로그인이 필요한 서비스입니다.');
-                        props.history.push('/');
-
                         dispatch(setToken(''));
                         dispatch(toggleLoggedIn(false));
                         removeCookies('access_token', {path: '/'});
+                        props.history.push('/');
                     }
                     else if (err.response.data.message === 'auth-fail') {
                         alert('다시 로그인 해주세요!');
-                        props.history.push('/');
-
                         dispatch(setToken(''));
                         dispatch(toggleLoggedIn(false));
                         removeCookies('access_token', {path: '/'});
+                        props.history.push('/');
+                    }
+                    else if (err.response.data.message === 'class-auth-fail') {
+                        alert('본인의 반이 아니면 접속할 수 없습니다.');
+                        props.history.push('/');
+                    }
+                    else if (err.response.data.message === 'not-exist-user') {
+                        alert('다시 로그인 해주세요!');
+                        dispatch(setToken(''));
+                        dispatch(toggleLoggedIn(false));
+                        removeCookies('access_token', {path: '/'});
+                        props.history.push('/');
                     }
                     else if (err.response.data.message === 'not-exist-class') {
                         alert('그런 반은 없습니다.');

@@ -17,6 +17,30 @@ import generalFunctions from "../generalFunctions";
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
+const transEnum = {
+    "1": "채점하는 중",
+    "2": "맞았습니다!",
+    "3": "틀렸습니다",
+    "4": "시간 초과",
+    "5": "메모리 초과",
+    "6": "런타임 에러",
+    "7": "출력 초과",
+    "8": "컴파일 에러",
+    "9": "채점 실패"
+};
+
+const textColor = {
+    "1": "gray",
+    "2": "green",
+    "3": "red",
+    "4": "red",
+    "5": "red",
+    "6": "blue",
+    "7": "red",
+    "8": "blue",
+    "9": "black"
+};
+
 function ShowProblems(props) {
     const renders = [];
     for(let i = 0; i < props.problem_list.length; i++) {
@@ -33,8 +57,17 @@ function ShowProblems(props) {
                         {item.problem_number}
                     </Link>
                 </td>
+                <td style={{color:textColor[item.state]}}>
+                    {transEnum[item.state]}
+                </td>
                 <td>
-                    {item.state}
+                    {item.state === 2 ? `${item.time_usage}ms` : ''}
+                </td>
+                <td>
+                    {item.state === 2 ? `${item.memory_usage / 1024}KB` : ''}
+                </td>
+                <td>
+                    {`${item.code_length}B`}
                 </td>
             </tr>
         )
@@ -215,6 +248,9 @@ function MyJudges(props) {
                             <th>채점 번호</th>
                             <th>문제 번호</th>
                             <th>결과</th>
+                            <th>시간</th>
+                            <th>메모리</th>
+                            <th>코드 길이</th>
                         </tr>
                         </thead>
                         <tbody>

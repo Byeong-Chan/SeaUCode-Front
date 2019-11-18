@@ -6,6 +6,7 @@ import axios from 'axios';
 import {Col, Row, Container, Navbar} from 'react-bootstrap';
 
 import Menu from './classComponent/Menu';
+import Chatting from './classComponent/Chatting';
 
 import config from '../../config';
 import generalFunctions from '../../generalFunctions';
@@ -97,7 +98,7 @@ function Class(props) {
                             학생관리
                         </Route>
                         <Route path={`${path}/`}>
-                            채팅
+                            <Chatting />
                         </Route>
                     </Switch>
                 </Col>

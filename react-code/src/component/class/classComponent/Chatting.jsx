@@ -4,11 +4,16 @@ import { Button, Form, Col, Row, Card } from 'react-bootstrap';
 import axios from "axios";
 import config from "../../../config";
 import generalFunctions from "../../../generalFunctions";
+import {useSelector} from "react-redux";
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 function Chatting() {
+
+    const token = useSelector(
+        state => state.token
+    );
 
     const bodyStyle = {
         margin: "20px",

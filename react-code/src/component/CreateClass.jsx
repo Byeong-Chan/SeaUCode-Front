@@ -44,10 +44,13 @@ function CreateClass(props) {
 
     const postCreateClass = e => {
         generalFunctions.axiosInit(axios, token);
-        axios.post('/class/createClass', {name: className})
-            .then(response => {
-                props.history.push('/class/' + response.data['class_id']);
-            }).catch(err => {
+        if(className.length === 0) {
+            alert('반 이름을 입력해주세요.');
+        } else {
+            axios.post('/class/createClass', {name: className})
+                .then(response => {
+                    props.history.push('/class/' + response.data['class_id']);
+                }).catch(err => {
                 if(err.response === undefined) {
                     alert('서버와의 연결이 끊어졌습니다.');
                 }
@@ -72,29 +75,24 @@ function CreateClass(props) {
                 else {
                     alert('서버에 문제가 생겼습니다.');
                 }
-        });
+            });
+        }
     };
+
+    const enterKeyPress = (e) => {
+        if(e.key == 'Enter'){
+            postCreateClass();
+        }
+    }
 
     return (
         <div className="CreateClass">
-            <Form style={{"marginTop":"200px"}}>
-                <Row className="justify-content-xl-center">
-                    <Col lg="6">
-                        <h1 style={{"textAlign":"center"}}>
-                            반 이름
-                        </h1>
-                    </Col>
-                </Row>
-                <Row className="justify-content-xl-center">
-                    <Col lg="6">
-                        <Form.Control value={className} size="lg" type="text" placeholder="반 이름 입력" onChange={changeClassName} />
-                    </Col>
-                </Row>
-                <Row className="justify-content-xl-center" style={{"marginTop":"50px"}}>
-                    <Col lg="auto">
-                        <Button type="button" onClick={postCreateClass}>반 생성!</Button>
-                    </Col>
-                </Row>
+            <Form style={{"text-align":"center", "maxWidth": "600px", "margin": "12% auto 0"}}>
+                <div>
+                    <h1>반 이름</h1>
+                    <Form.Control value={className} size="lg" type="text" placeholder="반 이름 입력" onChange={changeClassName} onKeyPress={enterKeyPress}  style={{"margin": "30px 0"}} />
+                    <Button type="button" onClick={postCreateClass}>반 생성!</Button>
+                </div>
             </Form>
         </div>
     );

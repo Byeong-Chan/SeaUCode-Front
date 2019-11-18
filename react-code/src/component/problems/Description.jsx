@@ -70,18 +70,20 @@ function Description(props) {
                 <Col sm="12">
                     <Table striped bordered hover>
                         <thead>
-                        <tr>
-                            <th>시간 제한</th>
-                            <th>메모리 제한</th>
-                            <th>SPJ</th>
-                            <th>난이도</th>
-                        </tr>
+                            <tr>
+                                <th>시간 제한</th>
+                                <th>메모리 제한</th>
+                                <th>SPJ</th>
+                                <th>난이도</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            <td key="timeLimit">{timeLimit} 초</td>
-                            <td key="memoryLimit">{memoryLimit} MB</td>
-                            <td key="spj">{spj ? <b>SPJ</b> : <b>none-spj</b>}</td>
-                            <td key="difficulty">{difficulty}</td>
+                            <tr>
+                                <td>{timeLimit} 초</td>
+                                <td>{memoryLimit} MB</td>
+                                <td>{spj ? <b>SPJ</b> : <b>none-spj</b>}</td>
+                                <td>{difficulty}</td>
+                            </tr>
                         </tbody>
                     </Table>
                 </Col>

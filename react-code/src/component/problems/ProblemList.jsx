@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import 'typescript';
 import {Col, Row, Button, Form, Table} from 'react-bootstrap';
-import Ide from './Ide';
-import Description from './Description';
 import axios from 'axios';
 
 import config from '../../config';
@@ -66,8 +64,10 @@ function ProblemList(props) {
         if(field !== '') setOnSearch(true);
         else setOnSearch(false);
 
+        const searchField = field !== '' ? constraint + '/' + field + '/' : '';
+
         axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
-        axios.post('/problems/getProblemList/' + constraint, {field: field, page: page})
+        axios.get('/problems/getProblemList/' + searchField + 1)
             .then(result => {
                 setSearchedProblemList(result.data.problem_list);
             }).catch(err => {
@@ -93,8 +93,9 @@ function ProblemList(props) {
         setPage(nextPage);
 
         if(onSearch) {
+            const searchField = field !== '' ? constraint + '/' + field + '/' : '';
             axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
-            axios.post('/problems/getProblemList/' + constraint, {field: field, page: nextPage})
+            axios.get('/problems/getProblemList/' + searchField + nextPage)
                 .then(result => {
                     setSearchedProblemList(result.data.problem_list);
                 }).catch(err => {
@@ -123,8 +124,9 @@ function ProblemList(props) {
 
     useEffect(() => {
         async function getFirstPage() {
+            setPage(1);
             axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
-            axios.get('/problems/getProblemList/' + page)
+            axios.get('/problems/getProblemList/' + 1)
                 .then(result => {
                     setSearchedProblemList(result.data.problem_list);
                 }).catch(err => {

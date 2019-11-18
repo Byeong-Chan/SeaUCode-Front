@@ -12,7 +12,6 @@ import generalFunctions from '../generalFunctions';
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
-
 function CreateClass(props) {
     const dispatch = useDispatch();
     const [cookies, setCookie, removeCookie] = useCookies(['access_token']);

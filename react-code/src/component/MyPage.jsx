@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { Button, Form, Col, Row } from 'react-bootstrap';
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import generalFunctions from "../generalFunctions";
 import config from "../config";
@@ -132,6 +132,8 @@ function MyPage(props) {
     return (
         <div className="MyPage">
             <Form style={{"margin":"50px 20% 0"}}>
+                <Link to="/myJudges">내 제출 기록</Link>
+                <hr />
                 푼 문제(학생 전용)
                 <hr />
                 <Form.Group as={Row}>

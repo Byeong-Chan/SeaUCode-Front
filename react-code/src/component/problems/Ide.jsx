@@ -24,7 +24,7 @@ function Ide(props) {
     const { id } = useParams();
 
     const dispatch = useDispatch();
-    const [cookies] = useCookies(['access_token']);
+    const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
     const [codeSave, setCodeSave] = useCookies(['user_code' + '/' + id]);
 
     const token = useSelector(
@@ -68,8 +68,11 @@ function Ide(props) {
         setCodeSave('user_code' + '/' + id, code, { maxAge: 60*60*24*7, path: '/' });
 
         const problem_id = id;
-        generalFunctions.axiosInit(axios, token);
-        axios.post('/pending/submitCode', {problem_number: problem_id, language: language, code: code})
+        generalFunctions.loggedInTest(axios, cookies, dispatch)
+            .then(result => {
+                generalFunctions.axiosInit(axios, result.refresh_token);
+                return axios.post('/pending/submitCode', {problem_number: problem_id, language: language, code: code});
+            })
             .then(result => {
                 alert('제출에 성공했습니다!');
             }).catch(err => {
@@ -79,6 +82,7 @@ function Ide(props) {
                 else if(err.response.data.message === 'auth-fail') {
                     dispatch(toggleLoggedIn(false));
                     dispatch(setToken(''));
+                    removeCookies('access_token', {path: '/'});
                     props.history.push('/');
                     alert('로그인이 필요한 서비스입니다.');
                 }

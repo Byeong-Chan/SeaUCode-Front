@@ -10,7 +10,8 @@ import {
     Route,
     Link,
     useRouteMatch,
-    useParams
+    useParams,
+    withRouter
 } from "react-router-dom";
 import config from "../config";
 
@@ -20,7 +21,7 @@ const setUserEmail = input_email => ({ type: config.SET_USER_EMAIL, input_email}
 const setUserName = input_name => ({ type: config.SET_USER_NAME, input_name});
 const setUserNickname = input_nickname => ({ type: config.SET_USER_NICKNAME, input_nickname});
 
-function LoggedInUserTopNav() {
+function LoggedInUserTopNav(props) {
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
 
     const dispatch = useDispatch();
@@ -32,6 +33,7 @@ function LoggedInUserTopNav() {
         dispatch(setUserName(''));
         dispatch(setUserNickname(''));
         removeCookie('access_token', { path: '/' });
+        props.history.push('/');
     };
 
     return (
@@ -39,8 +41,9 @@ function LoggedInUserTopNav() {
             <Link to="/"><Button onClick={logout} variant="dark">로그아웃</Button></Link>
             <Link to="/createClass"><Button variant="dark">반 만들기</Button></Link>
             <Link to="/myPage"><Button variant="dark">마이페이지</Button></Link>
+            <Link to="/problems"><Button variant="dark">문제 목록</Button></Link>
         </div>
     );
 }
 
-export default LoggedInUserTopNav;
+export default withRouter(LoggedInUserTopNav);

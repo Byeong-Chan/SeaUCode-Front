@@ -11,9 +11,12 @@ import config from "../config";
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
+const setUserName = input_name => ({ type: config.SET_USER_NAME, input_name});
+const setUserEmail = input_email => ({ type: config.SET_USER_EMAIL, input_email});
+const setUserNickname = input_nickname => ({ type: config.SET_USER_NICKNAME, input_nickname});
 
 function MyPage(props) {
-    const [cookies] = useCookies(['access_token']);
+    const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
     const dispatch = useDispatch();
 
     const userName = useSelector(
@@ -51,26 +54,63 @@ function MyPage(props) {
             alert('바꿀 이름을 입력해주세요.');
         }
         else {
-            generalFunctions.axiosInit(axios, cookies.token);
-            axios.post('/userRevise', {name: rename, password: password})
-                .then(result=>{
+            generalFunctions.axiosInit(axios, cookies.access_token);
+            axios.post('/user/userRevise', {name: rename, password: password})
+                .then(result => {
+                    dispatch(setUserName(rename));
                     alert('성공적으로 변경 되었습니다.');
                 }).catch(err => {
                     if(err.response === undefined) {
                         alert('서버와 연결이 끊어졌습니다.');
                     }
-                    else if(err.response.message === 'update failure') {
+                    else if(err.response.data.message === 'update failure') {
                         alert('업데이트에 실패했습니다.');
                     }
-                    else if(err.response.message === 'not found') {
+                    else if(err.response.data.message === 'not found') {
                         alert('로그인 정보가 잘못 되었습니다. 다시 로그인 해주세요.');
                         dispatch(setToken(''));
                         dispatch(toggleLoggedIn(false));
+                        removeCookies('access_token', {path: '/'});
                         props.history.push('/');
                     }
                     else {
                         alert('서버에 문제가 생겼습니다.');
                     }
+            });
+        }
+    };
+
+    const deleteUser = e => {
+        const answer = window.confirm('정말로 삭제하시겠습니까? 삭제 이후 계정정보는 복구 할 수 없습니다.');
+        if(answer) {
+            generalFunctions.axiosInit(axios, cookies.access_token);
+            axios.delete('/user/userDelete')
+                .then(result => {
+                    dispatch(toggleLoggedIn(false));
+                    dispatch(setToken(''));
+                    dispatch(setUserEmail(''));
+                    dispatch(setUserName(''));
+                    dispatch(setUserNickname(''));
+                    removeCookies('access_token', {path: '/'});
+                    props.history.push('/');
+                    alert('성공적으로 탈퇴되었습니다.');
+                }).catch(err => {
+                if(err.response === undefined) {
+                    alert('서버와 연결이 끊어졌습니다.');
+                }
+                else if(err.response.data.message === 'user do not exist') {
+                    dispatch(toggleLoggedIn(false));
+                    dispatch(setToken(''));
+                    dispatch(setUserEmail(''));
+                    dispatch(setUserName(''));
+                    dispatch(setUserNickname(''));
+                    removeCookies('access_token', {path: '/'});
+                    props.history.push('/');
+                    alert('로그인 정보가 잘못되었습니다. 다시 로그인 해주세요.');
+                }
+                else {
+                    alert('서버에 문제가 생겼습니다.');
+                }
             });
         }
     };
@@ -142,7 +182,17 @@ function MyPage(props) {
                     </Col>
                 </Form.Group>
 
-                <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
+                <Form.Group as={Row}>
+                    <Form.Label column sm={12}>
+                        <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
+                    </Form.Label>
+                </Form.Group>
+
+                <Form.Group as={Row}>
+                    <Form.Label column sm={12}>
+                        <Button variant="danger w-100" onClick={deleteUser}>삭제</Button>
+                    </Form.Label>
+                </Form.Group>
 
             </Form>
         </div>

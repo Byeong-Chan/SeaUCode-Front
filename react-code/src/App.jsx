@@ -12,6 +12,7 @@ import Class from './component/class/Class';
 import MyPage from './component/MyPage';
 import Problem from './component/problems/Problem';
 import ProblemList from './component/problems/ProblemList';
+import MyJudges from "./component/MyJudges";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -26,6 +27,10 @@ import {
 } from "react-router-dom";
 
 import generalFunctions from './generalFunctions';
+import config from "./config";
+
+const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
+const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 function DefaultTopBar(props) {
     return (
@@ -85,6 +90,8 @@ function App() {
             generalFunctions.axiosInit(axios, refresh_token);
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .catch(err => {
+                    dispatch(toggleLoggedIn(false));
+                    dispatch(setToken(''));
                     removeCookie('access_token', {path: '/'});
                 });
         };
@@ -135,6 +142,10 @@ function App() {
 
                         <Route path="/createClass">
                             <CreateClass />
+                        </Route>
+
+                        <Route path="/myJudges">
+                            <MyJudges />
                         </Route>
 
                         <Route path="/myPage">

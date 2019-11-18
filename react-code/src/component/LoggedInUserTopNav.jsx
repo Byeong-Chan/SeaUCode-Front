@@ -40,6 +40,7 @@ function LoggedInUserTopNav(props) {
         <div className="LoggedInUserTopNav">
             <Link to="/"><Button onClick={logout} variant="dark">로그아웃</Button></Link>
             <Link to="/createClass"><Button variant="dark">반 만들기</Button></Link>
+            <Link to="/classList"><Button variant="dark">반 목록</Button></Link>
             <Link to="/myPage"><Button variant="dark">마이페이지</Button></Link>
             <Link to="/problems"><Button variant="dark">문제 목록</Button></Link>
         </div>

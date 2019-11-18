@@ -3,6 +3,7 @@ import 'typescript';
 import { Button, Form, Col, Row, Card } from 'react-bootstrap';
 import axios from "axios";
 import config from "../../../config";
+import generalFunctions from "../../../generalFunctions";
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
@@ -62,8 +63,8 @@ function Chatting() {
     };
     const submitChatText = e => {
         if(chatText != "") {
-
-            console.log(chatText);
+            generalFunctions.axiosInit(axios, token);
+            axios.post('/class/submitChatting', {message: chatText})
         }
     }
 

@@ -7,6 +7,7 @@ import {Col, Row, Container, Navbar} from 'react-bootstrap';
 
 import Menu from './classComponent/Menu';
 import Chatting from './classComponent/Chatting';
+import Student from './classComponent/Student'
 
 import config from '../../config';
 import generalFunctions from '../../generalFunctions';
@@ -104,7 +105,7 @@ function Class(props) {
                 <Col style={{ paddingLeft: 0, paddingRight: 0 }}>
                     <Switch>
                         <Route path={`${path}/student`}>
-                            학생관리
+                            <Student/>
                         </Route>
                         <Route path={`${path}/`}>
                             <Chatting />

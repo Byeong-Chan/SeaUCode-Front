@@ -78,18 +78,12 @@ function CreateClass(props) {
         }
     };
 
-    const enterKeyPress = (e) => {
-        if(e.key == 'Enter'){
-            postCreateClass();
-        }
-    }
-
     return (
         <div className="CreateClass">
             <Form style={{"text-align":"center", "maxWidth": "600px", "margin": "12% auto 0"}}>
                 <div>
                     <h1>반 이름</h1>
-                    <Form.Control value={className} size="lg" type="text" placeholder="반 이름 입력" onChange={changeClassName} onKeyPress={enterKeyPress}  style={{"margin": "30px 0"}} />
+                    <Form.Control value={className} size="lg" type="text" placeholder="반 이름 입력" onChange={changeClassName} style={{"margin": "30px 0"}} />
                     <Button type="button" onClick={postCreateClass}>반 생성!</Button>
                 </div>
             </Form>

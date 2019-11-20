@@ -53,7 +53,7 @@ function Chatting() {
     }
 
     const enterKeyPress = (e) => {
-        if(e.key == 'Enter'){
+        if(e.key === 'Enter'){
             if (!e.shiftKey){
                 e.preventDefault();
                 submitChatText();
@@ -67,7 +67,7 @@ function Chatting() {
         setChatText(e.target.value);
     };
     const submitChatText = e => {
-        if(chatText != "") {
+        if(chatText !== "") {
             generalFunctions.axiosInit(axios, token);
             axios.post('/class/submitChatting', {message: chatText})
         }

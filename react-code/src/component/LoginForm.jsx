@@ -44,7 +44,7 @@ function LoginForm(props) {
     };
 
     const enterKeyPress = (e) => {
-        if(e.key == 'Enter'){
+        if(e.key === 'Enter'){
             postLogin();
         }
     }

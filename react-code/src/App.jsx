@@ -14,6 +14,7 @@ import Problem from './component/problems/Problem';
 import ProblemList from './component/problems/ProblemList';
 import MyJudges from './component/MyJudges';
 import JudgeResult from './component/JudgeResult';
+import AdminPage from './component/admin/AdminPage';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -125,6 +126,10 @@ function App() {
             <Row style={{"height":"92.5vh"}}>
                 <Col lg={12}>
                     <Switch>
+                        <Route path="/admin">
+                            <AdminPage/>
+                        </Route>
+
                         <Route path="/problems/:id">
                             <Problem />
                         </Route>

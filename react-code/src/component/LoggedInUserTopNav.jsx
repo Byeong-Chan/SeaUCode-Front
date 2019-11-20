@@ -14,6 +14,8 @@ import {
     withRouter
 } from "react-router-dom";
 import config from "../config";
+import generalFunctions from "../generalFunctions";
+import axios from "axios";
 
 const clearToken = () => ({ type: "token/CLEAR_TOKEN" });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
@@ -25,6 +27,21 @@ function LoggedInUserTopNav(props) {
     const [Cookie, setCookie, removeCookie] = useCookies(['access_token']);
 
     const dispatch = useDispatch();
+
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        async function isAdmin() {
+            generalFunctions.axiosInit(axios, Cookie.access_token);
+            return axios.get('/loggedIn').then(response => {
+                if(response.data.role !== 3) setIsAdmin(false);
+                else setIsAdmin(true);
+            }).catch(err => {
+                setIsAdmin(false);
+            });
+        };
+        isAdmin();
+    }, [Cookie, dispatch]);
 
     const logout = e => {
         dispatch(toggleLoggedIn(false));
@@ -43,6 +60,7 @@ function LoggedInUserTopNav(props) {
             <Link to="/classList"><Button variant="dark">반 목록</Button></Link>
             <Link to="/myPage"><Button variant="dark">마이페이지</Button></Link>
             <Link to="/problems"><Button variant="dark">문제 목록</Button></Link>
+            {isAdmin ? <Link to="/admin"><Button variant="dark">관리자 페이지</Button></Link> : null}
         </div>
     );
 }

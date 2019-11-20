@@ -88,7 +88,7 @@ function Class(props) {
                     }
                     else {
                         alert('문제가 발생했습니다.');
-                        //props.history.push('/');
+                        props.history.push('/');
                     }
             });
         };

@@ -4,6 +4,9 @@ import {Col, Row, Container, Navbar, Button, Dropdown, DropdownButton, Table} fr
 import axios from 'axios';
 import config from '../../config';
 
+import remarkMath from 'remark-math';
+import ReactMathjax from 'react-mathjax';
+
 import {
     Link,
     useParams,
@@ -63,83 +66,115 @@ function Description(props) {
         getDescription();
     }, []);
 
+    function codeBlock(props) {
+        return (
+            <pre style={{backgroundColor: "lightgrey"}}>
+                <code>
+                    {props.value}
+                </code>
+            </pre>
+        )
+    }
+
+    function mathBlock(props) {
+        return (
+            <ReactMathjax.Node formula={props.value} />
+        )
+    }
+    function mathInline(props) {
+        return (
+            <ReactMathjax.Node formula={props.value} inline />
+        )
+    }
+
     return (
-        <div className="Description" style={{"height":"100%"}}>
-            <Row>
-                <Col sm="12">
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>시간 제한</th>
-                                <th>메모리 제한</th>
-                                <th>SPJ</th>
-                                <th>난이도</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{timeLimit} 초</td>
-                                <td>{memoryLimit} MB</td>
-                                <td>{spj ? <b>SPJ</b> : <b>none-spj</b>}</td>
-                                <td>{difficulty}</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </Col>
-            </Row>
+        <ReactMathjax.Provider>
+            <div className="Description" style={{"height":"100%"}}>
+                <Row>
+                    <Col sm="12">
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>시간 제한</th>
+                                    <th>메모리 제한</th>
+                                    <th>SPJ</th>
+                                    <th>난이도</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{timeLimit} 초</td>
+                                    <td>{memoryLimit} MB</td>
+                                    <td>{spj ? <b>SPJ</b> : <b>none-spj</b>}</td>
+                                    <td>{difficulty}</td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                    </Col>
+                </Row>
 
-            <Row>
-                <Col sm="12">
-                    <ReactMarkdown source={`# ${name}`}/>
-                    <ReactMarkdown source="***"/>
-                </Col>
-            </Row>
+                <Row>
+                    <Col sm="12">
+                        <ReactMarkdown source={`# ${name}`}/>
+                        <ReactMarkdown source="***"/>
+                    </Col>
+                </Row>
 
-            <Row>
-                <Col sm="12">
-                    <ReactMarkdown source="## 문제"/>
-                    <ReactMarkdown source="***"/>
-                    <ReactMarkdown source={problemDescription}/>
-                    <ReactMarkdown source="---"/>
-                </Col>
-            </Row>
+                <Row>
+                    <Col sm="12">
+                        <ReactMarkdown source="## 문제"/>
+                        <ReactMarkdown source="***"/>
+                        <ReactMarkdown source={problemDescription} plugins={[remarkMath]} renderers={{
+                            math: mathBlock,
+                            inlineMath: mathInline
+                        }} />
+                        <ReactMarkdown source="---"/>
+                    </Col>
+                </Row>
 
-            <Row>
-                <Col sm="12">
-                    <ReactMarkdown source="## 입력"/>
-                    <ReactMarkdown source="***"/>
-                    <ReactMarkdown source={inputDescription}/>
-                    <ReactMarkdown source="---"/>
-                </Col>
-            </Row>
+                <Row>
+                    <Col sm="12">
+                        <ReactMarkdown source="## 입력"/>
+                        <ReactMarkdown source="***"/>
+                        <ReactMarkdown source={inputDescription} plugins={[remarkMath]} renderers={{
+                            math: mathBlock,
+                            inlineMath: mathInline
+                        }} />
+                        <ReactMarkdown source="---"/>
+                    </Col>
+                </Row>
 
-            <Row>
-                <Col sm="12">
-                    <ReactMarkdown source="## 출력"/>
-                    <ReactMarkdown source="***"/>
-                    <ReactMarkdown source={outputDescription}/>
-                    <ReactMarkdown source="---"/>
-                </Col>
-            </Row>
+                <Row>
+                    <Col sm="12">
+                        <ReactMarkdown source="## 출력"/>
+                        <ReactMarkdown source="***"/>
+                        <ReactMarkdown source={outputDescription} plugins={[remarkMath]} renderers={{
+                            math: mathBlock,
+                            inlineMath: mathInline
+                        }} />
+                        <ReactMarkdown source="---"/>
+                    </Col>
+                </Row>
 
-            <Row>
-                <Col sm="6">
-                    <ReactMarkdown source="## 예제 입력"/>
-                    <ReactMarkdown source={`\`\`\`alias\n${sampleInput}\n\`\`\`\n`}/>
-                </Col>
-                <Col sm="6">
-                    <ReactMarkdown source="## 예제 출력"/>
-                    <ReactMarkdown source={`\`\`\`alias\n${sampleOutput}\n\`\`\`\n`}/>
-                </Col>
-            </Row>
+                <Row>
+                    <Col sm="6">
+                        <ReactMarkdown source="## 예제 입력"/>
+                        <ReactMarkdown source={`\`\`\`\n${sampleInput}\n\`\`\`\n`} renderers={{code: codeBlock}}/>
+                    </Col>
+                    <Col sm="6">
+                        <ReactMarkdown source="## 예제 출력"/>
+                        <ReactMarkdown source={`\`\`\`\n${sampleOutput}\n\`\`\`\n`} renderers={{code: codeBlock}}/>
+                    </Col>
+                </Row>
 
-            <Row>
-                <Col sm="12">
-                    <ReactMarkdown source="---"/>
-                    <Link to={url + '/submitMode'}><Button variant="primary w-100"> 코드 작성 </Button></Link>
-                </Col>
-            </Row>
-        </div>
+                <Row>
+                    <Col sm="12">
+                        <ReactMarkdown source="---"/>
+                        <Link to={url + '/submitMode'}><Button variant="primary w-100"> 코드 작성 </Button></Link>
+                    </Col>
+                </Row>
+            </div>
+        </ReactMathjax.Provider>
     );
 }
 

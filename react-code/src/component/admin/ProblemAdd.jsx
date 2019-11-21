@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {useDropzone} from 'react-dropzone';
 import 'typescript';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -111,6 +112,8 @@ function AdminPage(props) {
     const { path, url } = useRouteMatch();
     const { id } = useParams();
 
+    const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
+
     const [name, setName] = useState('');
     const [problemDescription, setProblemDescription] = useState('');
 
@@ -168,6 +171,7 @@ function AdminPage(props) {
     function outputDescriptionDidMount(editor, monaco) {
         editor.focus();
     }
+
     const onOutputDescriptionChange = e => {
         setOutputDescription(e);
     };
@@ -175,6 +179,7 @@ function AdminPage(props) {
     function sampleInputDidMount(editor, monaco) {
         editor.focus();
     }
+
     const onSampleInputChange = e => {
         setSampleInput(e);
     };
@@ -276,7 +281,6 @@ function AdminPage(props) {
             sample_output : sampleOutput,
             input_description : inputDescription,
             output_description : outputDescription,
-            solution : '',
             difficulty : difficulty,
             Category : category,
             input_list: inputList,
@@ -287,7 +291,34 @@ function AdminPage(props) {
             memory_limit: memoryLimit,
             time_limit: timeLimit
         };
+        const formData = new FormData();
+        for(const key of Object.keys(form)) {
+            if(key === 'input_list' || key === 'output_list') {
+                for(let i = 0; i < form[key].length; i++) formData.append(key, form[key][i].txt);
+            }
+            else if(key === 'Category') {
+                for(let i = 0; i < form[key].length; i++) formData.append(key, form[key][i]);
+            }
+            else formData.append(key, form[key]);
+        }
+        for(let i = 0; i < acceptedFiles.length; i++) {
+            formData.append('files', acceptedFiles[i]);
+        }
+        generalFunctions.axiosInit(axios, cookies.access_token);
+        axios.post('/admin/addProblem', formData).then(response => {
+            
+        }).catch(err => {
+            if(err.response === undefined) {
+                alert('서버와의 연결이 끊어졌습니다.')
+            }
+        })
     };
+
+    const files = acceptedFiles.map(file => (
+        <li key={file.path}>
+            {file.path} - {file.size} bytes
+        </li>
+    ));
 
     return (
         <div className="AdminPage" style={{"height":"100%"}}>
@@ -369,7 +400,7 @@ function AdminPage(props) {
             </Row>
             <Row>
                 <Col lg={3}>
-                    <ReactMarkdown source="## 예제 출력"/>
+                    <ReactMarkdown source="## 예제 출력" />
                 </Col>
                 <Col lg={9}>
                     <MonacoEditor
@@ -394,16 +425,16 @@ function AdminPage(props) {
             </Row>
 
             <Row>
-                <Col lg={2}>
+                <Col lg={3}>
                     <ReactMarkdown source="## 시간 제한(sec)"/>
                 </Col>
-                <Col lg={4}>
+                <Col lg={3}>
                     <Form.Control type="number" value={timeLimit} onChange={changeTimeLimit} />
                 </Col>
-                <Col lg={2}>
+                <Col lg={3}>
                     <ReactMarkdown source="## 메모리(MB)"/>
                 </Col>
-                <Col lg={4}>
+                <Col lg={3}>
                     <Form.Control type="number" value={memoryLimit} onChange={changeMemoryLimit} />
                 </Col>
             </Row>
@@ -438,6 +469,22 @@ function AdminPage(props) {
             </Row>
             <IOList changeInputList={changeInputList} changeOutputList={changeOutputList} inputList={inputList} outputList={outputList} />
 
+            <Row>
+                <Col lg={12}>
+                    <div {...getRootProps({className: 'dropzone'})}>
+                        <input {...getInputProps()} />
+                        <p> 여기를 눌러 이미지 파일과 pdf 파일을 보내세요! </p>
+                    </div>
+                </Col>
+            </Row>
+            <Row>
+                <Col lg={12}>
+                    <aside>
+                        <h4>Files</h4>
+                        <ul>{files}</ul>
+                    </aside>
+                </Col>
+            </Row>
             <Row>
                 <Col lg={12}>
                     <Button variant="primary w-100" onClick={submitProblem}> 문제 생성! </Button>

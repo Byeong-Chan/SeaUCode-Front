@@ -64,7 +64,7 @@ function Description(props) {
             });
         };
         getDescription();
-    }, []);
+    }, [props.history, id]);
 
     function codeBlock(props) {
         return (

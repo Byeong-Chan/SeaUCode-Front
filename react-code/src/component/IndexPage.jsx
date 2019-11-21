@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import 'typescript';
-import { Button, Form, Modal, Col, Row, Carousel } from 'react-bootstrap';
+import {Carousel} from 'react-bootstrap';
 
 function IndexPage() {
 

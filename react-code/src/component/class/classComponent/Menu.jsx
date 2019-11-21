@@ -38,9 +38,6 @@ function Menu(props) {
                 학생 관리
             </ListGroup.Item>
             </Link>
-            <ListGroup.Item action variant="secondary">
-                학생 관리
-            </ListGroup.Item>
         </ListGroup>
     );
 }

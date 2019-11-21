@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'typescript';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
-import {Button, Card, Table} from 'react-bootstrap';
+import {Button, Form, Modal, Table} from 'react-bootstrap';
 import axios from 'axios';
 import config from '../../../config';
 import generalFunctions from "../../../generalFunctions";
@@ -32,29 +32,42 @@ function Student(props) {
     );
 
     useEffect(() => {
-        async function get_class_list() {
+        async function get_student_list() {
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
-                    console.log("들어옴");
-                }).then(
-
-            );
+                    axios.get('/class/getStudentList')
+                })
         };
-        get_class_list();
+        get_student_list();
     }, [cookies, dispatch]);
 
-    const classrooms = [
-        {_id: 4, name: "임시반1111"},
-        {_id: 5, name: "임시반12423"}
+    const students = [
+        {_id: 1, name: "학생"},
+        {_id: 2, name: "학생2"}
     ]
-    const tableTemplate = classrooms.map((classroom) =>
-        <tr key={classroom._id}>
-            <td>{classroom._id}</td>
-            <td><Link to={'class/' + classroom._id}>{classroom.name}</Link></td>
-            <td>12</td>
+    const tableTemplate = students.map((student) =>
+        <tr key={student._id}>
+            <td>1</td>
+            <td><Link to={'studentInfo/' + student._id}>{student.name}</Link></td>
+            <td><Button variant="danger" size="sm" onClick={postDelStudent}>탈퇴</Button></td>
         </tr>
     )
+
+    const [showAddStudent, setShowAddStudent] = useState(false);
+    const handleCloseAddStudent = () => setShowAddStudent(false);
+    const handleShowAddStudent = () => setShowAddStudent(true);
+
+    const [ addNickname, setAddNickname ] = useState('');
+    const changeAddNickname = e => {
+        setAddNickname(e.target.value);
+    };
+
+    const postAddStudent = e => {
+        generalFunctions.axiosInit(axios, token);
+        console.log(addNickname);
+        axios.post('/class/addStudent', {nickname: addNickname});
+    };
 
     return (
         <div>
@@ -62,29 +75,29 @@ function Student(props) {
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>반 이름</th>
-                    <th>학생 수</th>
+                    <th>닉네임</th>
+                    <th><Button size="sm" onClick={handleShowAddStudent}>새 학생 추가</Button></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>씨유코드 고급반 11111</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>씨유코드 중급반 12345</td>
-                    <td>12</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>씨유코드 초급반 43452</td>
-                    <td>12</td>
-                </tr>
-                {tableTemplate}
+                    {tableTemplate}
                 </tbody>
             </Table>
+
+            <Modal show={showAddStudent} onHide={handleCloseAddStudent}>
+                <Modal.Header closeButton>
+                    <Modal.Title>새 학생 추가</Modal.Title>
+                </Modal.Header>
+                <Modal.Body><input type="text" value={addNickname} placeholder="추가할 학생의 닉네임 입력" onChange={changeAddNickname} style={{"width": "100%"}}/></Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseAddStudent}>
+                        취소
+                    </Button>
+                    <Button variant="primary" onClick={postAddStudent}>
+                        추가하기
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }

@@ -50,7 +50,7 @@ function Student(props) {
         <tr key={student._id}>
             <td>1</td>
             <td><Link to={'studentInfo/' + student._id}>{student.name}</Link></td>
-            <td><Button variant="danger" size="sm" onClick={postDelStudent}>탈퇴</Button></td>
+            <td><Button variant="danger" size="sm">탈퇴</Button></td>
         </tr>
     )
 

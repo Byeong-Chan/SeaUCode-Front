@@ -32,27 +32,24 @@ function Student(props) {
     );
 
     useEffect(() => {
-        async function get_class_list() {
+        async function get_student_list() {
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
-                    console.log("들어옴");
-                }).then(
-
-            );
+                    axios.get('/class/getStudentList')
+                })
         };
-        get_class_list();
+        get_student_list();
     }, [cookies, dispatch]);
 
-    const classrooms = [
-        {_id: 4, name: "임시반1111"},
-        {_id: 5, name: "임시반12423"}
+    const students = [
+        {_id: 1, name: "학생"},
+        {_id: 2, name: "학생2"}
     ]
-    const tableTemplate = classrooms.map((classroom) =>
-        <tr key={classroom._id}>
-            <td>{classroom._id}</td>
-            <td><Link to={'class/' + classroom._id}>{classroom.name}</Link></td>
-            <td>12</td>
+    const tableTemplate = students.map((student) =>
+        <tr key={student._id}>
+            <td>{student._id}</td>
+            <td><Link to={'studentInfo/' + student._id}>{student.name}</Link></td>
         </tr>
     )
 
@@ -62,27 +59,11 @@ function Student(props) {
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>반 이름</th>
-                    <th>학생 수</th>
+                    <th>닉네임</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>씨유코드 고급반 11111</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>씨유코드 중급반 12345</td>
-                    <td>12</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>씨유코드 초급반 43452</td>
-                    <td>12</td>
-                </tr>
-                {tableTemplate}
+                    {tableTemplate}
                 </tbody>
             </Table>
         </div>

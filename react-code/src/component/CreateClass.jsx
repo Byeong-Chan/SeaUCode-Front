@@ -33,7 +33,7 @@ function CreateClass(props) {
                 });
         };
         login_check();
-    }, [cookies, dispatch]);
+    }, [cookies, dispatch, props.history]);
 
     const [ className, setClassName ] = useState('');
 

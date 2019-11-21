@@ -87,7 +87,7 @@ function JudgeResult(props) {
             });
         };
         getJudgeResult();
-    }, []);
+    }, [cookies, dispatch, props.history, id, removeCookie]);
 
     return (
         <div className="Description" style={{"height":"100%"}}>
@@ -121,7 +121,7 @@ function JudgeResult(props) {
             </Row>
             <Row>
                 <Col sm="12">
-                    <ReactMarkdown source={"```" + "\n" + judgeResult.ErrorMessage + "\n" + "```"} />
+                    <ReactMarkdown source={`\`\`\`\n${judgeResult.ErrorMessage}\n\`\`\``} />
                 </Col>
             </Row>
             <Row>

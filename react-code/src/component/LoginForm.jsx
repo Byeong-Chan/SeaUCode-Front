@@ -78,7 +78,7 @@ function LoginForm(props) {
 
                     <Form.Group as={Row}>
                         <Col sm={{ span: 8, offset: 4 }}>
-                            <Button variant="primary" type="button" onClick={postLogin} variant="dark">
+                            <Button type="button" onClick={postLogin} variant="dark">
                                 login
                             </Button>
                         </Col>

@@ -127,7 +127,7 @@ function MyPage(props) {
                 });
         };
         cookie_update();
-    }, [cookies, dispatch]);
+    }, [cookies, dispatch, props.history]);
 
     return (
         <div className="MyPage">

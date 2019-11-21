@@ -67,7 +67,7 @@ function AdminPage(props) {
             });
         };
         isAdmin();
-    }, [cookies, dispatch]);
+    }, [cookies, dispatch, props.history, removeCookies]);
 
     return (
         <div className="AdminPage" style={{"height":"100%"}}>

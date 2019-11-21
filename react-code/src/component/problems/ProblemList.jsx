@@ -86,7 +86,7 @@ function ProblemList(props) {
                 return;
         }
         if(parseInt(e.target.value) < 0) {
-            if(page == 1)
+            if(page === 1)
                 return;
         }
         const nextPage = page + parseInt(e.target.value);

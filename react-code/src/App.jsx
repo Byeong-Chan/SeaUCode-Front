@@ -8,6 +8,7 @@ import LoggedInUserTopNav from './component/LoggedInUserTopNav';
 import CreateClass from './component/CreateClass';
 import IndexPage from './component/IndexPage';
 import Class from './component/class/Class';
+import ClassList from './component/class/ClassList';
 import MyPage from './component/MyPage';
 import Problem from './component/problems/Problem';
 import ProblemList from './component/problems/ProblemList';
@@ -142,7 +143,7 @@ function App() {
                         </Route>
 
                         <Route path="/class">
-                            내가 속한 반 목록
+                            <ClassList />
                         </Route>
 
                         <Route path="/createClass">

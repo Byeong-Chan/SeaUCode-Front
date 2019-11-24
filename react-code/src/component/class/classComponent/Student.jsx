@@ -57,7 +57,6 @@ function Student(props) {
 
     const postAddStudent = e => {
         generalFunctions.axiosInit(axios, token);
-        console.log(addNickname);
         axios.post('/class/addStudentToClass', {
             _id: id,
             nickname: addNickname
@@ -92,10 +91,10 @@ function Student(props) {
     };
 
     const tableTemplate = userList.map((student, i) =>
-        <tr key={i + 1}>
+        <tr key={`student_${i + 1}`}>
             <td>{i + 1}</td>
             <td><Link to={`student/${student.nickname}`}>{student.name}</Link></td>
-            <td><Button value={student.nickname} onClick={postDelStudent} variant="danger" size="sm">탈퇴</Button></td>
+            <td><Button value={student.nickname} onClick={postDelStudent} variant="danger" size="sm">제거</Button></td>
         </tr>
     );
 
@@ -105,7 +104,7 @@ function Student(props) {
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>닉네임</th>
+                    <th>이름</th>
                     <th><Button size="sm" onClick={handleShowAddStudent}>새 학생 추가</Button></th>
                 </tr>
                 </thead>

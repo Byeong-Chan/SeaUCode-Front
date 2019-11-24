@@ -38,10 +38,9 @@ function Student(props) {
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
-                    axios.get('/class/getClassUserlist/' + id);
+                    return axios.get('/class/getClassUserlist/' + id);
                 }).then( res => {
-                    //setUserList(res.data.nickname);
-                    setUserList(["홍길동", "아무개"]);
+                    setUserList(res.data);
             });
         };
         get_student_list();
@@ -62,7 +61,9 @@ function Student(props) {
         axios.post('/class/addStudentToClass', {
             id: id,
             nickname: addNickname
-        }).then(res => {console.log("추가됨")});
+        }).then(res => {
+            console.log("추가됨");
+        });
     };
 
     const postDelStudent = e => {
@@ -72,16 +73,18 @@ function Student(props) {
         axios.post('/class/deleteStudentInClass/', {
             id: id,
             nickname: addNickname
-        }).then(res => {console.log("삭제됨")});
+        }).then(res => {
+            console.log("삭제됨")
+        });
     };
 
     const tableTemplate = userList.map((student, i) =>
         <tr key={i + 1}>
             <td>{i + 1}</td>
-            <td><Link to={'student/' + '5dd22f818da8ee2ba83fe5c1'}>{student}</Link></td>
+            <td><Link to={`student/${student.nickname}`}>{student.name}</Link></td>
             <td><Button onClick={postDelStudent} variant="danger" size="sm">탈퇴</Button></td>
         </tr>
-    )
+    );
 
     return (
         <div>

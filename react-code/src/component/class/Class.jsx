@@ -9,6 +9,7 @@ import Menu from './classComponent/Menu';
 import Chatting from './classComponent/Chatting';
 import Student from './classComponent/Student'
 import StudentInfo from './classComponent/StudentInfo'
+import AssignmentList from './assignmentComponent/AssignmentList'
 import AddAssignment from './assignmentComponent/AddAssignment'
 
 import config from '../../config';
@@ -22,7 +23,6 @@ import {
     useParams,
     withRouter
 } from "react-router-dom";
-import AssignmentList from "./assignmentComponent/AssignmentList";
 
 const setToken = refresh_token => ({ type: config.SET_TOKEN, refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});

@@ -5,34 +5,28 @@ import axios from 'axios';
 import config from '../../../config';
 import generalFunctions from "../../../generalFunctions";
 
+import SelectedAssignment from "./SelectedAssignment";
+
 import {
     Link,
     useRouteMatch,
     withRouter
 } from "react-router-dom";
 
-const selectedProblemList = [];
-const selectedProblemNumList = [];
+const selectedProblem = [];
+const selectedProblemNum = [];
 const addProblem = e => {
     let count = 0;
-    for(let i = 0; i < selectedProblemList.length; i ++) {
-        if (e.toString() == selectedProblemList[i].toString()) {
+    for(let i = 0; i < selectedProblem.length; i ++) {
+        if (e.toString() == selectedProblem[i].toString()) {
             count++;
         }
     }
     if(count == 0) {
-        selectedProblemList.push(e);
-        selectedProblemNumList.push(e[0]);
+        selectedProblem.push(e);
+        selectedProblemNum.push(e[0]);
     } else {
         alert("이미 추가된 문제입니다.")
-    }
-}
-const removeProblem = e => {
-    for(let i = 0; i < selectedProblemList.length; i ++) {
-        if (e.toString() == selectedProblemList[i].toString()) {
-            selectedProblemList.splice(selectedProblemList[i], 1);
-            selectedProblemNumList.splice(selectedProblemNumList.indexOf(e[0]), 1);
-        }
     }
 }
 
@@ -62,30 +56,10 @@ function ShowProblems(props) {
                     {category}
                 </td>
                 <td>
-                    <Button onClick={(e) => addProblem([item.problem_number, item.name, category])} variant="primary">
+                    <Button onClick={(e) => addProblem([item.problem_number, item.name, category])} variant="primary" size="sm">
                         추가
                     </Button>
                 </td>
-            </tr>
-        )
-    }
-    return renders;
-}
-function ShowSelectedProblems(props) {
-    const renders = [];
-    for(let i = 0; i < props.length; i++) {
-        const item = props[i];
-
-        renders.push(
-            <tr key={item[0]}>
-                <th>{item[0]}</th>
-                <th>{item[1]}</th>
-                <th>{item[2]}</th>
-                <th>
-                    <Button onClick={(e) => removeProblem([item[0], item[1], item[2]])} variant="primary">
-                        제거
-                    </Button>
-                </th>
             </tr>
         )
     }
@@ -101,6 +75,7 @@ function AddAssignment(props) {
     const [field, setField] = useState('');
     const [constraint, setConstraint] = useState('name');
     const [searchedProblemList, setSearchedProblemList] = useState([]);
+    const [selectedProblemList, setSelectedProblemList] = useState([]);
 
     const changeConstraint = e => {
         setConstraint(e.target.value);
@@ -180,6 +155,7 @@ function AddAssignment(props) {
             axios.get('/problems/getProblemList/' + 1)
                 .then(result => {
                     setSearchedProblemList(result.data.problem_list);
+                    setSelectedProblemList(selectedProblem);
                 }).catch(err => {
                 if(err.response === undefined) {
                     alert('서버와의 연결이 끊어졌습니다.');
@@ -214,19 +190,6 @@ function AddAssignment(props) {
         right: "15px",
         width: "60px"
     }
-
-    const ShowSelectedProblems2 = selectedProblemList.map((problem) =>
-        <tr key={problem[0]}>
-            <th>{problem[0]}</th>
-            <th>{problem[1]}</th>
-            <th>{problem[2]}</th>
-            <th>
-                <Button onClick={(e) => removeProblem([problem[0], problem[1], problem[2]])} variant="primary">
-                    제거
-                </Button>
-            </th>
-        </tr>
-    )
 
     return (
         <Container>
@@ -272,7 +235,7 @@ function AddAssignment(props) {
                             <ShowProblems problem_list={searchedProblemList} url={url}/>
                         </tbody>
                     </Table>
-                    <div style={{display: "flex", textAlign: "center"}}>
+                    <div style={{marginBottom: "30px", display: "flex", textAlign: "center"}}>
                         <Form.Control as="select" onChange={changeConstraint} style={{width: "33%"}}>
                             <option value="name">문제 이름</option>
                             <option value="category">알고리즘 분류</option>
@@ -281,22 +244,7 @@ function AddAssignment(props) {
                         <Button onClick={findProblems} variant="outline-primary" style={{marginLeft: "5px"}}>검색</Button>
                     </div>
                 </Col>
-                <Col lg={6} md={12}>
-                    <h6 style={{fontWeight: "bold"}}>[선택된 문제]</h6>
-                    <Table striped bordered hover>
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>문제명</th>
-                            <th>분류</th>
-                            <th>선택</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <ShowSelectedProblems problem_list={selectedProblemList} url={url}/>
-                        </tbody>
-                    </Table>
-                </Col>
+                <SelectedAssignment selectedProblem={selectedProblemList}/>
             </Row>
         </Container>
     );

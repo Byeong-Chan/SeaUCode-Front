@@ -8,7 +8,7 @@ import { useCookies } from 'react-cookie';
 import MonacoEditor from 'react-monaco-editor';
 
 import axios from 'axios';
-import {Col, Row, Form, Button} from 'react-bootstrap';
+import {Col, Row, Form, Button, Card} from 'react-bootstrap';
 
 import ReactMarkdown from 'react-markdown';
 import generalFunctions from '../../generalFunctions';
@@ -21,6 +21,20 @@ import {
     useParams,
     withRouter
 } from "react-router-dom";
+
+const pageStyle = {
+    maxWidth: "960px",
+    margin: "40px auto"
+}
+const cardStyle = {
+    marginBottom: "10px"
+}
+const completeBtnStyle = {
+    height: "93%",
+    fontSize: "large",
+    fontWeight: "bold",
+    minHeight: "50px"
+}
 
 function IOList(props) {
     const renders = [];
@@ -62,16 +76,16 @@ function IOList(props) {
     for(let i = 0; i < props.inputList.length; i++) {
         renders.push((
             <Row key={(i + 1) + "IOList"}>
-                <Col lg={1}>
+                <Col md={2}>
                     {i + 1} input
                 </Col>
-                <Col lg={5}>
+                <Col md={4}>
                      <input id={(i + 1) + "inputFileAdmin"} type="file" onChange={changeInput}/>
                 </Col>
-                <Col lg={1}>
+                <Col md={2}>
                     {i + 1} output
                 </Col>
-                <Col lg={5}>
+                <Col md={4}>
                     <input id={(i + 1) + "outputFileAdmin"}type="file" onChange={changeOutput}/>
                 </Col>
             </Row>
@@ -321,20 +335,22 @@ function AdminPage(props) {
     ));
 
     return (
-        <div className="AdminPage" style={{"height":"100%"}}>
-            <Row>
-                <Col lg={2}>
-                    <ReactMarkdown source="# 문제 이름"/>
-                </Col>
-                <Col lg={10}>
+        <div className="AdminPage" style={pageStyle}>
+            <h3 style={{textAlign: "center"}}>새 문제 등록</h3>
+            <hr/>
+            <Card style={cardStyle}>
+                <Card.Header>
+                    <ReactMarkdown source="##### **문제 이름**"/>
+                </Card.Header>
+                <Card.Body>
                     <Form.Control type="text" value={name} onChange={changeName} />
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={3}>
-                    <ReactMarkdown source="## 문제 디스크립션"/>
-                </Col>
-                <Col lg={9}>
+                </Card.Body>
+            </Card>
+            <Card style={cardStyle}>
+                <Card.Header>
+                    <ReactMarkdown source="##### **문제 디스크립션**"/>
+                </Card.Header>
+                <Card.Body>
                     <MonacoEditor
                         width="100%"
                         height="20vh"
@@ -345,13 +361,13 @@ function AdminPage(props) {
                         onChange={onProblemDescriptionChange}
                         editorDidMount={problemDescriptionDidMount}
                     />
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={3}>
-                    <ReactMarkdown source="## 입력 디스크립션"/>
-                </Col>
-                <Col lg={9}>
+                </Card.Body>
+            </Card>
+            <Card style={cardStyle}>
+                <Card.Header>
+                    <ReactMarkdown source="##### **입력 디스크립션**"/>
+                </Card.Header>
+                <Card.Body>
                     <MonacoEditor
                         width="100%"
                         height="20vh"
@@ -362,13 +378,13 @@ function AdminPage(props) {
                         onChange={onInputDescriptionChange}
                         editorDidMount={inputDescriptionDidMount}
                     />
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={3}>
-                    <ReactMarkdown source="## 출력 디스크립션"/>
-                </Col>
-                <Col lg={9}>
+                </Card.Body>
+            </Card>
+            <Card style={cardStyle}>
+                <Card.Header>
+                    <ReactMarkdown source="##### **출력 디스크립션**"/>
+                </Card.Header>
+                <Card.Body>
                     <MonacoEditor
                         width="100%"
                         height="20vh"
@@ -379,13 +395,13 @@ function AdminPage(props) {
                         onChange={onOutputDescriptionChange}
                         editorDidMount={outputDescriptionDidMount}
                     />
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={3}>
-                    <ReactMarkdown source="## 예제 입력"/>
-                </Col>
-                <Col lg={9}>
+                </Card.Body>
+            </Card>
+            <Card style={cardStyle}>
+                <Card.Header>
+                    <ReactMarkdown source="##### **예제 입력**"/>
+                </Card.Header>
+                <Card.Body>
                     <MonacoEditor
                         width="100%"
                         height="20vh"
@@ -396,13 +412,13 @@ function AdminPage(props) {
                         onChange={onSampleInputChange}
                         editorDidMount={sampleInputDidMount}
                     />
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={3}>
-                    <ReactMarkdown source="## 예제 출력" />
-                </Col>
-                <Col lg={9}>
+                </Card.Body>
+            </Card>
+            <Card style={cardStyle}>
+                <Card.Header>
+                    <ReactMarkdown source="##### **예제 출력**"/>
+                </Card.Header>
+                <Card.Body>
                     <MonacoEditor
                         width="100%"
                         height="20vh"
@@ -413,81 +429,112 @@ function AdminPage(props) {
                         onChange={onSampleOutputChange}
                         editorDidMount={sampleOutputDidMount}
                     />
+                </Card.Body>
+            </Card>
+            <Row>
+                <Col md={4} sm={12}>
+                    <Card style={cardStyle}>
+                        <Card.Header>
+                            <ReactMarkdown source="##### **난이도 이름**"/>
+                        </Card.Header>
+                        <Card.Body>
+                            <Form.Control type="number" value={difficulty} onChange={changeDifficulty} />
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col md={4} sm={12}>
+                    <Card style={cardStyle}>
+                        <Card.Header>
+                            <ReactMarkdown source="##### **시간 제한(sec)**"/>
+                        </Card.Header>
+                        <Card.Body>
+                            <Form.Control type="number" value={timeLimit} onChange={changeTimeLimit} />
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col md={4} sm={12}>
+                    <Card style={cardStyle}>
+                        <Card.Header>
+                            <ReactMarkdown source="##### **메모리(MB)**"/>
+                        </Card.Header>
+                        <Card.Body>
+                            <Form.Control type="number" value={memoryLimit} onChange={changeMemoryLimit} />
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
             <Row>
-                <Col lg={3}>
-                    <ReactMarkdown source="## 난이도"/>
+                <Col md="8" sm="12">
+                    <Card style={cardStyle}>
+                        <Card.Header>
+                            <Row>
+                                <Col sm="4">
+                                    <ReactMarkdown source="##### **카테고리**"/>
+                                </Col>
+                                <Col sm="4">
+                                    <Button variant="primary w-100" onClick={addCategory}> add Category </Button>
+                                </Col>
+                                <Col sm="4">
+                                    <Button variant="danger w-100" onClick={deleteCategory}> delete Category </Button>
+                                </Col>
+                            </Row>
+                        </Card.Header>
+                        <Card.Body>
+                            <CategoryList changeCategory={changeCategory} category={category}/>
+                        </Card.Body>
+                    </Card>
                 </Col>
-                <Col lg={9}>
-                    <Form.Control type="number" value={difficulty} onChange={changeDifficulty} />
-                </Col>
-            </Row>
-
-            <Row>
-                <Col lg={3}>
-                    <ReactMarkdown source="## 시간 제한(sec)"/>
-                </Col>
-                <Col lg={3}>
-                    <Form.Control type="number" value={timeLimit} onChange={changeTimeLimit} />
-                </Col>
-                <Col lg={3}>
-                    <ReactMarkdown source="## 메모리(MB)"/>
-                </Col>
-                <Col lg={3}>
-                    <Form.Control type="number" value={memoryLimit} onChange={changeMemoryLimit} />
-                </Col>
-            </Row>
-
-            <Row>
-                <Col lg={6}>
-                    <Button variant="primary w-100" onClick={addCategory}> add Category </Button>
-                </Col>
-                <Col lg={6}>
-                    <Button variant="danger w-100" onClick={deleteCategory}> delete Category </Button>
-                </Col>
-            </Row>
-
-            <CategoryList changeCategory={changeCategory} category={category}/>
-
-            <Row>
-                <Col lg={4}>
-                    <Button variant="primary w-100" onClick={changeIsSpj}> SPJ 사용 </Button>
-                </Col>
-                <Col lg={8}>
-                    {isSpj ? <input type="file" onChange={changeSpjCode}/> : ''}
-                </Col>
-            </Row>
-
-            <Row>
-                <Col lg={6}>
-                    <Button variant="primary w-100" onClick={addInputOutput}>add input, output data</Button>
-                </Col>
-                <Col lg={6}>
-                    <Button variant="danger w-100" onClick={deleteInputOutput}>delete input, output data</Button>
-                </Col>
-            </Row>
-            <IOList changeInputList={changeInputList} changeOutputList={changeOutputList} inputList={inputList} outputList={outputList} />
-
-            <Row>
-                <Col lg={12}>
-                    <div {...getRootProps({className: 'dropzone'})}>
-                        <input {...getInputProps()} />
-                        <p> 여기를 눌러 이미지 파일과 pdf 파일을 보내세요! </p>
-                    </div>
+                <Col md="4" sm="12">
+                    <Card style={cardStyle}>
+                        <Card.Header>
+                            <Button variant="primary w-100" onClick={changeIsSpj}> SPJ 사용 </Button>
+                        </Card.Header>
+                        <Card.Body>
+                            {isSpj ? <input type="file" onChange={changeSpjCode}/> : ''}
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
             <Row>
-                <Col lg={12}>
-                    <aside>
-                        <h4>Files</h4>
-                        <ul>{files}</ul>
-                    </aside>
+                <Col md="12">
+                    <Card style={cardStyle}>
+                        <Card.Header>
+                            <Row>
+                                <Col sm="6">
+                                    <ReactMarkdown source="##### **input & output 데이터**"/>
+                                </Col>
+                                <Col sm="3">
+                                    <Button variant="primary w-100" onClick={addInputOutput}>add data</Button>
+                                </Col>
+                                <Col sm="3">
+                                    <Button variant="danger w-100" onClick={deleteInputOutput}>delete data</Button>
+                                </Col>
+                            </Row>
+                        </Card.Header>
+                        <Card.Body>
+                            <IOList changeInputList={changeInputList} changeOutputList={changeOutputList} inputList={inputList} outputList={outputList} />
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
             <Row>
-                <Col lg={12}>
-                    <Button variant="primary w-100" onClick={submitProblem}> 문제 생성! </Button>
+                <Col md="8" sm="12">
+                    <Card style={cardStyle}>
+                        <Card.Header>
+                            <div {...getRootProps({className: 'dropzone'})}>
+                                <input {...getInputProps()} />
+                                <Button> 파일첨부(이미지 혹은 pdf) </Button>
+                            </div>
+                        </Card.Header>
+                        <Card.Body>
+                            <aside>
+                                <ul>{files}</ul>
+                            </aside>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col md="4" sm="12">
+                    <Button variant="dark w-100" onClick={submitProblem} style={completeBtnStyle}> 문제 생성! </Button>
                 </Col>
             </Row>
         </div>

@@ -9,6 +9,7 @@ import Menu from './classComponent/Menu';
 import Chatting from './classComponent/Chatting';
 import Student from './classComponent/Student'
 import StudentInfo from './classComponent/StudentInfo'
+import AssignmentList from './assignmentComponent/AssignmentList'
 import AddAssignment from './assignmentComponent/AddAssignment'
 
 import config from '../../config';
@@ -111,6 +112,7 @@ function Class(props) {
                         </Route>
                         <Route path={`${path}/student/:id`}>
                             <StudentInfo/>
+                            <AssignmentList/>
                         </Route>
                         <Route path={`${path}/student`}>
                             <Student/>

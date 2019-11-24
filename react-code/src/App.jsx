@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'typescript';
 
 import RegisterForm from './component/RegisterForm';
 import LoginForm from './component/LoginForm';
@@ -99,7 +98,7 @@ function App() {
                 });
         };
         cookie_update();
-    }, [cookies, dispatch]);
+    }, [cookies, dispatch, removeCookie]);
 
     const [registerModalShow, setRegisterModalShow] = useState(false);
     const [loginModalShow, setLoginModalShow] = useState(false);

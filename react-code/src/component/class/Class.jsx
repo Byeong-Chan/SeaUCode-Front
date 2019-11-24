@@ -95,7 +95,7 @@ function Class(props) {
             });
         };
         get_class_info();
-    }, [cookies, dispatch]);
+    }, [cookies, dispatch, removeCookies, props.history, id]);
 
     return (
         <div className="Class" style={{"height":"100%"}}>

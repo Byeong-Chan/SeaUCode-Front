@@ -218,7 +218,7 @@ function MyJudges(props) {
             });
         };
         getFirstPage();
-    }, []);
+    }, [cookies, dispatch, props.history, removeCookie]);
 
     return (
         <div className="ProblemList" style={{"height":"100%"}}>

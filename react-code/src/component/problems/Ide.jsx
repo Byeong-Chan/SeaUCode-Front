@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'typescript';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -25,7 +25,7 @@ function Ide(props) {
 
     const dispatch = useDispatch();
     const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
-    const [codeSave, setCodeSave] = useCookies(['user_code' + '/' + id]);
+    const [codeSave, setCodeSave] = useCookies([`user_code/${id}`]);
 
     const token = useSelector(
         state => state.token
@@ -48,24 +48,24 @@ function Ide(props) {
     }
 
     const changeC = e => {
-        setCodeSave('user_code' + '/' + id, code, { maxAge: 60*60*24*7, path: '/' });
+        setCodeSave(`user_code/${id}`, code, { maxAge: 60*60*24*7, path: '/' });
         setLanguage('c');
     };
     const changeCpp = e => {
-        setCodeSave('user_code' + '/' + id, code, { maxAge: 60*60*24*7, path: '/' });
+        setCodeSave(`user_code/${id}`, code, { maxAge: 60*60*24*7, path: '/' });
         setLanguage('cpp');
     };
     const saveUserCode = () => {
         console.log(code);
-        setCodeSave('user_code' + '/' + id, code, { maxAge: 60*60*24*7, path: '/' });
+        setCodeSave(`user_code/${id}`, code, { maxAge: 60*60*24*7, path: '/' });
         alert('임시 저장 되었습니다!');
     };
     const backToDescription = () => {
-        setCodeSave('user_code' + '/' + id, code, { maxAge: 60*60*24*7, path: '/' });
+        setCodeSave(`user_code/${id}`, code, { maxAge: 60*60*24*7, path: '/' });
         props.history.push(url.slice(0, url.length - 11));
     };
     const submitUserCode = () => {
-        setCodeSave('user_code' + '/' + id, code, { maxAge: 60*60*24*7, path: '/' });
+        setCodeSave(`user_code/${id}`, code, { maxAge: 60*60*24*7, path: '/' });
 
         const problem_id = id;
         generalFunctions.loggedInTest(axios, cookies, dispatch)
@@ -97,16 +97,16 @@ function Ide(props) {
 
     useEffect(() => {
         async function saveCodeUpdate() {
-            if(codeSave['user_code' + '/' + id] === undefined || codeSave['user_code' + '/' + id] === '' || codeSave['user_code' + '/' + id] === null) {
-                setCodeSave('user_code' + '/' + id, "// write your code here", { maxAge: 60*60*24*7, path: '/' });
+            if(codeSave[`user_code/${id}`] === undefined || codeSave[`user_code/${id}`] === '' || codeSave[`user_code/${id}`] === null) {
+                setCodeSave(`user_code/${id}`, "// write your code here", { maxAge: 60*60*24*7, path: '/' });
                 setCode("// write your code here");
             }
             else {
-                setCode(codeSave['user_code' + '/' + id]);
+                setCode(codeSave[`user_code/${id}`]);
             }
         };
         saveCodeUpdate();
-    }, [codeSave]);
+    }, [codeSave, id, setCode, setCodeSave, props.history]);
 
     return (
         <div className="Ide" style={{"height":"100%", "width":"100%"}}>

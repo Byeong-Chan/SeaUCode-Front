@@ -11,6 +11,31 @@ import {
     withRouter
 } from "react-router-dom";
 
+const selectedProblemList = [];
+const selectedProblemNumList = [];
+const addProblem = e => {
+    let count = 0;
+    for(let i = 0; i < selectedProblemList.length; i ++) {
+        if (e.toString() == selectedProblemList[i].toString()) {
+            count++;
+        }
+    }
+    if(count == 0) {
+        selectedProblemList.push(e);
+        selectedProblemNumList.push(e[0]);
+    } else {
+        alert("이미 추가된 문제입니다.")
+    }
+}
+const removeProblem = e => {
+    for(let i = 0; i < selectedProblemList.length; i ++) {
+        if (e.toString() == selectedProblemList[i].toString()) {
+            selectedProblemList.splice(selectedProblemList[i], 1);
+            selectedProblemNumList.splice(selectedProblemNumList.indexOf(e[0]), 1);
+        }
+    }
+}
+
 function ShowProblems(props) {
     const renders = [];
     for(let i = 0; i < props.problem_list.length; i++) {
@@ -37,10 +62,30 @@ function ShowProblems(props) {
                     {category}
                 </td>
                 <td>
-                    <Button variant="primary">
+                    <Button onClick={(e) => addProblem([item.problem_number, item.name, category])} variant="primary">
                         추가
                     </Button>
                 </td>
+            </tr>
+        )
+    }
+    return renders;
+}
+function ShowSelectedProblems(props) {
+    const renders = [];
+    for(let i = 0; i < props.length; i++) {
+        const item = props[i];
+
+        renders.push(
+            <tr key={item[0]}>
+                <th>{item[0]}</th>
+                <th>{item[1]}</th>
+                <th>{item[2]}</th>
+                <th>
+                    <Button onClick={(e) => removeProblem([item[0], item[1], item[2]])} variant="primary">
+                        제거
+                    </Button>
+                </th>
             </tr>
         )
     }
@@ -170,6 +215,19 @@ function AddAssignment(props) {
         width: "60px"
     }
 
+    const ShowSelectedProblems2 = selectedProblemList.map((problem) =>
+        <tr key={problem[0]}>
+            <th>{problem[0]}</th>
+            <th>{problem[1]}</th>
+            <th>{problem[2]}</th>
+            <th>
+                <Button onClick={(e) => removeProblem([problem[0], problem[1], problem[2]])} variant="primary">
+                    제거
+                </Button>
+            </th>
+        </tr>
+    )
+
     return (
         <Container>
             <h3 style={{marginTop: "20px"}}>새 과제 출제</h3>
@@ -192,21 +250,21 @@ function AddAssignment(props) {
                         </thead>
                         <tbody>
                         <tr>
-                            <th>#</th>
+                            <th>1231</th>
                             <th>문제명</th>
                             <th>분류</th>
                             <th>
-                                <Button variant="primary" size="sm">
+                                <Button onClick={(e) => addProblem([12341, "문제2", "카테2"])} variant="primary" size="sm">
                                     추가
                                 </Button>
                             </th>
                         </tr>
                         <tr>
-                            <th>#</th>
+                            <th>34242</th>
                             <th>문제명</th>
                             <th>분류</th>
                             <th>
-                                <Button variant="primary" size="sm">
+                                <Button onClick={(e) => addProblem([34242, "문제1", "카테1"])} variant="primary" size="sm">
                                     추가
                                 </Button>
                             </th>
@@ -220,7 +278,7 @@ function AddAssignment(props) {
                             <option value="category">알고리즘 분류</option>
                         </Form.Control>
                         <Form.Control type="text" onChange={changeField} style={{width: "50%", marginLeft: "5px"}}/>
-                        <Button onClick={findProblems} style={{marginLeft: "5px"}}>검색</Button>
+                        <Button onClick={findProblems} variant="outline-primary" style={{marginLeft: "5px"}}>검색</Button>
                     </div>
                 </Col>
                 <Col lg={6} md={12}>
@@ -235,26 +293,7 @@ function AddAssignment(props) {
                         </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th>#</th>
-                                <th>문제명</th>
-                                <th>분류</th>
-                                <th>
-                                    <Button variant="danger" size="sm">
-                                        제거
-                                    </Button>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>#</th>
-                                <th>문제명</th>
-                                <th>분류</th>
-                                <th>
-                                    <Button variant="danger" size="sm">
-                                        제거
-                                    </Button>
-                                </th>
-                            </tr>
+                            <ShowSelectedProblems problem_list={selectedProblemList} url={url}/>
                         </tbody>
                     </Table>
                 </Col>

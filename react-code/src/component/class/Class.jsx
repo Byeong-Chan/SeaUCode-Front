@@ -51,7 +51,6 @@ function Class(props) {
                     generalFunctions.axiosInit(axios, res.refresh_token);
                     return axios.get('/class/getClassInfo/' + id);
                 }).then(result => {
-                    console.log(result.data.notice[0]);
                     setName(result.data.name);
                 }).catch(err => {
                     console.log(err);

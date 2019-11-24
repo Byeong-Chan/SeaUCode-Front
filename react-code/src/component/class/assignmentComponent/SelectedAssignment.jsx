@@ -13,7 +13,10 @@ const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 function SelectedAssignment(props) {
 
+    console.log(props);
+
     const selectedProblemList = props.selectedProblem;
+
 
     const tableTemplate = selectedProblemList.map((problem, i) =>
         <tr key={i + 1}>

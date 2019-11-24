@@ -13,6 +13,9 @@ import {
     withRouter
 } from "react-router-dom";
 
+const selectedProblem = [];
+const selectedProblemNum = [];
+
 function AddAssignment(props) {
 
     const { url } = useRouteMatch();
@@ -23,7 +26,6 @@ function AddAssignment(props) {
     const [constraint, setConstraint] = useState('name');
     const [searchedProblemList, setSearchedProblemList] = useState([]);
     const [selectedProblemList, setSelectedProblemList] = useState([]);
-    const [showProblemList, setShowProblemList] = useState([]);
 
     const changeConstraint = e => {
         setConstraint(e.target.value);
@@ -138,8 +140,6 @@ function AddAssignment(props) {
         width: "60px"
     }
 
-    const selectedProblem = [];
-    const selectedProblemNum = [];
     function addProblem(props) {
         let count = 0;
         for(let i = 0; i < selectedProblem.length; i ++) {
@@ -197,7 +197,7 @@ function AddAssignment(props) {
                 </tr>
             )
         }
-        setShowProblemList(showProblemList);
+        return problemListRenders;
     }
 
     return (
@@ -222,6 +222,26 @@ function AddAssignment(props) {
                         </thead>
                         <tbody>
                             {ShowProblems}
+                            <tr>
+                                <th>1</th>
+                                <th>ㅇㄴㄹㄴ</th>
+                                <th>ㄴㄴㄴ</th>
+                                <th>
+                                    <Button onClick={(e) => addProblem([1, "ㅇㄴㄹㄴ", "ㄴㄴㄴ"])} variant="primary" size="sm">
+                                        추가
+                                    </Button>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>2</th>
+                                <th>sdfse</th>
+                                <th>sss</th>
+                                <th>
+                                    <Button onClick={(e) => addProblem([2, "sdfse", "sss"])} variant="primary" size="sm">
+                                        추가
+                                    </Button>
+                                </th>
+                            </tr>
                         </tbody>
                     </Table>
                     <div style={{marginBottom: "30px", display: "flex", textAlign: "center"}}>

@@ -13,30 +13,7 @@ const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 function SelectedAssignment(props) {
 
-    const dispatch = useDispatch();
-    const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
-
-    const { path, url } = useRouteMatch();
-    const { id } = useParams();
-
-    const token = useSelector(
-        state => state.token
-    );
-    const isLoggedIn = useSelector(
-        state => state.isLoggedIn
-    );
-
-    const [selectedProblemList, setSelectedProblemList] = useState([]);
-
-    useEffect(() => {
-        async function get_problem_list() {
-            generalFunctions.loggedInTest(axios, cookies, dispatch)
-                .then( res => {
-                    setSelectedProblemList(props.selectedProblem);
-            });
-        };
-        get_problem_list();
-    }, [cookies, dispatch]);
+    const selectedProblemList = props.selectedProblem;
 
     const tableTemplate = selectedProblemList.map((problem, i) =>
         <tr key={i + 1}>

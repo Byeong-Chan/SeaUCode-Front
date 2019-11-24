@@ -13,67 +13,6 @@ import {
     withRouter
 } from "react-router-dom";
 
-const selectedProblem = [];
-const selectedProblemNum = [];
-const addProblem = e => {
-    let count = 0;
-    for(let i = 0; i < selectedProblem.length; i ++) {
-        if (e.toString() == selectedProblem[i].toString()) {
-            count++;
-        }
-    }
-    if(count == 0) {
-        selectedProblem.push(e);
-        selectedProblemNum.push(e[0]);
-    } else {
-        alert("이미 추가된 문제입니다.")
-    }
-}
-const removeProblem = e => {
-    for(let i = 0; i < selectedProblem.length; i ++) {
-        if (e.toString() == selectedProblem[i].toString()) {
-            selectedProblem.splice(selectedProblem[i], 1);
-            selectedProblemNum.splice(selectedProblemNum.indexOf(e[0]), 1);
-        }
-    }
-}
-
-function ShowProblems(props) {
-    const renders = [];
-    for(let i = 0; i < props.problem_list.length; i++) {
-        const item = props.problem_list[i];
-
-        let category = '';
-        for(let i = 0; i < item.Category.length; i++) {
-            category = category + item.Category[i];
-            if(i < item.Category.length - 1) category = category + ', ';
-        }
-        renders.push(
-            <tr key={item.problem_number}>
-                <td>
-                    <Link to={props.url+"/"+item.problem_number}>
-                        {item.problem_number}
-                    </Link>
-                </td>
-                <td>
-                    <Link to={props.url+"/"+item.problem_number}>
-                        {item.name}
-                    </Link>
-                </td>
-                <td>
-                    {category}
-                </td>
-                <td>
-                    <Button onClick={(e) => addProblem([item.problem_number, item.name, category])} variant="primary" size="sm">
-                        추가
-                    </Button>
-                </td>
-            </tr>
-        )
-    }
-    return renders;
-}
-
 function AddAssignment(props) {
 
     const { url } = useRouteMatch();
@@ -84,6 +23,7 @@ function AddAssignment(props) {
     const [constraint, setConstraint] = useState('name');
     const [searchedProblemList, setSearchedProblemList] = useState([]);
     const [selectedProblemList, setSelectedProblemList] = useState([]);
+    const [showProblemList, setShowProblemList] = useState([]);
 
     const changeConstraint = e => {
         setConstraint(e.target.value);
@@ -163,7 +103,6 @@ function AddAssignment(props) {
             axios.get('/problems/getProblemList/' + 1)
                 .then(result => {
                     setSearchedProblemList(result.data.problem_list);
-                    setSelectedProblemList(selectedProblem);
                 }).catch(err => {
                 if(err.response === undefined) {
                     alert('서버와의 연결이 끊어졌습니다.');
@@ -199,6 +138,68 @@ function AddAssignment(props) {
         width: "60px"
     }
 
+    const selectedProblem = [];
+    const selectedProblemNum = [];
+    function addProblem(props) {
+        let count = 0;
+        for(let i = 0; i < selectedProblem.length; i ++) {
+            if (props.toString() == selectedProblem[i].toString()) {
+                count++;
+            }
+        }
+        if(count == 0) {
+            selectedProblem.push(props);
+            selectedProblemNum.push(props[0]);
+        } else {
+            alert("이미 추가된 문제입니다.")
+        }
+        setSelectedProblemList(selectedProblem);
+    }
+    const removeProblem = e => {
+        for(let i = 0; i < selectedProblem.length; i ++) {
+            if (e.toString() == selectedProblem[i].toString()) {
+                selectedProblem.splice(selectedProblem[i], 1);
+                selectedProblemNum.splice(selectedProblemNum.indexOf(e[0]), 1);
+            }
+        }
+    }
+
+    const ShowProblems = e => {
+        let problemListRenders = [];
+        for(let i = 0; i < searchedProblemList; i++) {
+            const item = searchedProblemList[i];
+
+            let category = '';
+            for(let i = 0; i < item.Category.length; i++) {
+                category = category + item.Category[i];
+                if(i < item.Category.length - 1) category = category + ', ';
+            }
+            problemListRenders.push(
+                <tr key={item.problem_number}>
+                    <td>
+                        <Link to={url+"/"+item.problem_number}>
+                            {item.problem_number}
+                        </Link>
+                    </td>
+                    <td>
+                        <Link to={url+"/"+item.problem_number}>
+                            {item.name}
+                        </Link>
+                    </td>
+                    <td>
+                        {category}
+                    </td>
+                    <td>
+                        <Button onClick={(e) => addProblem([item.problem_number, item.name, category])} variant="primary" size="sm">
+                            추가
+                        </Button>
+                    </td>
+                </tr>
+            )
+        }
+        setShowProblemList(showProblemList);
+    }
+
     return (
         <Container>
             <h3 style={{marginTop: "20px"}}>새 과제 출제</h3>
@@ -220,27 +221,7 @@ function AddAssignment(props) {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <th>1231</th>
-                            <th>문제명</th>
-                            <th>분류</th>
-                            <th>
-                                <Button onClick={(e) => addProblem([12341, "문제2", "카테2"])} variant="primary" size="sm">
-                                    추가
-                                </Button>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>34242</th>
-                            <th>문제명</th>
-                            <th>분류</th>
-                            <th>
-                                <Button onClick={(e) => addProblem([34242, "문제1", "카테1"])} variant="primary" size="sm">
-                                    추가
-                                </Button>
-                            </th>
-                        </tr>
-                            <ShowProblems problem_list={searchedProblemList} url={url}/>
+                            {ShowProblems}
                         </tbody>
                     </Table>
                     <div style={{marginBottom: "30px", display: "flex", textAlign: "center"}}>

@@ -12,7 +12,7 @@ import AssignmentList from "../assignmentComponent/AssignmentList";
 import {
     useRouteMatch,
     useParams,
-    withRouter, Link
+    withRouter
 } from "react-router-dom";
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
@@ -24,7 +24,7 @@ function StudentInfo(props) {
     const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
 
     const { path, url } = useRouteMatch();
-    const { id } = useParams();
+    const { id, student_id } = useParams();
 
     const [asgList, setAsgList] = useState([]);
 

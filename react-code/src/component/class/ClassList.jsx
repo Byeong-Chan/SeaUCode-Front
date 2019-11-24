@@ -40,18 +40,29 @@ function ClassList(props) {
                     generalFunctions.axiosInit(axios, res.refresh_token);
                     return axios.get('/class/getClassList');
                 }).then( res => {
-                //setClassList([res.data.class_list]);
-                setClassList([11, 111]);
+                    setClassList(res.data.class_list);
+            }).catch(err => {
+                if(err.response === undefined) {
+                    alert('서버와 연결이 끊어졌습니다.');
+                    props.history.push('/');
+                }
+                else if(err.response.data.message === 'auth-fail') {
+                    alert('다시 로그인 해주세요.');
+                    removeCookies('access_token', {path : '/'});
+                    dispatch(setToken(''));
+                    dispatch(toggleLoggedIn(false));
+                    props.history.push('/');
+                }
             });
-        };
+        }
         get_class_list();
     }, [cookies, dispatch]);
 
     const tableTemplate = classList.map((classroom, i) =>
-        <tr key={i + 1}>
+        <tr key={`classroom_${i + 1}`}>
             <td>{i + 1}</td>
-            <td><Link to={'class/' + '5dd370ecb0b4863e08e6f63b'}>{classroom}</Link></td>
-            <td>12</td>
+            <td><Link to={'class/' + classroom._id}>{classroom.name}</Link></td>
+            <td>{classroom.user_list.length}</td>
         </tr>
     )
 
@@ -62,11 +73,11 @@ function ClassList(props) {
                 <tr>
                     <th>#</th>
                     <th>반 이름</th>
-                    <th>학생 수</th>
+                    <th>인원 수</th>
                 </tr>
                 </thead>
                 <tbody>
-                {tableTemplate}
+                    {tableTemplate}
                 </tbody>
             </Table>
         </div>

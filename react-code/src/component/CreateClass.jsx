@@ -80,7 +80,7 @@ function CreateClass(props) {
 
     return (
         <div className="CreateClass">
-            <Form style={{"text-align":"center", "maxWidth": "600px", "margin": "12% auto 0"}}>
+            <Form style={{"textAlign":"center", "maxWidth": "600px", "margin": "12% auto 0"}}>
                 <div>
                     <h1>반 이름</h1>
                     <Form.Control value={className} size="lg" type="text" placeholder="반 이름 입력" onChange={changeClassName} style={{"margin": "30px 0"}} />

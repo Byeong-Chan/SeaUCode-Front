@@ -13,8 +13,41 @@ import {
     withRouter
 } from "react-router-dom";
 
-const selectedProblem = [];
-const selectedProblemNum = [];
+function ShowProblems(props) {
+    const renders = [];
+    for(let i = 0; i < props.problem_list.length; i++) {
+        const item = props.problem_list[i];
+
+        let category = '';
+        for(let i = 0; i < item.Category.length; i++) {
+            category = category + item.Category[i];
+            if(i < item.Category.length - 1) category = category + ', ';
+        }
+        renders.push(
+            <tr key={item.problem_number}>
+                <td>
+                    <Link to={"/problems/"+item.problem_number}>
+                        {item.problem_number}
+                    </Link>
+                </td>
+                <td>
+                    <Link to={"/problems/"+item.problem_number}>
+                        {item.name}
+                    </Link>
+                </td>
+                <td>
+                    {category}
+                </td>
+                <td>
+                    <Button onClick={(e) => props.addProblem(item)} variant="primary" size="sm">
+                        추가
+                    </Button>
+                </td>
+            </tr>
+        )
+    }
+    return renders;
+}
 
 function AddAssignment(props) {
 
@@ -98,6 +131,12 @@ function AddAssignment(props) {
         }
     };
 
+    const postAssignment = e => {
+        const reqDate = {
+
+        }
+    };
+
     useEffect(() => {
         async function getFirstPage() {
             setPage(1);
@@ -121,89 +160,54 @@ function AddAssignment(props) {
         position: "absolute",
         top: "20px",
         right: "110px"
-    }
+    };
     const goBackButton = {
         position: "absolute",
         top: "20px",
         right: "15px"
-    }
+    };
     const nextButton = {
         position: "absolute",
         top: "-5px",
         right: "80px",
         width: "60px"
-    }
+    };
     const prevButton = {
         position: "absolute",
         top: "-5px",
         right: "15px",
         width: "60px"
-    }
+    };
 
-    function addProblem(props) {
-        let count = 0;
-        for(let i = 0; i < selectedProblem.length; i ++) {
-            if (props.toString() == selectedProblem[i].toString()) {
-                count++;
-            }
+    function addProblem(problem) {
+        if(selectedProblemList.find(e => e.problem_number === problem.problem_number) !== undefined) {
+            alert('이미 추가된 문제입니다.');
         }
-        if(count == 0) {
-            selectedProblem.push(props);
-            selectedProblemNum.push(props[0]);
-        } else {
-            alert("이미 추가된 문제입니다.")
+        else {
+            const newSelectedProblemList = selectedProblemList.concat(problem);
+            newSelectedProblemList.sort((a, b) => {
+                if(a.problem_number < b.problem_number) return -1;
+                if(a.problem_number > b.problem_number) return 1;
+                return 0;
+            });
+            setSelectedProblemList(newSelectedProblemList);
         }
-        setSelectedProblemList(selectedProblem);
     }
     const removeProblem = e => {
-        for(let i = 0; i < selectedProblem.length; i ++) {
-            if (e.toString() == selectedProblem[i].toString()) {
-                selectedProblem.splice(selectedProblem[i], 1);
-                selectedProblemNum.splice(selectedProblemNum.indexOf(e[0]), 1);
-            }
+        const newSelectedProblemList = selectedProblemList.concat();
+        if(newSelectedProblemList.findIndex(elem => elem.problem_number === parseInt(e.target.value)) === -1) {
+            alert('지울 수 없습니다.');
         }
-    }
-
-    const ShowProblems = e => {
-        let problemListRenders = [];
-        for(let i = 0; i < searchedProblemList; i++) {
-            const item = searchedProblemList[i];
-
-            let category = '';
-            for(let i = 0; i < item.Category.length; i++) {
-                category = category + item.Category[i];
-                if(i < item.Category.length - 1) category = category + ', ';
-            }
-            problemListRenders.push(
-                <tr key={item.problem_number}>
-                    <td>
-                        <Link to={url+"/"+item.problem_number}>
-                            {item.problem_number}
-                        </Link>
-                    </td>
-                    <td>
-                        <Link to={url+"/"+item.problem_number}>
-                            {item.name}
-                        </Link>
-                    </td>
-                    <td>
-                        {category}
-                    </td>
-                    <td>
-                        <Button onClick={(e) => addProblem([item.problem_number, item.name, category])} variant="primary" size="sm">
-                            추가
-                        </Button>
-                    </td>
-                </tr>
-            )
+        else {
+            newSelectedProblemList.splice(newSelectedProblemList.findIndex(elem => elem.problem_number === parseInt(e.target.value)), 1);
+            setSelectedProblemList(newSelectedProblemList);
         }
-        return problemListRenders;
-    }
+    };
 
     return (
         <Container>
             <h3 style={{marginTop: "20px"}}>새 과제 출제</h3>
-            <Button style={postAsgButton}>출제하기</Button>
+            <Button style={postAsgButton} onClick={postAssignment}>출제하기</Button>
             <Button variant="secondary" onClick={() => props.history.goBack(`${url}`)} style={goBackButton}>뒤로가기</Button>
             <hr/>
             <Row>
@@ -221,27 +225,7 @@ function AddAssignment(props) {
                         </tr>
                         </thead>
                         <tbody>
-                            {ShowProblems}
-                            <tr>
-                                <th>1</th>
-                                <th>ㅇㄴㄹㄴ</th>
-                                <th>ㄴㄴㄴ</th>
-                                <th>
-                                    <Button onClick={(e) => addProblem([1, "ㅇㄴㄹㄴ", "ㄴㄴㄴ"])} variant="primary" size="sm">
-                                        추가
-                                    </Button>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>sdfse</th>
-                                <th>sss</th>
-                                <th>
-                                    <Button onClick={(e) => addProblem([2, "sdfse", "sss"])} variant="primary" size="sm">
-                                        추가
-                                    </Button>
-                                </th>
-                            </tr>
+                            <ShowProblems problem_list={searchedProblemList} addProblem={addProblem}/>
                         </tbody>
                     </Table>
                     <div style={{marginBottom: "30px", display: "flex", textAlign: "center"}}>
@@ -249,11 +233,11 @@ function AddAssignment(props) {
                             <option value="name">문제 이름</option>
                             <option value="category">알고리즘 분류</option>
                         </Form.Control>
-                        <Form.Control type="text" onChange={changeField} style={{width: "50%", marginLeft: "5px"}}/>
+                        <Form.Control value={field} type="text" onChange={changeField} style={{width: "50%", marginLeft: "5px"}}/>
                         <Button onClick={findProblems} variant="outline-primary" style={{marginLeft: "5px"}}>검색</Button>
                     </div>
                 </Col>
-                <SelectedAssignment selectedProblem={selectedProblemList}/>
+                <SelectedAssignment selectedProblem={selectedProblemList} removeProblem={removeProblem}/>
             </Row>
         </Container>
     );

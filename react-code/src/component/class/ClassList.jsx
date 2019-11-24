@@ -24,6 +24,8 @@ function ClassList(props) {
     const { path, url } = useRouteMatch();
     const { id } = useParams();
 
+    const [classList, setClassList] = useState([]);
+
     const token = useSelector(
         state => state.token
     );
@@ -37,21 +39,18 @@ function ClassList(props) {
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
                     return axios.get('/class/getClassList');
-                }).then(
-
-            );
+                }).then( res => {
+                //setClassList([res.data.class_list]);
+                setClassList([11, 111]);
+            });
         };
         get_class_list();
     }, [cookies, dispatch]);
 
-    const classrooms = [
-        {_id: 4, name: "임시반1111"},
-        {_id: 5, name: "임시반12423"}
-    ]
-    const tableTemplate = classrooms.map((classroom) =>
-        <tr key={classroom._id}>
-            <td>{classroom._id}</td>
-            <td><Link to={'class/' + classroom._id}>{classroom.name}</Link></td>
+    const tableTemplate = classList.map((classroom, i) =>
+        <tr key={i + 1}>
+            <td>{i + 1}</td>
+            <td><Link to={'class/' + '5dd370ecb0b4863e08e6f63b'}>{classroom}</Link></td>
             <td>12</td>
         </tr>
     )
@@ -67,21 +66,6 @@ function ClassList(props) {
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>씨유코드 고급반 11111</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>씨유코드 중급반 12345</td>
-                    <td>12</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>씨유코드 초급반 43452</td>
-                    <td>12</td>
-                </tr>
                 {tableTemplate}
                 </tbody>
             </Table>

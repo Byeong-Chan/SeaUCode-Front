@@ -13,18 +13,16 @@ const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
 function SelectedAssignment(props) {
 
-    console.log(props);
-
     const selectedProblemList = props.selectedProblem;
 
 
     const tableTemplate = selectedProblemList.map((problem, i) =>
         <tr key={i + 1}>
-            <th>{problem[0]}</th>
-            <th>{problem[1]}</th>
-            <th>{problem[2]}</th>
+            <th>{problem.problem_number}</th>
+            <th>{problem.name}</th>
+            <th>{problem.Category.map((item, i) => i + 1 < problem.Category.length ? `${item}, ` : `${item}`)}</th>
             <th>
-                <Button variant="danger" size="sm">
+                <Button variant="danger" size="sm" value={problem.problem_number} onClick={props.removeProblem}>
                     제거
                 </Button>
             </th>

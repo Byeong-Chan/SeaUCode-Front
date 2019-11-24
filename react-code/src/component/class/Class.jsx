@@ -105,10 +105,10 @@ function Class(props) {
                 </Col>
                 <Col style={{ paddingLeft: 0, paddingRight: 0 }}>
                     <Switch>
-                        <Route path={`${path}/student/:id/addAssignment`}>
+                        <Route path={`${path}/student/:student_id/addAssignment`}>
                             <AddAssignment/>
                         </Route>
-                        <Route path={`${path}/student/:id`}>
+                        <Route path={`${path}/student/:student_id`}>
                             <StudentInfo/>
                         </Route>
                         <Route path={`${path}/student`}>

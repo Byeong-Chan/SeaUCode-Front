@@ -12,7 +12,7 @@ import AssignmentList from "../assignmentComponent/AssignmentList";
 import {
     useRouteMatch,
     useParams,
-    withRouter, Link
+    withRouter
 } from "react-router-dom";
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
@@ -24,7 +24,7 @@ function StudentInfo(props) {
     const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
 
     const { path, url } = useRouteMatch();
-    const { id } = useParams();
+    const { id, student_id } = useParams();
 
     const [asgList, setAsgList] = useState([]);
 
@@ -40,26 +40,42 @@ function StudentInfo(props) {
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
-                    axios.get('/class/getAssignmentList');
+                    return axios.get(`/assignment/getAssignmentList/${id}/${student_id}`);
                 }).then( res => {
-                //setAsgList(res.data.assignment_list);
-                setAsgList([
-                    {name: "정렬1", problem_list: [11, 111], start_date: "2019-09-11", end_date: "2019-09-20"},
-                    {name: "정렬2", problem_list: [12, 123, 33452], start_date: "2019-07-12", end_date: "2019-08-01"}
-                ])
+                    const assignment_list = res.data.assignment_list;
+                    for(let i = 0; i < assignment_list.length; i++) {
+                        assignment_list[i].acc_list = [];
+                    }
+                    const get_progress = async function(idx) {
+                        if(idx === assignment_list.length) return;
+                        return axios.get(`/assignment/getAssignmentProgress/${assignment_list[idx]._id}`).then( result => {
+                            assignment_list[idx].acc_list = result.data.acc_list;
+                            return get_progress(idx + 1);
+                        });
+                    };
+                    get_progress(0).then(() => {
+                        setAsgList(assignment_list);
+                    }).catch(err => {
+                        setAsgList(assignment_list);
+                        alert('진행도를 불러오는데 실패했습니다..!');
+                    });
+                }).catch(err => {
+                    console.log(err);
+                    alert('학생 과제 정보를 불러들이는데 실패했습니다..');
             });
         };
         get_assignment_list();
     }, [cookies, dispatch]);
 
     const [selectedAsg, setSelectedAsg] = useState([]);
+    const [selectedAsgAcc, setSelectedAsgAcc] = useState([]);
     const assignmentTable = asgList.map((assignment, i) =>
-        <tr key={i + 1} onClick={(e) => setSelectedAsg(assignment.problem_list)} style={{cursor: "pointer"}}>
+        <tr key={i + 1} onClick={(e) => {setSelectedAsg(assignment.problem_list); setSelectedAsgAcc(assignment.acc_list);}} style={{cursor: "pointer"}}>
             <th>{i + 1}</th>
             <th>{assignment.name}</th>
-            <th>{assignment.start_date}</th>
-            <th>{assignment.end_date}</th>
-            <th>60%</th>
+            <th>{(new Date(assignment.start_date)).toLocaleString()}</th>
+            <th>{(new Date(assignment.end_date)).toLocaleString()}</th>
+            <th>{assignment.acc_list.length / assignment.problem_list.length * 100}%</th>
         </tr>
     )
 
@@ -92,8 +108,8 @@ function StudentInfo(props) {
                     </Table>
                 </Col>
                 <Col lg={6} md={12}>
-                    {selectedAsg.length > 0 &&
-                        <AssignmentList problem_list={selectedAsg}/>
+                    {
+                        <AssignmentList problem_list={selectedAsg} acc_list={selectedAsgAcc}/>
                     }
                 </Col>
             </Row>

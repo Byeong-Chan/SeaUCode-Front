@@ -24,7 +24,10 @@ function Student(props) {
     const { path, url } = useRouteMatch();
     const { id } = useParams();
 
+    console.log(id.role);
+
     const [userList, setUserList] = useState([]);
+    const [isStudent, setIsStudent] = useState(false);
 
     const token = useSelector(
         state => state.token
@@ -38,9 +41,14 @@ function Student(props) {
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
-                    return axios.get('/class/getClassUserlist/' + id);
-                }).then( res => {
-                    setUserList(res.data);
+                    axios.get('/loggedIn').then(response => {
+                        if(response.data.role == 2) setIsStudent(true);
+                        else setIsStudent(false);
+                    }).then( res => {
+                        return axios.get('/class/getClassUserlist/' + id);
+                    }).then( res => {
+                        setUserList(res.data);
+                    });
             });
         };
         get_student_list();
@@ -94,7 +102,7 @@ function Student(props) {
         <tr key={`student_${i + 1}`}>
             <td>{i + 1}</td>
             <td><Link to={`student/${student.nickname}`}>{student.name}</Link></td>
-            <td><Button value={student.nickname} onClick={postDelStudent} variant="danger" size="sm">제거</Button></td>
+            {isStudent ? null : <td><Button value={student.nickname} onClick={postDelStudent} variant="danger" size="sm">제거</Button></td>}
         </tr>
     );
 
@@ -105,7 +113,7 @@ function Student(props) {
                 <tr>
                     <th>#</th>
                     <th>이름</th>
-                    <th><Button size="sm" onClick={handleShowAddStudent}>새 학생 추가</Button></th>
+                    {isStudent ? null : <th><Button size="sm" onClick={handleShowAddStudent}>새 학생 추가</Button></th>}
                 </tr>
                 </thead>
                 <tbody>

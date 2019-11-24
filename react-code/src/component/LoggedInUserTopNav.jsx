@@ -29,13 +29,15 @@ function LoggedInUserTopNav(props) {
     const dispatch = useDispatch();
 
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isStudent, setIsStudent] = useState(false);
 
     useEffect(() => {
         async function isAdmin() {
             generalFunctions.axiosInit(axios, Cookie.access_token);
             return axios.get('/loggedIn').then(response => {
-                if(response.data.role !== 3) setIsAdmin(false);
-                else setIsAdmin(true);
+                if(response.data.role == 3) setIsAdmin(true);
+                else if(response.data.role == 2) setIsStudent(true);
+                else setIsAdmin(false);
             }).catch(err => {
                 setIsAdmin(false);
             });
@@ -56,7 +58,7 @@ function LoggedInUserTopNav(props) {
     return (
         <div className="LoggedInUserTopNav">
             <Link to="/"><Button onClick={logout} variant="dark">로그아웃</Button></Link>
-            <Link to="/createClass"><Button variant="dark">반 만들기</Button></Link>
+            {isStudent ? null : <Link to="/createClass"><Button variant="dark">반 만들기</Button></Link>}
             <Link to="/class"><Button variant="dark">반 목록</Button></Link>
             <Link to="/myPage"><Button variant="dark">마이페이지</Button></Link>
             <Link to="/problems"><Button variant="dark">문제 목록</Button></Link>

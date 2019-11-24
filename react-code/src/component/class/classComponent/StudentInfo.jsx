@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import 'typescript';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
-import {Card, Col, Container, Row, Table} from 'react-bootstrap';
+import {Button, Container, Row, Col, Table} from 'react-bootstrap';
 import axios from 'axios';
 import config from '../../../config';
 import generalFunctions from "../../../generalFunctions";
+
+import AssignmentList from "../assignmentComponent/AssignmentList";
 
 import {
     useRouteMatch,
@@ -24,6 +26,8 @@ function StudentInfo(props) {
     const { path, url } = useRouteMatch();
     const { id } = useParams();
 
+    const [asgList, setAsgList] = useState([]);
+
     const token = useSelector(
         state => state.token
     );
@@ -32,19 +36,37 @@ function StudentInfo(props) {
     );
 
     useEffect(() => {
-        async function get_student_list() {
+        async function get_assignment_list() {
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
-
-                })
+                    axios.get('/class/getAssignmentList');
+                }).then( res => {
+                //setAsgList(res.data.assignment_list);
+                setAsgList([
+                    {name: "정렬1", problem_list: [11, 111], start_date: "2019-09-11", end_date: "2019-09-20"},
+                    {name: "정렬2", problem_list: [12, 123, 33452], start_date: "2019-07-12", end_date: "2019-08-01"}
+                ])
+            });
         };
-
+        get_assignment_list();
     }, [cookies, dispatch]);
 
-    const solvedCardStyle = {
-        margin: "5px 0 0 0",
-        padding: "10px"
+    const [selectedAsg, setSelectedAsg] = useState([]);
+    const assignmentTable = asgList.map((assignment, i) =>
+        <tr key={i + 1} onClick={(e) => setSelectedAsg(assignment.problem_list)} style={{cursor: "pointer"}}>
+            <th>{i + 1}</th>
+            <th>{assignment.name}</th>
+            <th>{assignment.start_date}</th>
+            <th>{assignment.end_date}</th>
+            <th>60%</th>
+        </tr>
+    )
+
+    const addAsgButton = {
+        position: "absolute",
+        top: "20px",
+        right: "15px"
     }
 
     return (
@@ -52,6 +74,7 @@ function StudentInfo(props) {
             <Row>
                 <Col lg={6} md={12}>
                     <h3 style={{"margin": "20px 0"}}>과제 목록</h3>
+                    <Button style={addAsgButton} onClick={() => props.history.push(`${url}` + '/addAssignment')}>새 과제 출제</Button>
                     <hr/>
                     <Table striped bordered hover>
                         <thead>
@@ -64,55 +87,14 @@ function StudentInfo(props) {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <th>#</th>
-                            <th>과제명</th>
-                            <th>제출일</th>
-                            <th>마감일</th>
-                            <th>진행도</th>
-                        </tr>
-                        <tr>
-                            <th>1</th>
-                            <th>과제1</th>
-                            <th>2019.11.21</th>
-                            <th>2019.11.29</th>
-                            <th>60%</th>
-                        </tr>
-                        <tr>
-                            <th>2</th>
-                            <th>과제2</th>
-                            <th>2019.11.21</th>
-                            <th>2019.11.30</th>
-                            <th>20%</th>
-                        </tr>
+                            {assignmentTable}
                         </tbody>
                     </Table>
                 </Col>
                 <Col lg={6} md={12}>
-                    <h3 style={{"margin": "20px 0"}}>OOO 님이 해결한 문제</h3>
-                    <hr/>
-                    <Row>
-                        <Col md={6} sm={12}>
-                            <Card style={solvedCardStyle}>
-                                A+B
-                            </Card>
-                        </Col>
-                        <Col md={6} sm={12}>
-                            <Card style={solvedCardStyle}>
-                                A-B
-                            </Card>
-                        </Col>
-                        <Col md={6} sm={12}>
-                            <Card style={solvedCardStyle}>
-                                A*B
-                            </Card>
-                        </Col>
-                        <Col md={6} sm={12}>
-                            <Card style={solvedCardStyle}>
-                                A/B
-                            </Card>
-                        </Col>
-                    </Row>
+                    {selectedAsg.length > 0 &&
+                        <AssignmentList problem_list={selectedAsg}/>
+                    }
                 </Col>
             </Row>
         </Container>

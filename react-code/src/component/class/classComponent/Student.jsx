@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'typescript';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
-import {Button, Form, Modal, Table} from 'react-bootstrap';
+import {Button, Modal, Table} from 'react-bootstrap';
 import axios from 'axios';
 import config from '../../../config';
 import generalFunctions from "../../../generalFunctions";
@@ -24,6 +24,8 @@ function Student(props) {
     const { path, url } = useRouteMatch();
     const { id } = useParams();
 
+    const [userList, setUserList] = useState([]);
+
     const token = useSelector(
         state => state.token
     );
@@ -36,23 +38,14 @@ function Student(props) {
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
-                    axios.get('/class/getStudentList')
-                })
+                    axios.get('/class/getClassUserlist/' + id);
+                }).then( res => {
+                    //setUserList(res.data.nickname);
+                    setUserList(["홍길동", "아무개"]);
+            });
         };
         get_student_list();
     }, [cookies, dispatch]);
-
-    const students = [
-        {_id: 1, name: "학생"},
-        {_id: 2, name: "학생2"}
-    ]
-    const tableTemplate = students.map((student) =>
-        <tr key={student._id}>
-            <td>1</td>
-            <td><Link to={'studentInfo/' + student._id}>{student.name}</Link></td>
-            <td><Button variant="danger" size="sm">탈퇴</Button></td>
-        </tr>
-    )
 
     const [showAddStudent, setShowAddStudent] = useState(false);
     const handleCloseAddStudent = () => setShowAddStudent(false);
@@ -66,8 +59,29 @@ function Student(props) {
     const postAddStudent = e => {
         generalFunctions.axiosInit(axios, token);
         console.log(addNickname);
-        axios.post('/class/addStudent', {nickname: addNickname});
+        axios.post('/class/addStudentToClass', {
+            id: id,
+            nickname: addNickname
+        }).then(res => {console.log("추가됨")});
     };
+
+    const postDelStudent = e => {
+        generalFunctions.axiosInit(axios, token);
+        const delNickname = e.id;
+        console.log(delNickname);
+        axios.post('/class/deleteStudentInClass/', {
+            id: id,
+            nickname: addNickname
+        }).then(res => {console.log("삭제됨")});
+    };
+
+    const tableTemplate = userList.map((student, i) =>
+        <tr key={i + 1}>
+            <td>{i + 1}</td>
+            <td><Link to={'student/' + '5dd22f818da8ee2ba83fe5c1'}>{student}</Link></td>
+            <td><Button onClick={postDelStudent} variant="danger" size="sm">탈퇴</Button></td>
+        </tr>
+    )
 
     return (
         <div>

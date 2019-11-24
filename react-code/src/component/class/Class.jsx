@@ -22,6 +22,7 @@ import {
     useParams,
     withRouter
 } from "react-router-dom";
+import AssignmentList from "./assignmentComponent/AssignmentList";
 
 const setToken = refresh_token => ({ type: config.SET_TOKEN, refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
@@ -111,6 +112,7 @@ function Class(props) {
                         </Route>
                         <Route path={`${path}/student/:id`}>
                             <StudentInfo/>
+                            <AssignmentList/>
                         </Route>
                         <Route path={`${path}/student`}>
                             <Student/>

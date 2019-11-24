@@ -29,6 +29,14 @@ const addProblem = e => {
         alert("이미 추가된 문제입니다.")
     }
 }
+const removeProblem = e => {
+    for(let i = 0; i < selectedProblem.length; i ++) {
+        if (e.toString() == selectedProblem[i].toString()) {
+            selectedProblem.splice(selectedProblem[i], 1);
+            selectedProblemNum.splice(selectedProblemNum.indexOf(e[0]), 1);
+        }
+    }
+}
 
 function ShowProblems(props) {
     const renders = [];

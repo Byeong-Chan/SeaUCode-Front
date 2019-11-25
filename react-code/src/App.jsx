@@ -64,7 +64,7 @@ function DefaultTopBar(props) {
 
 function Greeting(props) {
     if(props.isLoggedIn) {
-        return <LoggedInUserTopNav />;
+        return <LoggedInUserTopNav setIsTeacher={props.setIsTeacher} />;
     }
     else {
         return <DefaultTopBar
@@ -102,6 +102,7 @@ function App() {
 
     const [registerModalShow, setRegisterModalShow] = useState(false);
     const [loginModalShow, setLoginModalShow] = useState(false);
+    const [isTeacher, setIsTeacher] = useState(false);
 
     return (
         <Container className="App" style={{marginLeft:0, marginRight:0, paddingLeft:0, paddingRight:0, maxWidth: 1440}}>
@@ -117,6 +118,7 @@ function App() {
                                           setRegisterModalShow={setRegisterModalShow}
                                           loginModalShow={loginModalShow}
                                           setLoginModalShow={setLoginModalShow}
+                                          setIsTeacher={setIsTeacher}
                                 />
                             </Nav>
                         </Navbar.Collapse>
@@ -139,11 +141,11 @@ function App() {
                         </Route>
 
                         <Route path="/class/:id">
-                            <Class />
+                            <Class isTeacher={isTeacher}/>
                         </Route>
 
                         <Route path="/class">
-                            <ClassList />
+                            <ClassList/>
                         </Route>
 
                         <Route path="/createClass">

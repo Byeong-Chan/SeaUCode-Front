@@ -77,13 +77,13 @@ function StudentInfo(props) {
             <th>{(new Date(assignment.end_date)).toLocaleString()}</th>
             <th>{assignment.acc_list.length / assignment.problem_list.length * 100}%</th>
         </tr>
-    )
+    );
 
     const addAsgButton = {
         position: "absolute",
         top: "20px",
         right: "15px"
-    }
+    };
 
     return (
         <Container>

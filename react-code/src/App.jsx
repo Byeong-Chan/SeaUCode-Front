@@ -15,6 +15,7 @@ import ProblemList from './component/problems/ProblemList';
 import MyJudges from './component/MyJudges';
 import JudgeResult from './component/JudgeResult';
 import AdminPage from './component/admin/AdminPage';
+import MyAssignment from './component/problems/MyAssignment';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -130,6 +131,10 @@ function App() {
                     <Switch>
                         <Route path="/admin">
                             <AdminPage/>
+                        </Route>
+
+                        <Route path="/myAssignment">
+                            <MyAssignment/>
                         </Route>
 
                         <Route path="/problems/:id">

@@ -40,8 +40,8 @@ function MyAssignment(props) {
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
-                    if(url.split('/')[1] === 'class') return axios.get(`/assignment/MyAssignmentList/${id}`);
-                    else return axios.get('/assignment/MyAssignmentList');
+                    if(url.split('/')[1] === 'class') return axios.get(`/assignment/getMyAssignmentList/${id}`);
+                    else return axios.get('/assignment/getMyAssignmentList');
                 }).then( res => {
                 const assignment_list = res.data.assignment_list;
                 for(let i = 0; i < assignment_list.length; i++) {
@@ -90,8 +90,7 @@ function MyAssignment(props) {
         <Container>
             <Row>
                 <Col lg={6} md={12}>
-                    <h3 style={{"margin": "20px 0"}}>과제 목록</h3>
-                    <Button style={addAsgButton} onClick={() => props.history.push(`${url}` + '/addAssignment')}>새 과제 출제</Button>
+                    <h3 style={{"margin": "20px 0"}}>과제 목록</h3>>
                     <hr/>
                     <Table striped bordered hover>
                         <thead>

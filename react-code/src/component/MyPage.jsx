@@ -134,7 +134,7 @@ function MyPage(props) {
             <Form style={{"margin":"50px 20% 0"}}>
                 <Link to="/myJudges">내 제출 기록</Link>
                 <hr />
-                푼 문제(학생 전용)
+                <Link to="/myAssignment">나의 과제</Link>
                 <hr />
                 <Form.Group as={Row}>
                     <Form.Label column sm={4}>

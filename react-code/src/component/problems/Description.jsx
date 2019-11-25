@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'typescript';
-import {Col, Row, Container, Navbar, Button, Dropdown, DropdownButton, Table} from 'react-bootstrap';
+import {Col, Row, Container, Navbar, Button, Dropdown, DropdownButton, Table, Card, Form} from 'react-bootstrap';
 import axios from 'axios';
 import config from '../../config';
 
@@ -15,6 +15,19 @@ import {
 } from "react-router-dom";
 
 import ReactMarkdown from 'react-markdown';
+
+const pageStyle = {
+    maxWidth: "960px",
+    margin: "40px auto"
+}
+const cardStyle = {
+    marginBottom: "10px"
+}
+const btnStyle = {
+    fontSize: "large",
+    fontWeight: "bold",
+    minHeight: "50px"
+}
 
 function Description(props) {
     const { path, url } = useRouteMatch();
@@ -89,7 +102,64 @@ function Description(props) {
 
     return (
         <ReactMathjax.Provider>
-            <div className="Description" style={{"height":"100%"}}>
+            <div className="Description" style={pageStyle}>
+                <div style={{textAlign: "center"}}><ReactMarkdown source={`### ${name}`}/></div>
+                <hr/>
+                <Card style={cardStyle}>
+                    <Card.Header>
+                        <ReactMarkdown source="##### **문제**"/>
+                    </Card.Header>
+                    <Card.Body>
+                        <ReactMarkdown source={problemDescription} plugins={[remarkMath]} renderers={{
+                            math: mathBlock,
+                            inlineMath: mathInline
+                        }} />
+                    </Card.Body>
+                </Card>
+                <Card style={cardStyle}>
+                    <Card.Header>
+                        <ReactMarkdown source="##### **입력**"/>
+                    </Card.Header>
+                    <Card.Body>
+                        <ReactMarkdown source={inputDescription} plugins={[remarkMath]} renderers={{
+                            math: mathBlock,
+                            inlineMath: mathInline
+                        }} />
+                    </Card.Body>
+                </Card>
+                <Card style={cardStyle}>
+                    <Card.Header>
+                        <ReactMarkdown source="##### **출력**"/>
+                    </Card.Header>
+                    <Card.Body>
+                        <ReactMarkdown source={outputDescription} plugins={[remarkMath]} renderers={{
+                            math: mathBlock,
+                            inlineMath: mathInline
+                        }} />
+                    </Card.Body>
+                </Card>
+                <Row>
+                    <Col md="6" sm="12">
+                        <Card style={cardStyle}>
+                            <Card.Header>
+                                <ReactMarkdown source="##### **예제 입력**"/>
+                            </Card.Header>
+                            <Card.Body>
+                                <ReactMarkdown source={`\`\`\`\n${sampleInput}\n\`\`\`\n`} renderers={{code: codeBlock}}/>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col md="6" sm="12">
+                        <Card style={cardStyle}>
+                            <Card.Header>
+                                <ReactMarkdown source="##### **예제 출력**"/>
+                            </Card.Header>
+                            <Card.Body>
+                                <ReactMarkdown source={`\`\`\`\n${sampleOutput}\n\`\`\`\n`} renderers={{code: codeBlock}}/>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
                 <Row>
                     <Col sm="12">
                         <Table striped bordered hover>
@@ -115,62 +185,7 @@ function Description(props) {
 
                 <Row>
                     <Col sm="12">
-                        <ReactMarkdown source={`# ${name}`}/>
-                        <ReactMarkdown source="***"/>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col sm="12">
-                        <ReactMarkdown source="## 문제"/>
-                        <ReactMarkdown source="***"/>
-                        <ReactMarkdown source={problemDescription} plugins={[remarkMath]} renderers={{
-                            math: mathBlock,
-                            inlineMath: mathInline
-                        }} />
-                        <ReactMarkdown source="---"/>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col sm="12">
-                        <ReactMarkdown source="## 입력"/>
-                        <ReactMarkdown source="***"/>
-                        <ReactMarkdown source={inputDescription} plugins={[remarkMath]} renderers={{
-                            math: mathBlock,
-                            inlineMath: mathInline
-                        }} />
-                        <ReactMarkdown source="---"/>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col sm="12">
-                        <ReactMarkdown source="## 출력"/>
-                        <ReactMarkdown source="***"/>
-                        <ReactMarkdown source={outputDescription} plugins={[remarkMath]} renderers={{
-                            math: mathBlock,
-                            inlineMath: mathInline
-                        }} />
-                        <ReactMarkdown source="---"/>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col sm="6">
-                        <ReactMarkdown source="## 예제 입력"/>
-                        <ReactMarkdown source={`\`\`\`\n${sampleInput}\n\`\`\`\n`} renderers={{code: codeBlock}}/>
-                    </Col>
-                    <Col sm="6">
-                        <ReactMarkdown source="## 예제 출력"/>
-                        <ReactMarkdown source={`\`\`\`\n${sampleOutput}\n\`\`\`\n`} renderers={{code: codeBlock}}/>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col sm="12">
-                        <ReactMarkdown source="---"/>
-                        <Link to={url + '/submitMode'}><Button variant="primary w-100"> 코드 작성 </Button></Link>
+                        <Link to={url + '/submitMode'}><Button variant="primary w-100" style={btnStyle}> 코드 작성 </Button></Link>
                     </Col>
                 </Row>
             </div>

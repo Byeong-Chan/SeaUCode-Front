@@ -24,13 +24,15 @@ function MyAssignmentList(props) {
         margin: "5px 0 0 0",
         padding: "10px",
         cursor: "pointer",
-        background: "gray"
+        background: "lightgray",
+        color: "black"
     };
     const solvedCardStyle = {
         margin: "5px 0 0 0",
         padding: "10px",
         cursor: "pointer",
-        background: "green"
+        background: "#00ACEE",
+        color: "white"
     };
     const updateAsgButton = {
         position: "absolute",
@@ -44,20 +46,22 @@ function MyAssignmentList(props) {
     };
 
     const problemCard = problemList.map((problem, i) =>
-        <Row sm={12} key={`assignment_problem_${i + 1}`}>
+        <Col sm={6} key={`assignment_problem_${i + 1}`}>
             <Link to={`/problems/${problem}`}>
                 <Card style={accList.find(e => e === problem) === undefined ? unsolvedCardStyle : solvedCardStyle}>
                     {problem}
                 </Card>
             </Link>
-        </Row>
+        </Col>
     );
 
     return (
         <div>
             <h3 style={{"margin": "20px 0"}}>선택된 과제 진행상태</h3>
             <hr/>
-            {problemCard}
+            <Row>
+                {problemCard}
+            </Row>
         </div>
     );
 }

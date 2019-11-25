@@ -90,7 +90,7 @@ function MyAssignment(props) {
         <Container>
             <Row>
                 <Col lg={6} md={12}>
-                    <h3 style={{"margin": "20px 0"}}>과제 목록</h3>>
+                    <h3 style={{"margin": "20px 0"}}>과제 목록</h3>
                     <hr/>
                     <Table striped bordered hover>
                         <thead>

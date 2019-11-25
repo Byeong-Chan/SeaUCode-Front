@@ -286,6 +286,19 @@ function AddAssignment(props) {
         right: "15px",
         width: "60px"
     };
+    const subTitle = {
+        fontWeight: "bold",
+        color: "darkslategray",
+        marginBottom: "0px"
+    }
+    const dateStyle = {
+        padding: "0",
+        minWidth: "100px"
+    }
+    const dateText = {
+        width: "30px",
+        padding: "3px 10px 3px 5px"
+    }
 
     function addProblem(problem) {
         if(selectedProblemList.find(e => e.problem_number === problem.problem_number) !== undefined) {
@@ -319,90 +332,91 @@ function AddAssignment(props) {
             <Button variant="secondary" onClick={() => props.history.goBack(`${url}`)} style={goBackButton}>뒤로가기</Button>
             <hr/>
             <Row>
-                <Col lg={2}>
-                    <h4>
-                       <Form.Label>과제 이름</Form.Label>
-                    </h4>
+                <Col md="2" sm="12" style={{paddingTop: "8px", textAlign: "center"}}>
+                    <h5 style={subTitle}>과제명: </h5>
                 </Col>
-                <Col lg={10}>
-                    <Form.Control type='text' value={assignmentName} onChange={e => setAssignmentName(e.target.value)} />
+                <Col md="9" sm="12">
+                    <Form.Control type='text' value={assignmentName} onChange={e => setAssignmentName(e.target.value)}/>
                 </Col>
             </Row>
             <hr/>
-            <Row>
-                <Col lg={2}>
-                    <h4>
-                        <Form.Label>시작 시간</Form.Label>
-                    </h4>
+
+            <Row style={{marginLeft: "15px"}}>
+                <Col lg={6} md={12} style={{paddingLeft: "0", marginBottom: "5px",}}>
+                    <h6 style={{fontWeight: "bold", marginLeft: "-15px"}}>[제출일]</h6>
+                    <Row>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={sYear} onChange={e => {setSYear(e.target.value)}} />
+                                <span style={dateText}>년</span>
+                            </InputGroup>
+                        </Col>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={sMonth} onChange={e => {setSMonth(e.target.value)}} />
+                                <span style={dateText}>월</span>
+                            </InputGroup>
+                        </Col>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={sDay} onChange={e => {setSDay(e.target.value)}} />
+                                <span style={dateText}>일</span>
+                            </InputGroup>
+                        </Col>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={sHour} onChange={e => {setSHour(e.target.value)}} />
+                                <span style={dateText}>시</span>
+                            </InputGroup>
+                        </Col>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={sMinute} onChange={e => {setSMinute(e.target.value)}} />
+                                <span style={dateText}>분</span>
+                            </InputGroup>
+                        </Col>
+                    </Row>
                 </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={sYear} onChange={e => {setSYear(e.target.value)}} />
-                        <InputGroup.Text>년</InputGroup.Text>
-                    </InputGroup>
-                </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={sMonth} onChange={e => {setSMonth(e.target.value)}} />
-                        <InputGroup.Text>월</InputGroup.Text>
-                    </InputGroup>
-                </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={sDay} onChange={e => {setSDay(e.target.value)}} />
-                        <InputGroup.Text>일</InputGroup.Text>
-                    </InputGroup>
-                </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={sHour} onChange={e => {setSHour(e.target.value)}} />
-                        <InputGroup.Text>시</InputGroup.Text>
-                    </InputGroup>
-                </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={sMinute} onChange={e => {setSMinute(e.target.value)}} />
-                        <InputGroup.Text>분</InputGroup.Text>
-                    </InputGroup>
+                <Col lg={6} md={12} style={{paddingLeft: "0"}}>
+                    <h6 style={{fontWeight: "bold", marginLeft: "-15px"}}>[마감일]</h6>
+                    <Row>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={eYear} onChange={e => {setEYear(e.target.value)}} />
+                                <span style={dateText}>년</span>
+                            </InputGroup>
+                        </Col>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={eMonth} onChange={e => {setEMonth(e.target.value)}} />
+                                <span style={dateText}>월</span>
+                            </InputGroup>
+                        </Col>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={eDay} onChange={e => {setEDay(e.target.value)}} />
+                                <span style={dateText}>일</span>
+                            </InputGroup>
+                        </Col>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={eHour} onChange={e => {setEHour(e.target.value)}} />
+                                <span style={dateText}>시</span>
+                            </InputGroup>
+                        </Col>
+                        <Col lg={2} md={4} sm={6} style={dateStyle}>
+                            <InputGroup size="sm">
+                                <Form.Control type="number" value={eMinute} onChange={e => {setEMinute(e.target.value)}} />
+                                <span style={dateText}>분</span>
+                            </InputGroup>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
-            <Row>
-                <Col lg={2}>
-                    <h4>
-                        <Form.Label>끝 시간</Form.Label>
-                    </h4>
-                </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={eYear} onChange={e => {setEYear(e.target.value)}} />
-                        <InputGroup.Text>년</InputGroup.Text>
-                    </InputGroup>
-                </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={eMonth} onChange={e => {setEMonth(e.target.value)}} />
-                        <InputGroup.Text>월</InputGroup.Text>
-                    </InputGroup>
-                </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={eDay} onChange={e => {setEDay(e.target.value)}} />
-                        <InputGroup.Text>일</InputGroup.Text>
-                    </InputGroup>
-                </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={eHour} onChange={e => {setEHour(e.target.value)}} />
-                        <InputGroup.Text>시</InputGroup.Text>
-                    </InputGroup>
-                </Col>
-                <Col lg={2}>
-                    <InputGroup>
-                        <Form.Control type="number" value={eMinute} onChange={e => {setEMinute(e.target.value)}} />
-                        <InputGroup.Text>분</InputGroup.Text>
-                    </InputGroup>
-                </Col>
-            </Row>
+
+
+
+
             <hr/>
             <Row>
                 <Col lg={6} md={12}>

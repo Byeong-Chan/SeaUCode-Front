@@ -435,7 +435,7 @@ function AdminPage(props) {
                 <Col md={4} sm={12}>
                     <Card style={cardStyle}>
                         <Card.Header>
-                            <ReactMarkdown source="##### **난이도 이름**"/>
+                            <ReactMarkdown source="##### **난이도**"/>
                         </Card.Header>
                         <Card.Body>
                             <Form.Control type="number" value={difficulty} onChange={changeDifficulty} />

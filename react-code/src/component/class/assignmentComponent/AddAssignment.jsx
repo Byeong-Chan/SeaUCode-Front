@@ -235,6 +235,7 @@ function AddAssignment(props) {
             return axios.post('/problems/setAssignment', reqData);
         }).then(result => {
             alert('과제 출제 성공');
+            props.history.goBack(`${url}`);
         }).catch(err => {
             if(err.response === undefined) {
                 alert('서버와 연결이 끊어졌습니다.');

@@ -39,7 +39,12 @@ function Menu(props) {
                         학생 관리
                     </ListGroup.Item>
                 </Link>
-                    : null
+                    :
+                <Link to={`${props.url}/myAssignment`}>
+                    <ListGroup.Item action variant="secondary">
+                        내 과제 보기
+                    </ListGroup.Item>
+                </Link>
             }
         </ListGroup>
     );

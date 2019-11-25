@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import {Button, Container, Row, Col, Table} from 'react-bootstrap';
 import axios from 'axios';
-import config from '../../../config';
-import generalFunctions from "../../../generalFunctions";
+import config from '../../config';
+import generalFunctions from "../../generalFunctions";
 
-import AssignmentList from "../assignmentComponent/AssignmentList";
+import AssignmentList from "./MyAssignmentList";
 
 import {
     useRouteMatch,
@@ -18,13 +18,13 @@ import {
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
-function StudentInfo(props) {
+function MyAssignment(props) {
 
     const dispatch = useDispatch();
     const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
 
     const { path, url } = useRouteMatch();
-    const { id, student_id } = useParams();
+    const { id } = useParams();
 
     const [asgList, setAsgList] = useState([]);
 
@@ -40,28 +40,29 @@ function StudentInfo(props) {
             generalFunctions.loggedInTest(axios, cookies, dispatch)
                 .then( res => {
                     generalFunctions.axiosInit(axios, res.refresh_token);
-                    return axios.get(`/assignment/getAssignmentList/${id}/${student_id}`);
+                    if(url.split('/')[1] === 'class') return axios.get(`/assignment/MyAssignmentList/${id}`);
+                    else return axios.get('/assignment/MyAssignmentList');
                 }).then( res => {
-                    const assignment_list = res.data.assignment_list;
-                    for(let i = 0; i < assignment_list.length; i++) {
-                        assignment_list[i].acc_list = [];
-                    }
-                    const get_progress = async function(idx) {
-                        if(idx === assignment_list.length) return;
-                        return axios.get(`/assignment/getAssignmentProgress/${assignment_list[idx]._id}`).then( result => {
-                            assignment_list[idx].acc_list = result.data.acc_list;
-                            return get_progress(idx + 1);
-                        });
-                    };
-                    get_progress(0).then(() => {
-                        setAsgList(assignment_list);
-                    }).catch(err => {
-                        setAsgList(assignment_list);
-                        alert('진행도를 불러오는데 실패했습니다..!');
+                const assignment_list = res.data.assignment_list;
+                for(let i = 0; i < assignment_list.length; i++) {
+                    assignment_list[i].acc_list = [];
+                }
+                const get_progress = async function(idx) {
+                    if(idx === assignment_list.length) return;
+                    return axios.get(`/assignment/getAssignmentProgress/${assignment_list[idx]._id}`).then( result => {
+                        assignment_list[idx].acc_list = result.data.acc_list;
+                        return get_progress(idx + 1);
                     });
+                };
+                get_progress(0).then(() => {
+                    setAsgList(assignment_list);
                 }).catch(err => {
-                    console.log(err);
-                    alert('학생 과제 정보를 불러들이는데 실패했습니다..');
+                    setAsgList(assignment_list);
+                    alert('진행도를 불러오는데 실패했습니다..!');
+                });
+            }).catch(err => {
+                console.log(err);
+                alert('학생 과제 정보를 불러들이는데 실패했습니다..');
             });
         };
         get_assignment_list();
@@ -117,4 +118,4 @@ function StudentInfo(props) {
     );
 }
 
-export default withRouter(StudentInfo);
+export default withRouter(MyAssignment);

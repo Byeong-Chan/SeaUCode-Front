@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import 'typescript';
-import {Container, Col, Row, Button, Form, Table} from 'react-bootstrap';
+import {Container, Col, Row, Button, Form, Table, InputGroup} from 'react-bootstrap';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import config from '../../../config';
 import generalFunctions from "../../../generalFunctions";
 
@@ -9,6 +11,7 @@ import SelectedAssignment from "./SelectedAssignment";
 
 import {
     Link,
+    useParams,
     useRouteMatch,
     withRouter
 } from "react-router-dom";
@@ -51,7 +54,12 @@ function ShowProblems(props) {
 
 function AddAssignment(props) {
 
+    const dispatch = useDispatch();
+
     const { url } = useRouteMatch();
+    const { id, student_id } = useParams();
+
+    const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
 
     const [onSearch, setOnSearch] = useState(false);
     const [page, setPage] = useState(1);
@@ -59,6 +67,19 @@ function AddAssignment(props) {
     const [constraint, setConstraint] = useState('name');
     const [searchedProblemList, setSearchedProblemList] = useState([]);
     const [selectedProblemList, setSelectedProblemList] = useState([]);
+    const [assignmentName, setAssignmentName] = useState('');
+
+    const [sYear, setSYear] = useState(0);
+    const [sMonth, setSMonth] = useState(0);
+    const [sDay, setSDay] = useState(0);
+    const [sHour, setSHour] = useState(0);
+    const [sMinute, setSMinute] = useState(0);
+
+    const [eYear, setEYear] = useState(0);
+    const [eMonth, setEMonth] = useState(0);
+    const [eDay, setEDay] = useState(0);
+    const [eHour, setEHour] = useState(0);
+    const [eMinute, setEMinute] = useState(0);
 
     const changeConstraint = e => {
         setConstraint(e.target.value);
@@ -132,9 +153,96 @@ function AddAssignment(props) {
     };
 
     const postAssignment = e => {
-        const reqDate = {
-
+        const maxD = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        if(sYear < 1970 || 2100 < sYear) {
+            alert('1970 ~ 2100 년 사이로 입력해주세요.');
+            return;
         }
+        if(sMonth < 1 || 12 < sMonth) {
+            alert('1 ~ 12 월 사이로 입력해주세요.');
+            return;
+        }
+
+        if(sYear % 400 === 0 || (sYear % 4 === 0 && sYear % 100 !== 0)) maxD[2] = 29;
+        if(sDay < 1 || maxD[sMonth] < sDay) {
+            alert(`1 ~ ${maxD[sMonth]} 일 사이로 입력해주세요.`);
+            return;
+        }
+
+        if(sHour < 0 || 23 < sHour) {
+            alert('0 ~ 23 시 사이로 입력해주세요.');
+            return;
+        }
+
+        if(sMinute < 0 || 59 < sMinute) {
+            alert('0 ~ 59 분 사이로 입력해주세요.');
+            return;
+        }
+
+
+
+        if(eYear < 1970 || 2100 < eYear) {
+            alert('1970 ~ 2100 년 사이로 입력해주세요.');
+            return;
+        }
+        if(eMonth < 1 || 12 < eMonth) {
+            alert('1 ~ 12 월 사이로 입력해주세요.');
+            return;
+        }
+
+        if(eYear % 400 === 0 || (eYear % 4 === 0 && eYear % 100 !== 0)) maxD[2] = 29;
+        if(eDay < 1 || maxD[eMonth] < eDay) {
+            alert(`1 ~ ${maxD[eMonth]} 일 사이로 입력해주세요.`);
+            return;
+        }
+
+        if(eHour < 0 || 23 < eHour) {
+            alert('0 ~ 23 시 사이로 입력해주세요.');
+            return;
+        }
+
+        if(eMinute < 0 || 59 < eMinute) {
+            alert('0 ~ 59 분 사이로 입력해주세요.');
+            return;
+        }
+
+        const start_date = new Date(sYear, sMonth - 1, sDay, sHour, sMinute, 0, 0);
+        const end_date = new Date(eYear, eMonth - 1, eDay, eHour, eMinute, 0, 0);
+
+        if(start_date > end_date) {
+            alert('시작 시간이 끝 시간보다 나중일 수 없습니다!');
+            return;
+        }
+
+        const problem_list = [];
+        selectedProblemList.map((item, i) => problem_list.push(item.problem_number));
+
+        if(problem_list.length === 0) {
+            alert('한 문제 이상을 입력해주세요.');
+            return;
+        }
+        const reqData = {
+            user_nickname : student_id,
+            name  : assignmentName,
+            problem_list : problem_list,
+            start_date : start_date,
+            end_date : end_date,
+            classroom_id: id
+        };
+
+        generalFunctions.loggedInTest(axios, cookies, dispatch).then(result => {
+            generalFunctions.axiosInit(axios, result.refresh_token);
+            return axios.post('/problems/setAssignment', reqData);
+        }).then(result => {
+            alert('과제 출제 성공');
+        }).catch(err => {
+            if(err.response === undefined) {
+                alert('서버와 연결이 끊어졌습니다.');
+            }
+            else {
+                alert('과제 출제에 실패하였습니다..');
+            }
+        })
     };
 
     useEffect(() => {
@@ -209,6 +317,92 @@ function AddAssignment(props) {
             <h3 style={{marginTop: "20px"}}>새 과제 출제</h3>
             <Button style={postAsgButton} onClick={postAssignment}>출제하기</Button>
             <Button variant="secondary" onClick={() => props.history.goBack(`${url}`)} style={goBackButton}>뒤로가기</Button>
+            <hr/>
+            <Row>
+                <Col lg={2}>
+                    <h4>
+                       <Form.Label>과제 이름</Form.Label>
+                    </h4>
+                </Col>
+                <Col lg={10}>
+                    <Form.Control type='text' value={assignmentName} onChange={e => setAssignmentName(e.target.value)} />
+                </Col>
+            </Row>
+            <hr/>
+            <Row>
+                <Col lg={2}>
+                    <h4>
+                        <Form.Label>시작 시간</Form.Label>
+                    </h4>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={sYear} onChange={e => {setSYear(e.target.value)}} />
+                        <InputGroup.Text>년</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={sMonth} onChange={e => {setSMonth(e.target.value)}} />
+                        <InputGroup.Text>월</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={sDay} onChange={e => {setSDay(e.target.value)}} />
+                        <InputGroup.Text>일</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={sHour} onChange={e => {setSHour(e.target.value)}} />
+                        <InputGroup.Text>시</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={sMinute} onChange={e => {setSMinute(e.target.value)}} />
+                        <InputGroup.Text>분</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+            </Row>
+            <Row>
+                <Col lg={2}>
+                    <h4>
+                        <Form.Label>끝 시간</Form.Label>
+                    </h4>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={eYear} onChange={e => {setEYear(e.target.value)}} />
+                        <InputGroup.Text>년</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={eMonth} onChange={e => {setEMonth(e.target.value)}} />
+                        <InputGroup.Text>월</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={eDay} onChange={e => {setEDay(e.target.value)}} />
+                        <InputGroup.Text>일</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={eHour} onChange={e => {setEHour(e.target.value)}} />
+                        <InputGroup.Text>시</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+                <Col lg={2}>
+                    <InputGroup>
+                        <Form.Control type="number" value={eMinute} onChange={e => {setEMinute(e.target.value)}} />
+                        <InputGroup.Text>분</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+            </Row>
             <hr/>
             <Row>
                 <Col lg={6} md={12}>

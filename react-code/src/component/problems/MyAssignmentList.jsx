@@ -34,16 +34,6 @@ function MyAssignmentList(props) {
         background: "#00ACEE",
         color: "white"
     };
-    const updateAsgButton = {
-        position: "absolute",
-        top: "20px",
-        right: "80px"
-    };
-    const deleteAsgButton = {
-        position: "absolute",
-        top: "20px",
-        right: "15px"
-    };
 
     const problemCard = problemList.map((problem, i) =>
         <Col sm={6} key={`assignment_problem_${i + 1}`}>

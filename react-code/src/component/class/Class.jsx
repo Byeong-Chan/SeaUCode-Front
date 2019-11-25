@@ -101,7 +101,7 @@ function Class(props) {
 
             <Row style={{"height":"100%", paddingLeft: 0, paddingRight: 0 }}>
                 <Col sm={2} style={{ paddingLeft: 0, paddingRight: 0, backgroundColor: "#343a40" }}>
-                    <Menu className={name} url={url}/>
+                    <Menu className={name} url={url} isTeacher={props.isTeacher} />
                 </Col>
                 <Col style={{ paddingLeft: 0, paddingRight: 0 }}>
                     <Switch>

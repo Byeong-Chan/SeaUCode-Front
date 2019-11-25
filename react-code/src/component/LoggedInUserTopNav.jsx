@@ -35,10 +35,14 @@ function LoggedInUserTopNav(props) {
         async function isAdmin() {
             generalFunctions.axiosInit(axios, Cookie.access_token);
             return axios.get('/loggedIn').then(response => {
-                if(response.data.role == 3) setIsAdmin(true);
-                else if(response.data.role == 2) setIsStudent(true);
-                else setIsAdmin(false);
+                if(response.data.role === 3) setIsAdmin(true);
+                else if(response.data.role === 2) setIsStudent(true);
+                else if(response.data.role === 1) {
+                    props.setIsTeacher(true);
+                }
             }).catch(err => {
+                props.setIsTeacher(false);
+                setIsStudent(false);
                 setIsAdmin(false);
             });
         };

@@ -32,12 +32,15 @@ function Menu(props) {
                     <b>{props.className}</b>
                 </ListGroup.Item>
             </Link>
-
-            <Link to={`${props.url}/student`}>
-            <ListGroup.Item action variant="secondary">
-                학생 관리
-            </ListGroup.Item>
-            </Link>
+            {
+                props.isTeacher ?
+                <Link to={`${props.url}/student`}>
+                    <ListGroup.Item action variant="secondary">
+                        학생 관리
+                    </ListGroup.Item>
+                </Link>
+                    : null
+            }
         </ListGroup>
     );
 }

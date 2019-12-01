@@ -7,6 +7,8 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import {Col, Row, Container, Navbar} from 'react-bootstrap';
 import ProblemAdd from './ProblemAdd';
+import AdminProblemList from "./AdminProblemList";
+import ProblemModify from './ProblemModify';
 
 import config from '../../config';
 import generalFunctions from '../../generalFunctions';
@@ -71,7 +73,17 @@ function AdminPage(props) {
 
     return (
         <div className="AdminPage" style={{"height":"100%"}}>
-            <ProblemAdd />
+            <Switch>
+                <Route path={path + '/modifyProblem/:id'}>
+                    <ProblemModify />
+                </Route>
+                <Route path={path + '/addProblem'}>
+                    <ProblemAdd />
+                </Route>
+                <Route path={path}>
+                    <AdminProblemList />
+                </Route>
+            </Switch>
         </div>
     );
 }

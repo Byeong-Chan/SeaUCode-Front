@@ -119,7 +119,7 @@ function CategoryList(props) {
     return renders;
 }
 
-function AdminPage(props) {
+function ProblemAdd(props) {
     const dispatch = useDispatch();
     const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
 
@@ -335,7 +335,7 @@ function AdminPage(props) {
     ));
 
     return (
-        <div className="AdminPage" style={pageStyle}>
+        <div className="ProblemAdd" style={pageStyle}>
             <h3 style={{textAlign: "center"}}>새 문제 등록</h3>
             <hr/>
             <Card style={cardStyle}>
@@ -541,4 +541,4 @@ function AdminPage(props) {
     );
 }
 
-export default withRouter(AdminPage);
+export default withRouter(ProblemAdd);

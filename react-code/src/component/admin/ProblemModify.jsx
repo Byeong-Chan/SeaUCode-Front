@@ -137,6 +137,7 @@ function ProblemModify(props) {
     const [sampleInput, setSampleInput] = useState('');
     const [sampleOutput, setSampleOutput] = useState('');
 
+    const [maxIOLength, setMaxIOLength] = useState(0);
     const [inputList, setInputList] =  useState([]);
     const [outputList, setOutputList] =  useState([]);
 
@@ -302,6 +303,7 @@ function ProblemModify(props) {
                 setName(res.data.name);
                 setSampleInput(res.data.sample_input);
                 setSampleOutput(res.data.sample_output);
+                setMaxIOLength(res.data.io_length);
                 const inputs = [];
                 const outputs = [];
                 for(let i = 0; i < res.data.io_length; i++) {
@@ -323,7 +325,7 @@ function ProblemModify(props) {
         const inputs = [];
         const outputs = [];
         for(let i = 0; i < inputList.length; i++) {
-            if(inputList[i].txt !== '' && outputList[i].txt !== '') {
+            if((inputList[i].txt !== '' && outputList[i].txt !== '') || i >= maxIOLength) {
                 inputs.push(inputList[i]);
                 outputs.push(outputList[i]);
             }
@@ -356,7 +358,10 @@ function ProblemModify(props) {
             }
 
             if(key === 'input_list' || key === 'output_list') {
-                for(let i = 0; i < form[key].length; i++) formData.append(key, form[key][i].txt);
+                for(let i = 0; i < form[key].length; i++) {
+                    formData.append(key + '_number', form[key][i]._id);
+                    formData.append(key, form[key][i].txt);
+                }
             }
             else if(key === 'Category') {
                 for(let i = 0; i < form[key].length; i++) formData.append(key, form[key][i]);
@@ -367,6 +372,7 @@ function ProblemModify(props) {
             formData.append('files', acceptedFiles[i]);
         }
         formData.append('problem_number', id);
+        formData.append('io_length', inputList.length);
         generalFunctions.axiosInit(axios, cookies.access_token);
         axios.post('/admin/updateProblem', formData).then(response => {
 

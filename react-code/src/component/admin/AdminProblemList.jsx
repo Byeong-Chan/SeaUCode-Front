@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import 'typescript';
 import {Col, Row, Button, Form, Table} from 'react-bootstrap';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
+import generalFunctions from '../../generalFunctions';
 import config from '../../config';
 
 import {
@@ -36,6 +38,9 @@ function ShowProblems(props) {
                 <td>
                     {category}
                 </td>
+                <td>
+                    <Button variant="danger" value={item.problem_number} onClick={props.deleteProblem}>삭제</Button>
+                </td>
             </tr>
         )
     }
@@ -44,6 +49,8 @@ function ShowProblems(props) {
 
 function AdminProblemList(props) {
     const { url } = useRouteMatch();
+
+    const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
 
     const [onSearch, setOnSearch] = useState(false);
     const [page, setPage] = useState(1);
@@ -122,6 +129,17 @@ function AdminProblemList(props) {
         }
     };
 
+    const deleteProblem = e => {
+        generalFunctions.axiosInit(axios, cookies.access_token);
+        axios.post('/admin/deleteProblem', {problem_number: parseInt(e.target.value)}).then(result => {
+            const e = {target: {value: 0}};
+            changePage(e);
+            alert('삭제에 성공하였습니다.');
+        }).catch(err => {
+            alert('삭제에 실패하였습니다.');
+        });
+    };
+
     useEffect(() => {
         async function getFirstPage() {
             setPage(1);
@@ -175,10 +193,11 @@ function AdminProblemList(props) {
                             <th>번호</th>
                             <th>문제 이름</th>
                             <th>알고리즘 분류</th>
+                            <th>삭제</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <ShowProblems problem_list={searchedProblemList} url={url}/>
+                        <ShowProblems problem_list={searchedProblemList} url={url} deleteProblem={deleteProblem}/>
                         </tbody>
                     </Table>
                 </Col>

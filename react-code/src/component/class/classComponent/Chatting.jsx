@@ -5,11 +5,18 @@ import axios from "axios";
 import config from "../../../config";
 import generalFunctions from "../../../generalFunctions";
 import {useSelector} from "react-redux";
+import { useParams, withRouter} from 'react-router-dom';
 
 const setToken = refresh_token => ({ type: "token/SET_TOKEN", refresh_token });
 const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 
-function Chatting() {
+function Chatting(props) {
+
+    const { id } = useParams();
+
+    const chattingSocket = useSelector(
+        state => state.chattingSocket
+    );
 
     const token = useSelector(
         state => state.token
@@ -19,38 +26,48 @@ function Chatting() {
         margin: "20px",
         overflowY: "auto",
         maxHeight: window.innerHeight - "130"
-    }
+    };
     const tagStyle = {
         position: "absolute",
         top: "-8px",
         left: "-15px"
-    }
+    };
     const nameStyle = {
         position: "relative",
         padding: "8px 20px",
         background: "black",
         color: "white",
         borderRadius: "12px"
-    }
+    };
     const dateStyle = {
         position: "relative",
         top: "5px",
         left: "5px",
         fontSize: "small",
         color: "gray"
-    }
+    };
     const footerStyle = {
         position: "absolute",
         bottom: "0px",
         width: "100%",
         padding: "0 20px"
-    }
+    };
     const textareaStyle = {
         width: "100%",
         resize: "none",
         border: "1px solid darkgray",
         borderRadius: "5px"
-    }
+    };
+
+    useEffect(() => {
+        async function get_another_user_chatting() {
+            chattingSocket.off();
+            chattingSocket.on(id, data => {
+                props.setChatting(props.chatting.concat(data));
+            })
+        };
+        get_another_user_chatting();
+    }, [props.setChatting, props.chatting]);
 
     const enterKeyPress = (e) => {
         if(e.key === 'Enter'){
@@ -60,25 +77,26 @@ function Chatting() {
                 setChatText("");
             }
         }
-    }
+    };
 
     const [chatText, setChatText] = useState("");
+
     const chatTextChange = e => {
         setChatText(e.target.value);
     };
     const submitChatText = e => {
         if(chatText !== "") {
             generalFunctions.axiosInit(axios, token);
-            axios.post('/class/submitChatting', {message: chatText})
-        }
-    }
+            axios.post('/class/saveChatting', {id: id, message: chatText}).then(result => {
 
-    const chatLogs = [
-        {_id: 1, send_time: "2019-11-14 20:49", message: 'soddsfs', owner: "학생"},
-        {_id: 2, send_time: "2019-11-14 20:50", message: 'blablabla', owner: "선생님"}
-    ]
-    const chatTemplate = chatLogs.map((chatLog) =>
-        <Card style={{"margin": "15px 15px 25px 15px"}}>
+            }).catch(err => {
+                alert('전송에 실패하였습니다.');
+            })
+        }
+    };
+
+    const chatTemplate = props.chatting.map((chatLog, idx) =>
+        <Card key={`chatting_${idx}`} style={{"margin": "15px 15px 25px 15px"}}>
             <div style={tagStyle}>
                         <span style={nameStyle}>
                             {chatLog.owner}
@@ -91,13 +109,13 @@ function Chatting() {
                 {chatLog.message}
             </Card.Body>
         </Card>
-    )
+    );
 
     return (
         <div className="chatting">
-            <body style={bodyStyle}>
+            <div style={bodyStyle}>
             {chatTemplate}
-            </body>
+            </div>
             <footer style={footerStyle}>
                 <textarea style={textareaStyle} value={chatText} onChange={chatTextChange} onKeyPress={enterKeyPress}>
                 </textarea>
@@ -107,4 +125,4 @@ function Chatting() {
     );
 }
 
-export default Chatting;
+export default withRouter(Chatting);

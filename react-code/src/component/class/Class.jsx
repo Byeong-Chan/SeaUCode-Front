@@ -53,6 +53,8 @@ function Class(props) {
                     return axios.get('/class/getClassInfo/' + id);
                 }).then(result => {
                     setName(result.data.name);
+                    setNotice(result.data.notice);
+                    setChatting(result.data.chatting);
                 }).catch(err => {
                     console.log(err);
                     if (err.response === undefined) {
@@ -119,7 +121,7 @@ function Class(props) {
                             <Student/>
                         </Route>
                         <Route path={`${path}/`}>
-                            <Chatting />
+                            <Chatting chatting={chatting} setChatting={setChatting} notice={notice} setNotice={setNotice} />
                         </Route>
                     </Switch>
                 </Col>

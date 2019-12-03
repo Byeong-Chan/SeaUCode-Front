@@ -47,7 +47,7 @@ function AssignmentList(props) {
 
     const problemCard = problemList.map((problem, i) =>
         <Col sm={6} key={`assignment_problem_${i + 1}`}>
-            <Link to={`/problems/${problem}`}>
+            <Link to={`/studentJudges/${props.nickname}/${problem}`}>
                 <Card style={accList.find(e => e === problem) === undefined ? unsolvedCardStyle : solvedCardStyle}>
                     {problem}
                 </Card>

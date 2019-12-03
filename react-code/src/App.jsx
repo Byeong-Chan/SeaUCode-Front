@@ -16,6 +16,7 @@ import MyJudges from './component/MyJudges';
 import JudgeResult from './component/JudgeResult';
 import AdminPage from './component/admin/AdminPage';
 import MyAssignment from './component/problems/MyAssignment';
+import StudentJudges from './component/StudentJudges';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -163,6 +164,14 @@ function App() {
 
                         <Route path="/myJudges">
                             <MyJudges />
+                        </Route>
+
+                        <Route path="/studentJudges/:student_nickname/:problem_number">
+                            <StudentJudges />
+                        </Route>
+
+                        <Route path="/studentJudges/:id">
+                            <JudgeResult />
                         </Route>
 
                         <Route path="/myPage">

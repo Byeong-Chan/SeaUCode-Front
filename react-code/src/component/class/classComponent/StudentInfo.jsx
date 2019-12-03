@@ -109,7 +109,7 @@ function StudentInfo(props) {
                 </Col>
                 <Col lg={6} md={12}>
                     {
-                        <AssignmentList problem_list={selectedAsg} acc_list={selectedAsgAcc}/>
+                        <AssignmentList problem_list={selectedAsg} acc_list={selectedAsgAcc} nickname={student_id}/>
                     }
                 </Col>
             </Row>

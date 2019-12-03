@@ -221,7 +221,7 @@ function MyJudges(props) {
     }, [cookies, dispatch, props.history, removeCookie]);
 
     return (
-        <div className="ProblemList" style={{"height":"100%"}}>
+        <div className="MyJudges" style={{"height":"100%"}}>
             <Row>
                 <Form.Label column sm="1">검색 조건</Form.Label>
                 <Col sm="3">

@@ -17,6 +17,8 @@ function AssignmentList(props) {
         state => state.userNickname
     );
 
+    const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
+
     const problemList = props.problem_list;
     const accList = props.acc_list;
 
@@ -45,6 +47,29 @@ function AssignmentList(props) {
         right: "15px"
     };
 
+    const toModify = e => {
+        if(props.assignment_id === '') alert('과제를 선택해주세요!');
+        else props.history.push(`${props.url}/modifyAssignment/${props.assignment_id}`);
+    };
+
+    const toDelete = e => {
+        if(props.assignment_id === '') alert('과제를 선택해주세요!');
+        else {
+            const answer = window.confirm('정말로 삭제하시겠습니까?');
+            if(answer) {
+                generalFunctions.axiosInit(axios, cookies.access_token);
+                axios.delete(`/problems/deleteAssignment/${props.assignment_id}`).then(result=> {
+                    alert('삭제에 성공하였습니다!');
+                    const newArr = props.asgList.concat();
+                    newArr.splice(newArr.findIndex(elem => elem._id === props.assignment_id), 1);
+                    props.setAsgList(newArr);
+                }).catch(err => {
+                    alert('삭제에 실패하였습니다!');
+                })
+            }
+        }
+    };
+
     const problemCard = problemList.map((problem, i) =>
         <Col sm={6} key={`assignment_problem_${i + 1}`}>
             <Link to={`/studentJudges/${props.nickname}/${problem}`}>
@@ -58,8 +83,8 @@ function AssignmentList(props) {
     return (
         <div>
             <h3 style={{"margin": "20px 0"}}>선택된 과제 진행상태</h3>
-            <Button variant="danger" style={updateAsgButton}>수정</Button>
-            <Button variant="secondary" style={deleteAsgButton}>삭제</Button>
+            <Button variant="danger" style={updateAsgButton} onClick={toModify}>수정</Button>
+            <Button variant="secondary" style={deleteAsgButton} onClick={toDelete}>삭제</Button>
             <hr/>
             <Row>
                 {problemCard}

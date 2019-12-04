@@ -11,6 +11,7 @@ import Student from './classComponent/Student';
 import StudentInfo from './classComponent/StudentInfo';
 import AddAssignment from './assignmentComponent/AddAssignment';
 import MyAssignment from '../problems/MyAssignment';
+import ModifyAssignment from './assignmentComponent/ModifyAssignment';
 
 import config from '../../config';
 import generalFunctions from '../../generalFunctions';
@@ -110,6 +111,9 @@ function Class(props) {
                     <Switch>
                         <Route path={`${path}/myAssignment`}>
                             <MyAssignment/>
+                        </Route>
+                        <Route path={`${path}/student/:student_id/modifyAssignment/:assignment_id`}>
+                            <ModifyAssignment/>
                         </Route>
                         <Route path={`${path}/student/:student_id/addAssignment`}>
                             <AddAssignment/>

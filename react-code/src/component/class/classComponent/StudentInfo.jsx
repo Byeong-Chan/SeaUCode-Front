@@ -28,6 +28,8 @@ function StudentInfo(props) {
 
     const [asgList, setAsgList] = useState([]);
 
+    const [selectedId, setSelectedId] = useState('');
+
     const token = useSelector(
         state => state.token
     );
@@ -70,7 +72,7 @@ function StudentInfo(props) {
     const [selectedAsg, setSelectedAsg] = useState([]);
     const [selectedAsgAcc, setSelectedAsgAcc] = useState([]);
     const assignmentTable = asgList.map((assignment, i) =>
-        <tr key={i + 1} onClick={(e) => {setSelectedAsg(assignment.problem_list); setSelectedAsgAcc(assignment.acc_list);}} style={{cursor: "pointer"}}>
+        <tr key={i + 1} onClick={(e) => {setSelectedId(assignment._id); setSelectedAsg(assignment.problem_list); setSelectedAsgAcc(assignment.acc_list);}} style={{cursor: "pointer"}}>
             <th>{i + 1}</th>
             <th>{assignment.name}</th>
             <th>{(new Date(assignment.start_date)).toLocaleString()}</th>
@@ -109,7 +111,7 @@ function StudentInfo(props) {
                 </Col>
                 <Col lg={6} md={12}>
                     {
-                        <AssignmentList problem_list={selectedAsg} acc_list={selectedAsgAcc} nickname={student_id}/>
+                        <AssignmentList problem_list={selectedAsg} acc_list={selectedAsgAcc} nickname={student_id} assignment_id={selectedId} url={url} asgList={asgList} setAsgList={setAsgList}/>
                     }
                 </Col>
             </Row>

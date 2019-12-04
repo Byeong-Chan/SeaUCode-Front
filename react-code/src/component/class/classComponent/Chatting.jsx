@@ -13,7 +13,7 @@ const toggleLoggedIn = on_off => ({type: config.TOGGLE_LOGGED_IN, on_off});
 function Chatting(props) {
 
     const { id } = useParams();
-    const [ page, setPage ] = useState(0);
+    const [ page, setPage ] = useState(1);
 
     const chattingSocket = useSelector(
         state => state.chattingSocket
@@ -99,8 +99,15 @@ function Chatting(props) {
     const onPageChange = e => {
         generalFunctions.axiosInit(axios, token);
         axios.get(`/class/getChattingList/${page + 1}/${id}`).then(result => {
-            props.setChatting(result.data.chatting_list.concat(props.chatting));
-            if(result.data.chatting_list.length !== 0) setPage(page + 1);
+            if(result.data.chatting_list.length === 0) return;
+            const newarr = result.data.chatting_list.concat();
+            for(let i = 0; i < props.chatting.length; i++) {
+                if(result.data.chatting_list.find(elem => elem.owner === props.chatting[i].owner && elem.send_time === props.chatting[i].send_time && elem.message === props.chatting[i].message) !== undefined)
+                    continue;
+                newarr.push(props.chatting[i]);
+            }
+            props.setChatting(newarr);
+            setPage(page + 1);
         }).catch(err => {
             // 불러올 수 없다.
         });

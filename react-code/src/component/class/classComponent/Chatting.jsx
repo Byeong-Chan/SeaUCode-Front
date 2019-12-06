@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import 'typescript';
 import { Button, Form, Col, Row, Card } from 'react-bootstrap';
 import axios from "axios";
@@ -89,7 +89,7 @@ function Chatting(props) {
         if(chatText !== "") {
             generalFunctions.axiosInit(axios, token);
             axios.post('/class/saveChatting', {id: id, message: chatText}).then(result => {
-
+                chatScroll.scrollTo(0, chatScroll.scrollHeight);
             }).catch(err => {
                 alert('전송에 실패하였습니다.');
             })
@@ -108,6 +108,7 @@ function Chatting(props) {
             }
             props.setChatting(newarr);
             setPage(page + 1);
+            chatScroll.scrollTo(0, 1500);
         }).catch(err => {
             // 불러올 수 없다.
         });
@@ -129,18 +130,20 @@ function Chatting(props) {
         </Card>
     );
 
+    const chatScroll = document.getElementById("chatScroll");
+    const listenWheelEvent = (e) => {
+        if(chatScroll.scrollTop == 0) {
+            onPageChange();
+        }
+    }
+
     return (
         <div className="chatting">
             <Row>
-                <Col lg={6}>
-                    <Button onClick={onPageChange}>임시 채팅 새로 불러오기</Button>
-                </Col>
-            </Row>
-            <Row>
                 <Col lg={12}>
-            <div style={bodyStyle}>
-            {chatTemplate}
-            </div>
+                    <div id="chatScroll" style={bodyStyle} onScroll={listenWheelEvent}>
+                    {chatTemplate}
+                    </div>
                 </Col>
             </Row>
             <footer style={footerStyle}>

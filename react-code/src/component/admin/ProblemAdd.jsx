@@ -320,7 +320,8 @@ function ProblemAdd(props) {
         }
         generalFunctions.axiosInit(axios, cookies.access_token);
         axios.post('/admin/addProblem', formData).then(response => {
-            
+            alert('문제가 생성되었습니다.');
+            props.history.goBack(`${url}`);
         }).catch(err => {
             if(err.response === undefined) {
                 alert('서버와의 연결이 끊어졌습니다.')

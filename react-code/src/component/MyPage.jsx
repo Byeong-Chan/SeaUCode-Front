@@ -132,9 +132,14 @@ function MyPage(props) {
     return (
         <div className="MyPage">
             <Form style={{"margin":"50px 20% 0"}}>
-                <Link to="/myJudges">내 제출 기록</Link>
-                <hr />
-                <Link to="/myAssignment">나의 과제</Link>
+                <Row>
+                    <Col md="6" sm="12" style={{marginBottom: "10px"}}>
+                        <Link to="/myJudges"><Button variant="outline-dark" size="lg" block>내 제출 기록</Button></Link>
+                    </Col>
+                    <Col md="6" sm="12">
+                        <Link to="/myAssignment"><Button variant="outline-dark" size="lg" block>나의 과제</Button></Link>
+                    </Col>
+                </Row>
                 <hr />
                 <Form.Group as={Row}>
                     <Form.Label column sm={4}>
@@ -184,18 +189,14 @@ function MyPage(props) {
                     </Col>
                 </Form.Group>
 
-                <Form.Group as={Row}>
-                    <Form.Label column sm={12}>
-                        <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
-                    </Form.Label>
-                </Form.Group>
-
-                <Form.Group as={Row}>
-                    <Form.Label column sm={12}>
-                        <Button variant="danger w-100" onClick={deleteUser}>삭제</Button>
-                    </Form.Label>
-                </Form.Group>
-
+                <Row>
+                    <Col sm="12" style={{marginBottom: "10px"}}>
+                        <Button variant="primary" block onClick={updateUserInfo}>수정</Button>
+                    </Col>
+                    <Col sm="12">
+                        <Button variant="danger" block onClick={deleteUser}>삭제</Button>
+                    </Col>
+                </Row>
             </Form>
         </div>
     );

@@ -21,6 +21,10 @@
   color: #09d3ac;
 }
 
+.registerModal {
+  max-width: 80% !important;
+}
+
 .registerButton {
   margin-top: 15px;
   color: dodgerblue;

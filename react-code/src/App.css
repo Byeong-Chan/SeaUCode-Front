@@ -42,3 +42,8 @@
 .navbar .btn-toolbar .btn {
   width: 100%;
 }
+
+.noticeModal {
+  max-width: none !important;
+  margin: 20px 10% !important;
+}

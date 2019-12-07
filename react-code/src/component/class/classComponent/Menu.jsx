@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import {ListGroup} from 'react-bootstrap'
 
+import Notice from "./Notice";
+
 import {
     BrowserRouter as Router,
     Switch,
@@ -25,6 +27,8 @@ function Menu(props) {
         removeCookie('access_token');
     };
 
+    const [noticeModalShow, setNoticeModalShow] = useState(false);
+
     return (
         <ListGroup style={{textAlign: "center"}}>
             <Link to={`${props.url}`}>
@@ -36,7 +40,7 @@ function Menu(props) {
                 props.isTeacher ?
                 <Link to={`${props.url}/student`}>
                     <ListGroup.Item action variant="secondary">
-                        학생 관리
+                        <b>학생 관리</b>
                     </ListGroup.Item>
                 </Link>
                     :
@@ -46,6 +50,13 @@ function Menu(props) {
                     </ListGroup.Item>
                 </Link>
             }
+            <ListGroup.Item variant="secondary" onClick={() => setNoticeModalShow(true)} style={{cursor: "pointer"}}>
+                <b>공지</b>
+            </ListGroup.Item>
+            <Notice
+                show={noticeModalShow}
+                onHide={() => setNoticeModalShow(false)}
+            />
         </ListGroup>
     );
 }

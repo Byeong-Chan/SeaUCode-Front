@@ -220,6 +220,12 @@ function MyJudges(props) {
         getFirstPage();
     }, [cookies, dispatch, props.history, removeCookie]);
 
+    const enterKeyPress = (e) => {
+        if(e.key === 'Enter'){
+            findJudges();
+        }
+    }
+
     return (
         <div className="MyJudges" style={{"height":"100%"}}>
             <Row>
@@ -231,7 +237,7 @@ function MyJudges(props) {
                     </Form.Control>
                 </Col>
                 <Col sm="5">
-                    <Form.Control type="text" onChange={changeField} />
+                    <Form.Control type="text" onChange={changeField} onKeyPress={enterKeyPress} />
                 </Col>
                 <Col sm="1">
                     <Button onClick={findJudges}>검색</Button>

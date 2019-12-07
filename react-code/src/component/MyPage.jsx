@@ -32,6 +32,9 @@ function MyPage(props) {
     const [rename, setRename] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [reboj, setReboj] = useState('');
+    const [recodeforces, setRecodeforces] = useState('');
+    const [respoj, setRespoj] = useState('');
 
     const changeRename = e => {
         setRename(e.target.value);
@@ -41,6 +44,15 @@ function MyPage(props) {
     };
     const changeConfirmPassword = e => {
         setConfirmPassword(e.target.value);
+    };
+    const changeReboj = e => {
+        setReboj(e.target.value);
+    };
+    const changeRecodeforces = e => {
+        setRecodeforces(e.target.value);
+    };
+    const changeRespoj = e => {
+        setRespoj(e.target.value);
     };
 
     const updateUserInfo = e => {
@@ -55,7 +67,7 @@ function MyPage(props) {
         }
         else {
             generalFunctions.axiosInit(axios, cookies.access_token);
-            axios.post('/user/userRevise', {name: rename, password: password})
+            axios.post('/user/userRevise', {name: rename, password: password, boj_id: reboj, codeforces_id: recodeforces, spoj_id: respoj})
                 .then(result => {
                     dispatch(setUserName(rename));
                     alert('성공적으로 변경 되었습니다.');
@@ -132,13 +144,18 @@ function MyPage(props) {
     return (
         <div className="MyPage">
             <Form style={{"margin":"50px 20% 0"}}>
-                <Link to="/myJudges">내 제출 기록</Link>
-                <hr />
-                <Link to="/myAssignment">나의 과제</Link>
+                <Row>
+                    <Col md="6" sm="12" style={{marginBottom: "10px"}}>
+                        <Link to="/myJudges"><Button variant="outline-dark" size="lg" block>내 제출 기록</Button></Link>
+                    </Col>
+                    <Col md="6" sm="12">
+                        <Link to="/myAssignment"><Button variant="outline-dark" size="lg" block>나의 과제</Button></Link>
+                    </Col>
+                </Row>
                 <hr />
                 <Form.Group as={Row}>
                     <Form.Label column sm={4}>
-                        닉네임
+                        <b>닉네임</b>
                     </Form.Label>
                     <Col sm={8}>
                         {userNickname}
@@ -147,7 +164,7 @@ function MyPage(props) {
 
                 <Form.Group as={Row}>
                     <Form.Label column sm={4}>
-                        실명
+                        <b>실명*</b>
                     </Form.Label>
                     <Col sm={4}>
                         {userName}
@@ -159,7 +176,7 @@ function MyPage(props) {
 
                 <Form.Group as={Row}>
                     <Form.Label column sm={4}>
-                        이메일
+                        <b>이메일</b>
                     </Form.Label>
                     <Col sm={8}>
                         {userEmail}
@@ -168,7 +185,7 @@ function MyPage(props) {
 
                 <Form.Group as={Row}>
                     <Form.Label column sm={4}>
-                        비밀번호 변경
+                        <b>비밀번호 변경*</b>
                     </Form.Label>
                     <Col sm={8}>
                         <Form.Control value={password} type="password" placeholder="password" onChange={changePassword}/>
@@ -177,25 +194,59 @@ function MyPage(props) {
 
                 <Form.Group as={Row}>
                     <Form.Label column sm={4}>
-                        비밀번호 확인
+                        <b>비밀번호 확인*</b>
                     </Form.Label>
                     <Col sm={8}>
                         <Form.Control value={confirmPassword} type="password" placeholder="password" onChange={changeConfirmPassword}/>
                     </Col>
                 </Form.Group>
 
+                <hr />
+
                 <Form.Group as={Row}>
-                    <Form.Label column sm={12}>
-                        <Button variant="primary w-100" onClick={updateUserInfo}>수정</Button>
+                    <Form.Label column sm={4}>
+                        <b>백준 ID</b>
                     </Form.Label>
+                    <Col sm={4}>
+                        bojID
+                    </Col>
+                    <Col sm={4}>
+                        <Form.Control value={reboj} type="text" placeholder="백준 ID 수정" onChange={changeReboj}/>
+                    </Col>
                 </Form.Group>
 
                 <Form.Group as={Row}>
-                    <Form.Label column sm={12}>
-                        <Button variant="danger w-100" onClick={deleteUser}>삭제</Button>
+                    <Form.Label column sm={4}>
+                        <b>코드포스 ID</b>
                     </Form.Label>
+                    <Col sm={4}>
+                        codeforcesID
+                    </Col>
+                    <Col sm={4}>
+                        <Form.Control value={recodeforces} type="text" placeholder="코드포스 ID 수정" onChange={changeRecodeforces}/>
+                    </Col>
                 </Form.Group>
 
+                <Form.Group as={Row}>
+                    <Form.Label column sm={4}>
+                        <b>SPOJ ID</b>
+                    </Form.Label>
+                    <Col sm={4}>
+                        spojID
+                    </Col>
+                    <Col sm={4}>
+                        <Form.Control value={respoj} type="text" placeholder="SPOJ ID 수정" onChange={changeRespoj}/>
+                    </Col>
+                </Form.Group>
+
+                <Row>
+                    <Col sm="12" style={{marginBottom: "10px"}}>
+                        <Button variant="primary" block onClick={updateUserInfo}>수정</Button>
+                    </Col>
+                    <Col sm="12">
+                        <Button variant="danger" block onClick={deleteUser}>삭제</Button>
+                    </Col>
+                </Row>
             </Form>
         </div>
     );

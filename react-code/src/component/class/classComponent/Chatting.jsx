@@ -121,7 +121,7 @@ function Chatting(props) {
                             {chatLog.owner}
                         </span>
                 <span style={dateStyle}>
-                            {chatLog.send_time}
+                            {(new Date(chatLog.send_time)).toLocaleString()}
                         </span>
             </div>
             <Card.Body style={{"padding": "2rem 1rem 1rem 1rem"}}>

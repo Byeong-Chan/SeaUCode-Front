@@ -54,7 +54,18 @@ function MyAssignment(props) {
                         return get_progress(idx + 1);
                     });
                 };
+
+                const get_judge_link = async function(idx) {
+                    if(idx === assignment_list.length) return;
+                    return axios.get(`/assignment/getOutJudgeResultLink/${assignment_list[idx]._id}`).then( result => {
+                        assignment_list[idx].link_list = result.data.link_list;
+                        return get_judge_link(idx + 1);
+                    });
+                };
+
                 get_progress(0).then(() => {
+                    return get_judge_link(0);
+                }).then(() => {
                     setAsgList(assignment_list);
                 }).catch(err => {
                     setAsgList(assignment_list);
@@ -70,8 +81,9 @@ function MyAssignment(props) {
 
     const [selectedAsg, setSelectedAsg] = useState([]);
     const [selectedAsgAcc, setSelectedAsgAcc] = useState([]);
+    const [selectedAsgLink, setSelectedAsgLink] = useState([]);
     const assignmentTable = asgList.map((assignment, i) =>
-        <tr key={i + 1} onClick={(e) => {setSelectedAsg(assignment.problem_list); setSelectedAsgAcc(assignment.acc_list);}} style={{cursor: "pointer"}}>
+        <tr key={i + 1} onClick={(e) => {setSelectedAsg(assignment.problem_list); setSelectedAsgAcc(assignment.acc_list); setSelectedAsgLink(assignment.link_list); }} style={{cursor: "pointer"}}>
             <th>{i + 1}</th>
             <th>{assignment.name}</th>
             <th>{(new Date(assignment.start_date)).toLocaleString()}</th>
@@ -109,7 +121,7 @@ function MyAssignment(props) {
                 </Col>
                 <Col lg={6} md={12}>
                     {
-                        <AssignmentList problem_list={selectedAsg} acc_list={selectedAsgAcc}/>
+                        <AssignmentList link_list={selectedAsgLink} problem_list={selectedAsg} acc_list={selectedAsgAcc}/>
                     }
                 </Col>
             </Row>

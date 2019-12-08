@@ -26,28 +26,75 @@ function ShowProblems(props) {
             category = category + item.Category[i];
             if(i < item.Category.length - 1) category = category + ', ';
         }
-        renders.push(
-            <tr key={item.problem_number}>
-                <td>
-                    <Link to={"/problems/"+item.problem_number}>
-                        {item.problem_number}
-                    </Link>
-                </td>
-                <td>
-                    <Link to={"/problems/"+item.problem_number}>
-                        {item.name}
-                    </Link>
-                </td>
-                <td>
-                    {category}
-                </td>
-                <td>
-                    <Button onClick={(e) => props.addProblem(item)} variant="primary" size="sm">
-                        추가
-                    </Button>
-                </td>
-            </tr>
-        )
+
+        if(item.problem_number.toString().split('/')[0] === 'spoj' ||
+            item.problem_number.toString().split('/')[0] === 'boj' ||
+            item.problem_number.toString().split('/')[0] === 'codeforces') {
+
+            let outerUrl = '';
+            if(item.problem_number.toString().split('/')[0] === 'codeforces') {
+                let codeforcesURL = '';
+                for(let i = 10; i < item.problem_number.length; i++) {
+                    if("ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(item.problem_number[i]) !== -1) {
+                        codeforcesURL += '/';
+                    }
+                    codeforcesURL += item.problem_number[i];
+                }
+                outerUrl = `https://codeforces.com/problemset/problem/${codeforcesURL}`;
+            }
+            else if(item.problem_number.toString().split('/')[0] === 'boj') {
+                outerUrl = `https://www.acmicpc.net/problem/${item.problem_number.split('/')[1]}`;
+            }
+            else {
+                outerUrl = `https://www.spoj.com/problems/${item.problem_number.split('/')[1]}`;
+            }
+            renders.push(
+                <tr key={item.problem_number}>
+                    <td>
+                        <a href={outerUrl}>
+                            {item.problem_number}
+                        </a>
+                    </td>
+                    <td>
+                        <a href={outerUrl}>
+                            {item.name}
+                        </a>
+                    </td>
+                    <td>
+                        {category}
+                    </td>
+                    <td>
+                        <Button onClick={(e) => props.addProblem(item)} variant="primary" size="sm">
+                            추가
+                        </Button>
+                    </td>
+                </tr>
+            )
+        }
+        else {
+            renders.push(
+                <tr key={item.problem_number}>
+                    <td>
+                        <Link to={props.url + "/" + item.problem_number}>
+                            {item.problem_number}
+                        </Link>
+                    </td>
+                    <td>
+                        <Link to={props.url + "/" + item.problem_number}>
+                            {item.name}
+                        </Link>
+                    </td>
+                    <td>
+                        {category}
+                    </td>
+                    <td>
+                        <Button onClick={(e) => props.addProblem(item)} variant="primary" size="sm">
+                            추가
+                        </Button>
+                    </td>
+                </tr>
+            )
+        }
     }
     return renders;
 }
@@ -81,6 +128,9 @@ function ModifyAssignment(props) {
     const [eHour, setEHour] = useState(0);
     const [eMinute, setEMinute] = useState(0);
 
+    const [oj, setOj] = useState('SeaUCode');
+    const [outer, setOuter] = useState('');
+
     const changeConstraint = e => {
         setConstraint(e.target.value);
     };
@@ -94,10 +144,11 @@ function ModifyAssignment(props) {
         if(field !== '') setOnSearch(true);
         else setOnSearch(false);
 
+        const getProblemUrl = `/problems/get${outer}ProblemList${outer === 'Out' ? '/' + oj : ''}/`;
         const searchField = field !== '' ? constraint + '/' + field + '/' : '';
 
         axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
-        axios.get('/problems/getProblemList/' + searchField + 1)
+        axios.get(getProblemUrl + searchField + 1)
             .then(result => {
                 setSearchedProblemList(result.data.problem_list);
             }).catch(err => {
@@ -119,13 +170,14 @@ function ModifyAssignment(props) {
             if(page === 1)
                 return;
         }
+        const getProblemUrl = `/problems/get${outer}ProblemList${outer === 'Out' ? '/' + oj : ''}/`;
         const nextPage = page + parseInt(e.target.value);
         setPage(nextPage);
 
         if(onSearch) {
             const searchField = field !== '' ? constraint + '/' + field + '/' : '';
             axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
-            axios.get('/problems/getProblemList/' + searchField + nextPage)
+            axios.get(getProblemUrl + searchField + nextPage)
                 .then(result => {
                     setSearchedProblemList(result.data.problem_list);
                 }).catch(err => {
@@ -138,7 +190,7 @@ function ModifyAssignment(props) {
             });
         }
         else {
-            axios.get('/problems/getProblemList/' + nextPage)
+            axios.get(getProblemUrl + nextPage)
                 .then(result => {
                     setSearchedProblemList(result.data.problem_list);
                 }).catch(err => {
@@ -249,9 +301,10 @@ function ModifyAssignment(props) {
 
     useEffect(() => {
         async function getFirstPage() {
+            const getProblemUrl = `/problems/get${outer}ProblemList${outer === 'Out' ? '/' + oj : ''}/`;
             setPage(1);
             axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
-            axios.get('/problems/getProblemList/' + 1)
+            axios.get(getProblemUrl + 1)
                 .then(result => {
                     setSearchedProblemList(result.data.problem_list);
                     generalFunctions.axiosInit(axios, cookies.access_token);
@@ -324,11 +377,23 @@ function ModifyAssignment(props) {
     }
 
     function addProblem(problem) {
-        if(selectedProblemList.find(e => e.problem_number === problem.problem_number) !== undefined) {
+        const newProblem = {};
+        for(const key of Object.keys(problem)) {
+            newProblem[key] = problem[key];
+            if(key === 'problem_number') {
+                newProblem[key] = problem[key].toString().concat();
+                if(newProblem[key].split('/')[0] !== 'boj' &&
+                    newProblem[key].split('/')[0] !== 'codeforces' &&
+                    newProblem[key].split('/')[0] !== 'spoj')
+                    newProblem[key] = 'SeaUCode/' + newProblem[key];
+            }
+        }
+
+        if(selectedProblemList.find(e => e.problem_number === newProblem.problem_number) !== undefined) {
             alert('이미 추가된 문제입니다.');
         }
         else {
-            const newSelectedProblemList = selectedProblemList.concat(problem);
+            const newSelectedProblemList = selectedProblemList.concat(newProblem);
             newSelectedProblemList.sort((a, b) => {
                 if(a.problem_number < b.problem_number) return -1;
                 if(a.problem_number > b.problem_number) return 1;
@@ -337,15 +402,23 @@ function ModifyAssignment(props) {
             setSelectedProblemList(newSelectedProblemList);
         }
     }
+
     const removeProblem = e => {
         const newSelectedProblemList = selectedProblemList.concat();
-        if(newSelectedProblemList.findIndex(elem => elem.problem_number === parseInt(e.target.value)) === -1) {
+        if(newSelectedProblemList.findIndex(elem => elem.problem_number === e.target.value) === -1) {
             alert('지울 수 없습니다.');
         }
         else {
-            newSelectedProblemList.splice(newSelectedProblemList.findIndex(elem => elem.problem_number === parseInt(e.target.value)), 1);
+            newSelectedProblemList.splice(newSelectedProblemList.findIndex(elem => elem.problem_number === e.target.value), 1);
             setSelectedProblemList(newSelectedProblemList);
         }
+    };
+
+    const changeOj = e => {
+        let newOuter = 'Out';
+        setOj(e.target.value);
+        if(e.target.value === 'SeaUCode') newOuter = '';
+        setOuter(newOuter);
     };
 
     return (
@@ -444,6 +517,12 @@ function ModifyAssignment(props) {
             <Row>
                 <Col lg={6} md={12}>
                     <h6 style={{fontWeight: "bold"}}>[문제 목록]</h6>
+                    <Form.Control as="select" onChange={changeOj}>
+                        <option value="SeaUCode">씨유코드</option>
+                        <option value="boj">백준 온라인 저지</option>
+                        <option value="codeforces">코드포스</option>
+                        <option value="spoj">Sphere 온라인 저지</option>
+                    </Form.Control>
                     <Button value={-1} onClick={changePage} style={nextButton} variant="outline-dark" size="sm">이전</Button>
                     <Button value={1} onClick={changePage} style={prevButton} variant="outline-dark" size="sm">다음</Button>
                     <Table striped bordered hover>

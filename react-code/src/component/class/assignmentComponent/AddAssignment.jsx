@@ -205,6 +205,7 @@ function AddAssignment(props) {
                 }
             });
         }
+        window.scrollTo(0, 300);
     };
 
     const postAssignment = e => {
@@ -331,17 +332,14 @@ function AddAssignment(props) {
         top: "20px",
         right: "15px"
     };
-    const nextButton = {
+    const recoButton = {
         position: "absolute",
         top: "-5px",
-        right: "80px",
-        width: "60px"
-    };
-    const prevButton = {
-        position: "absolute",
-        top: "-5px",
-        right: "15px",
-        width: "60px"
+        right: "15px"
+    }
+    const pageButton = {
+        width: "60px",
+        margin: "0 5px"
     };
     const subTitle = {
         fontWeight: "bold",
@@ -506,16 +504,31 @@ function AddAssignment(props) {
             <hr/>
             <Row>
                 <Col lg={6} md={12}>
-                    <h6 style={{fontWeight: "bold"}}>[문제 목록]</h6>
-                    <Form.Control as="select" onChange={changeOj}>
+                    <h6 style={{fontWeight: "bold", marginBottom: "20px"}}>[문제 목록]</h6>
+                    <Button onClick={changeRecommend} style={recoButton}> 추천 활성화 </Button>
+                    <Row>
+                        <Col xs={3} style={{textAlign: "center", padding: "5px 0 0 20px"}}>
+                            {recommend === '' ? null : "난이도 설정"}
+                        </Col>
+                        <Col xs={9}>
+                            {recommend === '' ? null : (<Form.Control type="number" value={difficulty} onChange={changeDifficulty}></Form.Control>)}
+                        </Col>
+                    </Row>
+                    <Form.Control as="select" onChange={changeOj} style={{margin: "5px 0"}}>
                         <option value="SeaUCode">씨유코드</option>
                         <option value="boj">백준 온라인 저지</option>
                         <option value="codeforces">코드포스</option>
                         <option value="spoj">Sphere 온라인 저지</option>
                     </Form.Control>
-                    <Button value={-1} onClick={changePage} style={nextButton} variant="outline-dark" size="sm">이전</Button>
-                    <Button value={1} onClick={changePage} style={prevButton} variant="outline-dark" size="sm">다음</Button>
-                    <Table striped bordered hover>
+                    <div style={{marginBottom: "10px", display: "flex", textAlign: "center"}}>
+                        <Form.Control as="select" onChange={changeConstraint} style={{width: "33%"}}>
+                            <option value="name">문제 이름</option>
+                            <option value="category">알고리즘 분류</option>
+                        </Form.Control>
+                        <Form.Control value={field} type="text" onChange={changeField} style={{width: "50%", marginLeft: "5px"}}/>
+                        <Button onClick={findProblems} variant="outline-primary" style={{position: "absolute", right: "15px", width: "13%"}}>검색</Button>
+                    </div>
+                    <Table striped bordered hover style={{marginBottom: "10px"}}>
                         <thead>
                         <tr>
                             <th>#</th>
@@ -528,25 +541,10 @@ function AddAssignment(props) {
                             <ShowProblems problem_list={searchedProblemList} addProblem={addProblem}/>
                         </tbody>
                     </Table>
-                    <div style={{marginBottom: "30px", display: "flex", textAlign: "center"}}>
-                        <Form.Control as="select" onChange={changeConstraint} style={{width: "33%"}}>
-                            <option value="name">문제 이름</option>
-                            <option value="category">알고리즘 분류</option>
-                        </Form.Control>
-                        <Form.Control value={field} type="text" onChange={changeField} style={{width: "50%", marginLeft: "5px"}}/>
-                        <Button onClick={findProblems} variant="outline-primary" style={{marginLeft: "5px"}}>검색</Button>
+                    <div style={{textAlign: "center", marginBottom: "20px"}}>
+                        <Button value={-1} onClick={changePage} style={pageButton} variant="outline-dark">이전</Button>
+                        <Button value={1} onClick={changePage} style={pageButton} variant="outline-dark">다음</Button>
                     </div>
-                    <Row>
-                        <Col sm={3}>
-                            <Button onClick={changeRecommend}> 추천 활성화 </Button>
-                        </Col>
-                        <Col sm={3}>
-                            {recommend === '' ? null : "난이도"}
-                        </Col>
-                        <Col sm={6}>
-                            {recommend === '' ? null : (<Form.Control type="number" value={difficulty} onChange={changeDifficulty}></Form.Control>)}
-                        </Col>
-                    </Row>
                 </Col>
                 <SelectedAssignment selectedProblem={selectedProblemList} removeProblem={removeProblem}/>
             </Row>

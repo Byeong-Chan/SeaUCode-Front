@@ -141,6 +141,12 @@ function ProblemList(props) {
         getFirstPage();
     }, []);
 
+    const enterKeyPress = (e) => {
+        if(e.key === 'Enter'){
+            findProblems();
+        }
+    }
+
     return (
         <div className="ProblemList" style={{"height":"100%"}}>
             <Row>
@@ -152,7 +158,7 @@ function ProblemList(props) {
                     </Form.Control>
                 </Col>
                 <Col sm="5">
-                    <Form.Control type="text" onChange={changeField} />
+                    <Form.Control type="text" onChange={changeField} onKeyPress={enterKeyPress}/>
                 </Col>
                 <Col sm="1">
                     <Button onClick={findProblems}>검색</Button>

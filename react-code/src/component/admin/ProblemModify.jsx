@@ -375,7 +375,8 @@ function ProblemModify(props) {
         formData.append('io_length', inputList.length);
         generalFunctions.axiosInit(axios, cookies.access_token);
         axios.post('/admin/updateProblem', formData).then(response => {
-
+            alert('문제가 수정되었습니다.');
+            props.history.goBack(`${url}`);
         }).catch(err => {
             if(err.response === undefined) {
                 alert('서버와의 연결이 끊어졌습니다.')

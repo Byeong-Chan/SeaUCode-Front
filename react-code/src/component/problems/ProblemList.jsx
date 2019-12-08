@@ -27,7 +27,7 @@ function ShowProblems(props) {
             item.problem_number.toString().split('/')[0] === 'codeforces') {
 
             let outerUrl = '';
-            if(props.oj === 'codeforces') {
+            if(item.problem_number.toString().split('/')[0] === 'codeforces') {
                 let codeforcesURL = '';
                 for(let i = 10; i < item.problem_number.length; i++) {
                     if("ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(item.problem_number[i]) !== -1) {
@@ -37,7 +37,7 @@ function ShowProblems(props) {
                 }
                 outerUrl = `https://codeforces.com/problemset/problem/${codeforcesURL}`;
             }
-            else if(props.oj === 'boj') {
+            else if(item.problem_number.toString().split('/')[0] === 'boj') {
                 outerUrl = `https://www.acmicpc.net/problem/${item.problem_number.split('/')[1]}`;
             }
             else {
@@ -244,7 +244,7 @@ function ProblemList(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            <ShowProblems problem_list={searchedProblemList} url={url} outer={outer} oj={oj}/>
+                            <ShowProblems problem_list={searchedProblemList} url={url}/>
                         </tbody>
                     </Table>
                 </Col>

@@ -130,8 +130,6 @@ function ModifyAssignment(props) {
 
     const [oj, setOj] = useState('SeaUCode');
     const [outer, setOuter] = useState('');
-    const [recommend, setRecommend] = useState('');
-    const [difficulty, setDifficulty] = useState(0);
 
     const changeConstraint = e => {
         setConstraint(e.target.value);
@@ -146,7 +144,7 @@ function ModifyAssignment(props) {
         if(field !== '') setOnSearch(true);
         else setOnSearch(false);
 
-        const getProblemUrl = `/problems/get${outer}ProblemList${outer === 'Out' ? '/' + oj : ''}${recommend === 'recommend' ? '/recommend/' + student_id + '/' + difficulty : ''}/`;
+        const getProblemUrl = `/problems/get${outer}ProblemList${outer === 'Out' ? '/' + oj : ''}/`;
         const searchField = field !== '' ? constraint + '/' + field + '/' : '';
 
         axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
@@ -172,7 +170,7 @@ function ModifyAssignment(props) {
             if(page === 1)
                 return;
         }
-        const getProblemUrl = `/problems/get${outer}ProblemList${outer === 'Out' ? '/' + oj : ''}${recommend === 'recommend' ? '/recommend/' + student_id + '/' + difficulty : ''}/`;
+        const getProblemUrl = `/problems/get${outer}ProblemList${outer === 'Out' ? '/' + oj : ''}/`;
         const nextPage = page + parseInt(e.target.value);
         setPage(nextPage);
 
@@ -303,7 +301,7 @@ function ModifyAssignment(props) {
 
     useEffect(() => {
         async function getFirstPage() {
-            const getProblemUrl = `/problems/get${outer}ProblemList${outer === 'Out' ? '/' + oj : ''}${recommend === 'recommend' ? '/recommend/' + student_id + '/' + difficulty : ''}/`;
+            const getProblemUrl = `/problems/get${outer}ProblemList${outer === 'Out' ? '/' + oj : ''}/`;
             setPage(1);
             axios.defaults.baseURL = config.serverURL; // TODO: 나중에 제대로 포워딩 할 것
             axios.get(getProblemUrl + 1)
@@ -368,15 +366,15 @@ function ModifyAssignment(props) {
         fontWeight: "bold",
         color: "darkslategray",
         marginBottom: "0px"
-    };
+    }
     const dateStyle = {
         padding: "0",
         minWidth: "100px"
-    };
+    }
     const dateText = {
         width: "30px",
         padding: "3px 10px 3px 5px"
-    };
+    }
 
     function addProblem(problem) {
         const newProblem = {};
@@ -421,15 +419,6 @@ function ModifyAssignment(props) {
         setOj(e.target.value);
         if(e.target.value === 'SeaUCode') newOuter = '';
         setOuter(newOuter);
-    };
-
-    const changeRecommend = e => {
-        if(recommend === '') setRecommend('recommend');
-        else setRecommend('');
-    };
-
-    const changeDifficulty = e => {
-        setDifficulty(e.target.value);
     };
 
     return (
@@ -557,17 +546,6 @@ function ModifyAssignment(props) {
                         <Form.Control value={field} type="text" onChange={changeField} style={{width: "50%", marginLeft: "5px"}}/>
                         <Button onClick={findProblems} variant="outline-primary" style={{marginLeft: "5px"}}>검색</Button>
                     </div>
-                    <Row>
-                        <Col sm={3}>
-                            <Button onClick={changeRecommend}> 추천 활성화 </Button>
-                        </Col>
-                        <Col sm={3}>
-                            {recommend === '' ? null : "난이도"}
-                        </Col>
-                        <Col sm={6}>
-                            {recommend === '' ? null : (<Form.Control type="number" value={difficulty} onChange={changeDifficulty}></Form.Control>)}
-                        </Col>
-                    </Row>
                 </Col>
                 <SelectedAssignment selectedProblem={selectedProblemList} removeProblem={removeProblem}/>
             </Row>

@@ -21,6 +21,7 @@ function AssignmentList(props) {
 
     const problemList = props.problem_list;
     const accList = props.acc_list;
+    const linkList = props.link_list;
 
     const unsolvedCardStyle = {
         margin: "5px 0 0 0",
@@ -70,15 +71,64 @@ function AssignmentList(props) {
         }
     };
 
-    const problemCard = problemList.map((problem, i) =>
-        <Col sm={6} key={`assignment_problem_${i + 1}`}>
-            <Link to={`/studentJudges/${props.nickname}/${problem}`}>
-                <Card style={accList.find(e => e === problem) === undefined ? unsolvedCardStyle : solvedCardStyle}>
-                    {problem}
-                </Card>
-            </Link>
-        </Col>
-    );
+    const problemCard = problemList.map((problem, i) => {
+        if (problem.split('/')[0] === 'SeaUCode') {
+            const tmp = accList.find(e => e === problem) === undefined ?
+                `/problems/${problem.split('/')[1]}` :
+                `/studentJudges/${props.nickname}/${problem.split('/')[1]}`;
+            return (
+                <Col sm={6} key={`assignment_problem_${i + 1}`}>
+                    <Link to={tmp}>
+                        <Card
+                            style={accList.find(e => e === problem) === undefined ? unsolvedCardStyle : solvedCardStyle}>
+                            {problem}
+                        </Card>
+                    </Link>
+                </Col>
+            );
+        }
+        else {
+            const tmp = linkList.find(elem => elem.problem_number === problem);
+            if(tmp === undefined) {
+                let outerUrl = "";
+                if(problem.split('/')[0] === 'codeforces') {
+                    outerUrl = "https://codeforces.com/problemset/problem/"
+                    for(let i = 10; i < problem.length; i++) {
+                        if("ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(problem[i]) !== -1) {
+                            outerUrl = outerUrl + '/';
+                        }
+                        outerUrl = outerUrl + problem[i];
+                    }
+                }
+                else if(problem.split('/')[0] === 'boj') {
+                    outerUrl = `https://acmicpc.net/problem/${problem.split('/')[1]}`;
+                }
+                else {
+                    outerUrl = `https://spoj.com/problems/${problem.split('/')[1]}`;
+                }
+                return (
+                    <Col sm={6} key={`assignment_problem_${i + 1}`}>
+                        <a href={outerUrl}>
+                            <Card
+                                style={accList.find(e => e === problem) === undefined ? unsolvedCardStyle : solvedCardStyle}>
+                                {problem}
+                            </Card>
+                        </a>
+                    </Col>
+                );
+            }
+            return (
+                <Col sm={6} key={`assignment_problem_${i + 1}`}>
+                    <a href={tmp.pending_link}>
+                        <Card
+                            style={accList.find(e => e === problem) === undefined ? unsolvedCardStyle : solvedCardStyle}>
+                            {problem}
+                        </Card>
+                    </a>
+                </Col>
+            );
+        }
+    });
 
     return (
         <div>

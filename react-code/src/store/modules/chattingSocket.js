@@ -6,7 +6,7 @@ import config from '../../config';
 // 액션 생섬함수 정의
 
 // **** 초기상태 정의
-const initialState = io.connect(config.serverURL);
+const initialState = io.connect(config.serverURL.substring(0,config.serverURL.length-4));
 
 // **** 리듀서 작성
 export default function chattingSocket(state = initialState, action) {

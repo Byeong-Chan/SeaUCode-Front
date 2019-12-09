@@ -217,13 +217,13 @@ function MyPage(props) {
 
                 <Form.Group as={Row}>
                     <Form.Label column sm={4}>
-                        <b>코드포스 ID</b>
+                        <b>코드포스 Handle</b>
                     </Form.Label>
                     <Col sm={4}>
-                        codeforcesID
+                        codeforcesHandle
                     </Col>
                     <Col sm={4}>
-                        <Form.Control value={recodeforces} type="text" placeholder="코드포스 ID 수정" onChange={changeRecodeforces}/>
+                        <Form.Control value={recodeforces} type="text" placeholder="코드포스 Handle 수정" onChange={changeRecodeforces}/>
                     </Col>
                 </Form.Group>
 

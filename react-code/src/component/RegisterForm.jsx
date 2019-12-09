@@ -179,10 +179,10 @@ function RegisterForm(props) {
 
                             <Form.Group as={Row} controlId="formHorizontalNickName">
                                 <Form.Label column sm={4}>
-                                    코드포스 ID
+                                    코드포스 Handle
                                 </Form.Label>
                                 <Col sm={8}>
-                                    <Form.Control type="text" placeholder="Codeforces ID" value={codeforcesID} onChange={codeforcesIDChange}/>
+                                    <Form.Control type="text" placeholder="Codeforces Handle" value={codeforcesID} onChange={codeforcesIDChange}/>
                                 </Col>
                             </Form.Group>
 

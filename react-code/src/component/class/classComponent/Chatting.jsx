@@ -114,18 +114,34 @@ function Chatting(props) {
         });
     };
 
+    const postOnNotice = e => {
+        generalFunctions.axiosInit(axios, token);
+        axios.post('/class/postNotice', {content: e.target.value, send_date: Date.now(), class_id: props.id}).then(result =>{
+            alert('공지에 게시되었습니다.');
+        }).catch(err => {
+            alert('게시에 실패하였습니다.');
+        });
+    };
+
     const chatTemplate = props.chatting.map((chatLog, idx) =>
         <Card key={`chatting_${idx}`} style={{"margin": "15px 15px 25px 15px"}}>
             <div style={tagStyle}>
-                        <span style={nameStyle}>
-                            {chatLog.owner}
-                        </span>
+                <span style={nameStyle}>
+                    {chatLog.owner}
+                </span>
                 <span style={dateStyle}>
-                            {(new Date(chatLog.send_time)).toLocaleString()}
-                        </span>
+                    {(new Date(chatLog.send_time)).toLocaleString()}
+                </span>
             </div>
             <Card.Body style={{"padding": "2rem 1rem 1rem 1rem"}}>
-                {chatLog.message}
+                    <Row>
+                    <Col md={10}>
+                        {chatLog.message}
+                    </Col>
+                    <Col md={2}>
+                        {props.isTeacher ? (<Button value={chatLog.message} onClick={postOnNotice}>공지하기</Button>) : null}
+                    </Col>
+                </Row>
             </Card.Body>
         </Card>
     );
@@ -135,7 +151,7 @@ function Chatting(props) {
         if(chatScroll.scrollTop == 0) {
             onPageChange();
         }
-    }
+    };
 
     return (
         <div className="chatting">

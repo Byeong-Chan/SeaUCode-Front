@@ -108,7 +108,7 @@ function AssignmentList(props) {
                 }
                 return (
                     <Col sm={6} key={`assignment_problem_${i + 1}`}>
-                        <a href={outerUrl}>
+                        <a href={outerUrl} target="_blank">
                             <Card
                                 style={accList.find(e => e === problem) === undefined ? unsolvedCardStyle : solvedCardStyle}>
                                 {problem}

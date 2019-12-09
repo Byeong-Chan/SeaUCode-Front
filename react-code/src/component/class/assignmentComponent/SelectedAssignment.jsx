@@ -27,7 +27,7 @@ function SelectedAssignment(props) {
                 </Button>
             </th>
         </tr>
-    )
+    );
 
     return (
         <Col lg={6} md={12}>

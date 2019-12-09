@@ -46,12 +46,12 @@ function ShowProblems(props) {
             renders.push(
                 <tr key={item.problem_number}>
                     <td>
-                        <a href={outerUrl}>
+                        <a href={outerUrl} target="_blank">
                             {item.problem_number}
                         </a>
                     </td>
                     <td>
-                        <a href={outerUrl}>
+                        <a href={outerUrl} target="_blank">
                             {item.name}
                         </a>
                     </td>

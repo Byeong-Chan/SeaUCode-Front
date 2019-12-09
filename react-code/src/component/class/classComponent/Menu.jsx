@@ -59,7 +59,7 @@ function Menu(props) {
                     :
                 <Link to={`${props.url}/myAssignment`}>
                     <ListGroup.Item action variant="secondary">
-                        내 과제 보기
+                        <b>내 과제 보기</b>
                     </ListGroup.Item>
                 </Link>
             }

@@ -47,6 +47,11 @@ function Chatting(props) {
         fontSize: "small",
         color: "gray"
     };
+    const noticeButton = {
+        position: "absolute",
+        top: "0px",
+        right: "0px"
+    }
     const footerStyle = {
         position: "absolute",
         bottom: "0px",
@@ -133,15 +138,10 @@ function Chatting(props) {
                     {(new Date(chatLog.send_time)).toLocaleString()}
                 </span>
             </div>
-            <Card.Body style={{"padding": "2rem 1rem 1rem 1rem"}}>
-                    <Row>
-                    <Col md={10}>
-                        {chatLog.message}
-                    </Col>
-                    <Col md={2}>
-                        {props.isTeacher ? (<Button value={chatLog.message} onClick={postOnNotice}>공지하기</Button>) : null}
-                    </Col>
-                </Row>
+
+            <Card.Body style={{"padding": "2rem 1rem 1rem 1rem", position: "relative"}}>
+                {props.isTeacher ? (<Button value={chatLog.message} onClick={postOnNotice} variant="outline-danger" size="sm" style={noticeButton}>공지하기</Button>) : null}
+                {chatLog.message}
             </Card.Body>
         </Card>
     );

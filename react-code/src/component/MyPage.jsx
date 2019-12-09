@@ -207,10 +207,7 @@ function MyPage(props) {
                     <Form.Label column sm={4}>
                         <b>백준 ID</b>
                     </Form.Label>
-                    <Col sm={4}>
-                        bojID
-                    </Col>
-                    <Col sm={4}>
+                    <Col sm={8}>
                         <Form.Control value={reboj} type="text" placeholder="백준 ID 수정" onChange={changeReboj}/>
                     </Col>
                 </Form.Group>
@@ -219,10 +216,7 @@ function MyPage(props) {
                     <Form.Label column sm={4}>
                         <b>코드포스 Handle</b>
                     </Form.Label>
-                    <Col sm={4}>
-                        codeforcesHandle
-                    </Col>
-                    <Col sm={4}>
+                    <Col sm={8}>
                         <Form.Control value={recodeforces} type="text" placeholder="코드포스 Handle 수정" onChange={changeRecodeforces}/>
                     </Col>
                 </Form.Group>
@@ -231,10 +225,7 @@ function MyPage(props) {
                     <Form.Label column sm={4}>
                         <b>SPOJ ID</b>
                     </Form.Label>
-                    <Col sm={4}>
-                        spojID
-                    </Col>
-                    <Col sm={4}>
+                    <Col sm={8}>
                         <Form.Control value={respoj} type="text" placeholder="SPOJ ID 수정" onChange={changeRespoj}/>
                     </Col>
                 </Form.Group>

@@ -14,6 +14,8 @@ import {
     useRouteMatch,
     useParams
 } from "react-router-dom";
+import generalFunctions from "../../../generalFunctions";
+import axios from "axios";
 
 const clearToken = () => ({ type: "token/CLEAR_TOKEN" });
 
@@ -28,6 +30,17 @@ function Menu(props) {
     };
 
     const [noticeModalShow, setNoticeModalShow] = useState(false);
+    const [noticeList, setNoticeList] = useState([]);
+
+    const onNoticeShow = e => {
+        setNoticeModalShow(true);
+        generalFunctions.axiosInit(axios, Cookie.access_token);
+        axios.get(`/class/getNoticeList/${props.id}`).then(result => {
+            setNoticeList(result.data.notice_list);
+        }).catch(err => {
+            alert('공지를 불러들이는데 실패하였습니다.');
+        });
+    };
 
     return (
         <ListGroup style={{textAlign: "center"}}>
@@ -50,10 +63,12 @@ function Menu(props) {
                     </ListGroup.Item>
                 </Link>
             }
-            <ListGroup.Item variant="secondary" onClick={() => setNoticeModalShow(true)} style={{cursor: "pointer"}}>
+            <ListGroup.Item variant="secondary" onClick={onNoticeShow} style={{cursor: "pointer"}}>
                 <b>공지</b>
             </ListGroup.Item>
             <Notice
+                id={props.id}
+                noticeList={noticeList}
                 show={noticeModalShow}
                 onHide={() => setNoticeModalShow(false)}
             />

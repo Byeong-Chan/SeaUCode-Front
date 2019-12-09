@@ -43,7 +43,6 @@ function Class(props) {
     );
 
     const [name, setName] = useState('');
-    const [notice, setNotice] = useState([]);
     const [chatting, setChatting] = useState([]);
 
     useEffect(() => {
@@ -54,7 +53,8 @@ function Class(props) {
                     return axios.get('/class/getClassInfo/' + id);
                 }).then(result => {
                     setName(result.data.name);
-                    setNotice(result.data.notice);
+                    if(result.data.notice.length > 0)
+                        alert(result.data.notice[0].content);
                     setChatting(result.data.chatting);
                 }).catch(err => {
                     console.log(err);
@@ -105,7 +105,7 @@ function Class(props) {
 
             <Row style={{"height":"100%", paddingLeft: 0, paddingRight: 0 }}>
                 <Col sm={2} style={{ paddingLeft: 0, paddingRight: 0, backgroundColor: "#343a40" }}>
-                    <Menu className={name} url={url} isTeacher={props.isTeacher} />
+                    <Menu className={name} url={url} isTeacher={props.isTeacher} id={id}/>
                 </Col>
                 <Col style={{ paddingLeft: 0, paddingRight: 0 }}>
                     <Switch>
@@ -125,7 +125,7 @@ function Class(props) {
                             <Student/>
                         </Route>
                         <Route path={`${path}/`}>
-                            <Chatting chatting={chatting} setChatting={setChatting} notice={notice} setNotice={setNotice} />
+                            <Chatting chatting={chatting} setChatting={setChatting} isTeacher={props.isTeacher} id={id}/>
                         </Route>
                     </Switch>
                 </Col>

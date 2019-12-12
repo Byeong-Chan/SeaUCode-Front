@@ -10,6 +10,7 @@ import { CookiesProvider } from 'react-cookie';
 import { createStore } from 'redux';
 import rootReducer from './store/modules';
 import { Provider } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 
 import { BrowserRouter as Router } from 'react-router-dom';
 
@@ -21,7 +22,9 @@ ReactDOM.render(
     <Router>
         <CookiesProvider>
             <Provider store={store}>
-                <App />
+                <DocumentTitle title='SeaUCode'>
+                    <App />
+                </DocumentTitle>
             </Provider>
         </CookiesProvider>
     </Router>,
